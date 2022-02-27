@@ -1,0 +1,47 @@
+{
+  "settings": {
+    "import/extensions": [".js", ".jsx"]
+  },
+  "extends": [
+    "react-app",
+    "airbnb",
+    "plugin:jsx-a11y/recommended",
+    "prettier",
+    "plugin:import/recommended"
+  ],
+  "plugins": ["jsx-a11y", "prettier"],
+  "rules": {
+    "semi": 2,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "jsx-a11y/label-has-associated-control": [2, { "assert": "htmlFor" }],
+    "prettier/prettier": [
+      2,
+      {
+        "semi": true
+      }
+    ],
+    "import/order": [
+      2,
+      {
+        "groups": ["builtin", "external", ["parent", "sibling", "index"]],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "always"
+      }
+    ],
+    "no-promise-executor-return": 0,
+    "no-param-reassign": 0,
+    "no-console": 2,
+    "react/jsx-no-bind": 0,
+    "no-plusplus": 0,
+    "no-use-before-define": 0,
+    "no-underscore-dangle": 0,
+    "camelcase": [2, { "allow": ["_id"]}],
+    "react/jsx-boolean-value": 0,
+    "no-restricted-syntax": [0, "ForOfStatement"],
+    "import/no-extraneous-dependencies": 0,
+    "react/react-in-jsx-scope": 0,
+  }
+}
