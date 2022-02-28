@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import Modal from "../../common/components/Modal";
@@ -19,6 +20,7 @@ const LoginButton = styled.button`
   transition: background-color 0.5s;
   width: 400px;
   height: 60px;
+  cursor: pointer;
 
   &:hover {
     background-color: ${COLOR.LIGHT_GREY};
@@ -32,9 +34,14 @@ const LoginButton = styled.button`
 function Login() {
   const loginError = useSelector((state) => state.login.error);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleGoogleLoginClick() {
     dispatch(loginSagaActionCreators.loggedInWithGoogle());
+  }
+
+  function handleLookaroundClick() {
+    navigate("/main");
   }
 
   function handleModalCloseClick() {
@@ -53,7 +60,9 @@ function Login() {
         <img src={googleGLogo} alt="googleGLogo" />
         Sign in with Google
       </LoginButton>
-      <LoginButton>Look around without sign in</LoginButton>
+      <LoginButton onClick={handleLookaroundClick}>
+        Look around without sign in
+      </LoginButton>
     </div>
   );
 }
