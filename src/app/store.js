@@ -2,14 +2,12 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
 import loginReducer from "../features/login/loginSlice";
-import meetingListReducer from "../features/meetingList/meetingListSlice";
 import rootSaga from "./rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const allReducers = combineReducers({
   login: loginReducer,
-  meetingList: meetingListReducer,
 });
 
 const rootReducer = (state, action) => {
