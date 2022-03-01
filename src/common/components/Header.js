@@ -20,10 +20,11 @@ const HeaderButton = styled.button`
   font-weight: bold;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.6s;
 
   &:hover {
-    text-shadow: grey 1px 0 10px;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   }
 `;
 

@@ -25,9 +25,13 @@ const SearchbarContainer = styled.div`
   align-items: center;
 
   .refreshIcon {
+    display: block;
+    padding: 0;
     margin: 0 auto;
     width: 2rem;
     transition: all 0.2s;
+    border: none;
+    background-color: transparent;
   }
 
   .refreshIcon:hover {
@@ -75,6 +79,13 @@ function Sidebar() {
     setEnteredText(event.target.value);
   }
 
+  function handleRefreshButtonClick() {
+    setLastId(null);
+    setQuery((existingQuery) =>
+      existingQuery === query ? query + " " : existingQuery
+    );
+  }
+
   return (
     <SidebarContainer>
       <SearchbarContainer>
@@ -87,7 +98,13 @@ function Sidebar() {
           />
           <input type="text" onChange={handleTextInput} value={enteredText} />
         </Searchbar>
-        <img className="refreshIcon" src={refreshIcon} alt="refresh-icon" />
+        <button
+          className="refreshIcon"
+          type="button"
+          onClick={handleRefreshButtonClick}
+        >
+          <img className="refreshIcon" src={refreshIcon} alt="refresh-icon" />
+        </button>
       </SearchbarContainer>
       <MeetingList query={query} onBottomScroll={setLastId} lastId={lastId} />
     </SidebarContainer>
