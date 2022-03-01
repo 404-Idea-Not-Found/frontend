@@ -42,6 +42,7 @@
     "react/jsx-boolean-value": 0,
     "no-restricted-syntax": [0, "ForOfStatement"],
     "import/no-extraneous-dependencies": 0,
-    "react/react-in-jsx-scope": 0
+    "react/react-in-jsx-scope": 0,
+    "prefer-arrow-callback": 0
   }
 }

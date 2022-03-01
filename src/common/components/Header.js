@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { loginSagaActionCreators } from "../../features/login/loginSagas";
-import { userLoggedOut } from "../../features/login/loginSlice";
 import { selectIsLoggedIn } from "../../features/login/selectors";
 import googleGLogo from "../../images/googleGLogo.png";
 
@@ -43,7 +42,7 @@ function Header() {
 
   function handleLogoutClikc() {
     document.cookie = "fourOFourToken=; max-age=0";
-    dispatch(userLoggedOut());
+    dispatch({ type: "RESET_APP" });
     navigate("/");
   }
 

@@ -20,11 +20,14 @@ export const meetingListSlice = createSlice({
       if (!action.payload.length) {
         state.lastId = null;
       }
+      state.error.isError = false;
+      state.error.errorMessage = null;
     },
     meetingListRequestSent: (state) => {
       state.isLoading = true;
     },
     failedFetchingMeetingList: (state, action) => {
+      state.isLoading = false;
       state.error.isError = true;
       state.error.errorMessage = action.payload;
     },

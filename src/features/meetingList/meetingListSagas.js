@@ -22,7 +22,13 @@ export function* getMeetingList() {
 
     yield put(meetingListLoaded(res.data.meetingList));
   } catch (error) {
-    yield put(failedFetchingMeetingList(error.response.data.errorMessage));
+    let errorMessage = error.message;
+
+    if (error.response) {
+      errorMessage = error.response.data.errorMessage;
+    }
+
+    yield put(failedFetchingMeetingList(errorMessage));
   }
 }
 

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 import refreshIcon from "../../images/refreshIcon.png";
@@ -6,7 +7,13 @@ import MeetingList from "../meetingList/MeetingList";
 
 const SidebarContainer = styled.div`
   width: 40%;
-  height: 90%;
+  height: 100%;
+
+  .down-arrow {
+    display: block;
+    margin: 0 auto;
+    width: 2rem;
+  }
 `;
 
 const SearchbarContainer = styled.div`
@@ -53,21 +60,36 @@ const Searchbar = styled.form`
 `;
 
 function Sidebar() {
+  const [enteredText, setEnteredText] = useState("");
+  const [query, setQuery] = useState("");
+  const [lastId, setLastId] = useState(null);
+
+  function handleTextSubmit(event) {
+    event.preventDefault();
+    setQuery(enteredText);
+    setLastId(null);
+    setEnteredText("");
+  }
+
+  function handleTextInput(event) {
+    setEnteredText(event.target.value);
+  }
+
   return (
     <SidebarContainer>
       <SearchbarContainer>
-        <Searchbar id="searchbar">
+        <Searchbar id="searchbar" onSubmit={handleTextSubmit}>
           <img
             htmlFor="searchbar"
             className="searchbarIcon"
             src={searchbarIcon}
             alt="searchbar-icon"
           />
-          <input type="text" />
+          <input type="text" onChange={handleTextInput} value={enteredText} />
         </Searchbar>
         <img className="refreshIcon" src={refreshIcon} alt="refresh-icon" />
       </SearchbarContainer>
-      <MeetingList />
+      <MeetingList query={query} onBottomScroll={setLastId} lastId={lastId} />
     </SidebarContainer>
   );
 }

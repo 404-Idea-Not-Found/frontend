@@ -1,7 +1,9 @@
 import axios from "axios";
 
-async function fetchMeetingList(lastId = "firstQuery") {
-  const res = await axios.get(`meeting/meeting-list/${lastId}`);
+async function fetchMeetingList(query, lastId = "firstQuery") {
+  const res = await axios.get(
+    `meeting/meeting-list?query=${query}&lastId=${lastId || "firstQuery"}`
+  );
 
   return res;
 }

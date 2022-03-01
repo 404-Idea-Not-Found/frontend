@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -97,9 +98,11 @@ function Landing() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const navigate = useNavigate();
 
-  if (isLoggedIn) {
-    navigate("/main");
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/main");
+    }
+  }, [isLoggedIn]);
 
   return (
     <StyledDiv>
