@@ -12,7 +12,7 @@ import { loginSagaActionCreators } from "./features/login/loginSagas";
 import Main from "./features/main/Main";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
-store.dispatch(loginSagaActionCreators.verified404Token());
+store.dispatch(loginSagaActionCreators.verify404Token());
 
 ReactDOM.render(
   <React.StrictMode>

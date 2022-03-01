@@ -7,6 +7,7 @@ import { COLOR } from "../../common/util/constants";
 import googleGLogo from "../../images/googleGLogo.png";
 import { loginSagaActionCreators } from "./loginSagas";
 import { userCheckedLoginError } from "./loginSlice";
+import { selectLoginError } from "./selectors";
 
 const LoginButton = styled.button`
   display: flex;
@@ -32,12 +33,12 @@ const LoginButton = styled.button`
 `;
 
 function Login() {
-  const loginError = useSelector((state) => state.login.error);
+  const loginError = useSelector(selectLoginError);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   function handleGoogleLoginClick() {
-    dispatch(loginSagaActionCreators.loggedInWithGoogle());
+    dispatch(loginSagaActionCreators.logInWithGoogle());
   }
 
   function handleLookaroundClick() {
