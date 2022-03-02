@@ -8,11 +8,11 @@ import getCookie from "../../common/util/getCookie";
 import { userLoggedIn, userLoginFailed } from "./loginSlice";
 
 export const loginSagaActionCreators = {
-  loggedInWithGoogle: () => ({
-    type: "LOGGED_IN_WITH_GOOGLE",
+  logInWithGoogle: () => ({
+    type: "LOG_IN_WITH_GOOGLE",
   }),
-  verified404Token: () => ({
-    type: "VERIFIED_404_TOKEN",
+  verify404Token: () => ({
+    type: "VERIFY_404_TOKEN",
   }),
 };
 
@@ -53,10 +53,10 @@ export function* verify404Token() {
   }
 }
 
-export function* watchloggedInWithGoogle() {
-  yield takeEvery("LOGGED_IN_WITH_GOOGLE", logInWithGoogle);
+export function* watchlogInWithGoogle() {
+  yield takeEvery("LOG_IN_WITH_GOOGLE", logInWithGoogle);
 }
 
-export function* watchVerified404Token() {
-  yield takeEvery("VERIFIED_404_TOKEN", verify404Token);
+export function* watchVerify404Token() {
+  yield takeEvery("VERIFY_404_TOKEN", verify404Token);
 }

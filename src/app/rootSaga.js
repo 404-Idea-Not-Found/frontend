@@ -1,10 +1,10 @@
 import { all } from "redux-saga/effects";
 
 import {
-  watchloggedInWithGoogle,
-  watchVerified404Token,
+  watchlogInWithGoogle,
+  watchVerify404Token,
 } from "../features/login/loginSagas";
 
 export default function* rootSaga() {
-  yield all([watchloggedInWithGoogle(), watchVerified404Token()]);
+  yield all([watchlogInWithGoogle(), watchVerify404Token()]);
 }

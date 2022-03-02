@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import Login from "../login/Login";
+import { selectIsLoggedIn } from "../login/selectors";
 
 const StyledDiv = styled.div`
   width: 100vw;
@@ -93,12 +95,14 @@ const LogoContainer = styled.div`
 `;
 
 function Landing() {
-  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   const navigate = useNavigate();
 
-  if (isLoggedIn) {
-    navigate("/main");
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/main");
+    }
+  }, [isLoggedIn]);
 
   return (
     <StyledDiv>

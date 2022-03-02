@@ -5,6 +5,7 @@ export const loginSlice = createSlice({
   initialState: {
     isLoggedIn: false,
     username: null,
+    userId: null,
     email: null,
     profilePicture: null,
     error: { isError: false, errorMessage: null },
@@ -15,12 +16,14 @@ export const loginSlice = createSlice({
       state.username = action.payload.username;
       state.email = action.payload.email;
       state.profilePicture = action.payload.profilePicture;
+      state.userId = action.payload._id;
     },
     userLoggedOut: (state) => {
       state.isLoggedIn = false;
       state.username = null;
       state.email = null;
       state.profilePicture = null;
+      state.userId = null;
     },
     userLoginFailed: (state, action) => {
       state.error.isError = true;
