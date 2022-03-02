@@ -5,6 +5,10 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
   }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export default GlobalStyle;

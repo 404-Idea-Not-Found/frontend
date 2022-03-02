@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import { COLOR } from "../../common/util/constants";
 import greenDot from "../../images/greenDot.png";
 import redDot from "../../images/redDot.png";
 
@@ -9,12 +11,16 @@ const MeetingContainer = styled.li`
   display: flex;
   box-sizing: border-box;
   align-items: center;
-  width: 90%;
+  width: calc(100% - 1rem);
   margin-top: 2rem;
   margin-bottom: 2rem;
   margin-left: 1rem;
-  text-overflow: ellipsis;
   cursor: pointer;
+  transition: border 0.4s;
+  border-left: ${(props) =>
+    props.isMeetingSelected ? "7px solid black" : "none"};
+
+  padding: 0.5rem;
 
   .meeting-title {
     font-size: 2rem;
@@ -27,10 +33,13 @@ const MeetingContainer = styled.li`
 
   .text-container {
     width: 100%;
+    transition: all 0.6s;
+    background-color: ${(props) =>
+      props.isMeetingSelected ? COLOR.LIGHT_GREY : "none"};
   }
 
   .meeting-title {
-    width: 340px;
+    width: 330px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -52,9 +61,21 @@ const Meeting = React.forwardRef(function Meeting(
   { meetingListLength, meeting, index },
   ref
 ) {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const isMeetingSelected = pathname.split("/")[3] === meeting._id;
+
+  function handleMeetingClick() {
+    navigate(`meeting/${meeting._id}`);
+  }
+
   if (meetingListLength - 1 === index) {
     return (
-      <MeetingContainer ref={ref}>
+      <MeetingContainer
+        ref={ref}
+        onClick={handleMeetingClick}
+        isMeetingSelected={isMeetingSelected}
+      >
         <div className="text-container">
           <div className="meeting-title">{meeting.title}</div>
           <div className="tag-container">
@@ -72,7 +93,10 @@ const Meeting = React.forwardRef(function Meeting(
   }
 
   return (
-    <MeetingContainer>
+    <MeetingContainer
+      onClick={handleMeetingClick}
+      isMeetingSelected={isMeetingSelected}
+    >
       <div className="text-container">
         <div className="meeting-title">{meeting.title}</div>
         <div className="tag-container">

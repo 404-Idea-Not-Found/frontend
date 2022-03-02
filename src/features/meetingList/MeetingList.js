@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import React, { useCallback, useRef } from "react";
-import { RotatingLines } from "react-loader-spinner";
 import styled from "styled-components";
 
+import ErrorMessage from "../../common/components/ErrorMessage";
+import Loader from "../../common/components/Loader";
 import useMeetingListSearch from "../../common/hooks/useMeetingListSearch";
 import Meeting from "./Meeting";
 
@@ -14,15 +15,6 @@ const MeetingListContainer = styled.ul`
   overflow-y: auto;
   padding: 0;
   margin: 0;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const LoaderContainer = styled.div`
-  display: flex;
-  justify-content: center;
 `;
 
 const MeetingList = React.memo(function MeetingList({
@@ -60,14 +52,8 @@ const MeetingList = React.memo(function MeetingList({
           key={meeting._id}
         />
       ))}
-      {isLoading && (
-        <LoaderContainer>
-          <RotatingLines width="100" strokeColor="black" />
-        </LoaderContainer>
-      )}
-      {error.isError && (
-        <div>{`현재 데이터를 불러올 수 없습니다 \n ${error.errorMessage}`}</div>
-      )}
+      {isLoading && <Loader />}
+      {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}
     </MeetingListContainer>
   );
 });

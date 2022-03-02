@@ -1,15 +1,26 @@
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
+import ErrorMessage from "../../common/components/ErrorMessage";
+import Loader from "../../common/components/Loader";
+import useGetMeeting from "../../common/hooks/useGetMeeting";
+import MeetingDetail from "./MeetingDetail";
+
 const ContentContainer = styled.div`
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: calc(100% - 1rem - 22px);
   box-sizing: border-box;
 `;
 
 function Content() {
+  const { meetingId } = useParams();
+  const { isLoading, error, meeting } = useGetMeeting(meetingId);
+
   return (
     <ContentContainer>
-      참여하고 싶은 미팅을 왼쪽에서 선택해주세요
+      {!isLoading && <MeetingDetail meeting={meeting} />}
+      {isLoading && <Loader spinnerWidth="300px" />}
+      {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}
     </ContentContainer>
   );
 }

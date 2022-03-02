@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
 import fetchMeetingList from "../api/fetchMeetingList";
+import sleep from "../util/sleep";
 
 function useMeetingListSearch(query, lastId) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState({ isError: false, errorMessage: null });
   const [meetingList, setMeetingList] = useState([]);
   const [hasMore, setHasMore] = useState(false);
-  // const [lastId , setLastId] = useState();
 
   useEffect(() => {
     setMeetingList([]);
@@ -15,13 +15,15 @@ function useMeetingListSearch(query, lastId) {
   }, [query]);
 
   useEffect(() => {
-    // const controller = new AbortController();
+    const controller = new AbortController();
     async function apiWrapper() {
       setIsLoading(true);
       setError({ isError: false, errorMessage: null });
 
       try {
         const { data } = await fetchMeetingList(query, lastId);
+
+        await sleep(200);
         setMeetingList((existingMeetingList) => [
           ...existingMeetingList,
           ...data.meetingList,
@@ -40,7 +42,7 @@ function useMeetingListSearch(query, lastId) {
 
     apiWrapper();
 
-    // return () => controller.abort();
+    return () => controller.abort();
   }, [query, lastId]);
   return { isLoading, error, meetingList, hasMore };
 }
