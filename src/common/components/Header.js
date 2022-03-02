@@ -46,7 +46,7 @@ function Header() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   function handleNewMeetingClick() {
-    navigate("/new-meeting");
+    navigate("new-meeting");
   }
 
   function handleMyPageClick() {

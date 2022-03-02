@@ -11,6 +11,7 @@ import Content from "./features/content/Content";
 import Landing from "./features/landing/Landing";
 import { loginSagaActionCreators } from "./features/login/loginSagas";
 import Main from "./features/main/Main";
+import MeetingForm from "./features/meetingForm/MeetingForm";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 store.dispatch(loginSagaActionCreators.verify404Token());
@@ -23,6 +24,7 @@ ReactDOM.render(
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="main" element={<Main />}>
+            <Route path="new-meeting" element={<MeetingForm />} />
             <Route path="meeting/:meetingId" element={<Content />} />
           </Route>
         </Routes>
