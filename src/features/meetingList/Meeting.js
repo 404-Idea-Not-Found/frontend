@@ -48,6 +48,7 @@ const MeetingContainer = styled.li`
   .tag {
     margin-right: 1rem;
     font-size: 1.2rem;
+    white-space: pre;
   }
 
   .dot {
@@ -79,8 +80,12 @@ const Meeting = React.forwardRef(function Meeting(
         <div className="text-container">
           <div className="meeting-title">{meeting.title}</div>
           <div className="tag-container">
-            <div className="tag">#{meeting.tag[0]}</div>
-            <div className="tag">#{meeting.tag[1]}</div>
+            <div className="tag">
+              {meeting.tag[0].length ? "#" + meeting.tag[0] : " "}
+            </div>
+            <div className="tag">
+              {meeting.tag[1].length ? "#" + meeting.tag[1] : " "}
+            </div>
           </div>
         </div>
         <img
@@ -100,8 +105,12 @@ const Meeting = React.forwardRef(function Meeting(
       <div className="text-container">
         <div className="meeting-title">{meeting.title}</div>
         <div className="tag-container">
-          <div className="tag">#{meeting.tag[0]}</div>
-          <div className="tag">#{meeting.tag[1]}</div>
+          <div className="tag">
+            {meeting.tag[0].length ? "#" + meeting.tag[0] : " "}
+          </div>
+          <div className="tag">
+            {meeting.tag[1].length ? "#" + meeting.tag[1] : " "}
+          </div>
         </div>
       </div>
       <img
