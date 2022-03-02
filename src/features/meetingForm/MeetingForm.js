@@ -5,6 +5,7 @@ import styled from "styled-components";
 import createNewMeeting from "../../common/api/createNewMeeting";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
+import getErrorMessage from "../../common/util/getErrorMessage";
 
 const StyledForm = styled.form`
   height: calc(100% - 3rem);
@@ -88,32 +89,6 @@ const InputWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
-
-const ModalContentsContainer = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-
-  h2 {
-    margin: 0;
-  }
-
-  button {
-    font-size: 2rem;
-    font-weight: bold;
-    border: none;
-    background-color: ${COLOR.SALMON};
-    padding: 0.3rem 1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  button:hover {
-    opacity: 0.3;
-  }
 `;
 
 const ErrorMessage = styled.div`
@@ -214,8 +189,9 @@ function MeetingForm() {
   function handleDescriptionInput(event) {
     setEnteredDescription(event.target.value);
     const isMinDescription = event.target.value.length >= 10;
+    const isMaxDescription = event.target.value.length <= 300;
 
-    if (!isMinDescription) {
+    if (!isMinDescription || !isMaxDescription) {
       setDescriptionError("10 ~ 300 글자 이내로 입력 해주세요");
       return;
     }
@@ -238,11 +214,7 @@ function MeetingForm() {
         await createNewMeeting(meetingData);
         setShowSuccessModal(true);
       } catch (error) {
-        let errorMessage = error.message;
-
-        if (error.response) {
-          errorMessage = error.response.data.errorMessage;
-        }
+        const errorMessage = getErrorMessage(error);
 
         setSubmissionError(errorMessage);
       }
@@ -261,21 +233,17 @@ function MeetingForm() {
     <>
       {submissionError && (
         <Modal onModalCloseClick={handleErrorModalCloseClick}>
-          <ModalContentsContainer>
-            <h1>미팅생성에 실패했습니다.</h1>
-            <div>{submissionError}</div>
-          </ModalContentsContainer>
+          <h1>미팅생성에 실패했습니다.</h1>
+          <div>{submissionError}</div>
         </Modal>
       )}
       {showSuccessModal && (
         <Modal onModalCloseClick={handleSuccessModalCloseClick}>
-          <ModalContentsContainer>
-            <h2>미팅생성이 완료되었습니다!</h2>
-            <p>마이페이지에서 약속 시간에 맞추어 미팅에 참여해 주세요!</p>
-            <button type="button" onClick={handleSuccessModalCloseClick}>
-              메인으로
-            </button>
-          </ModalContentsContainer>
+          <h2>미팅생성이 완료되었습니다!</h2>
+          <p>마이페이지에서 약속 시간에 맞추어 미팅에 참여해 주세요!</p>
+          <button type="button" onClick={handleSuccessModalCloseClick}>
+            메인으로
+          </button>
         </Modal>
       )}
       <StyledForm
@@ -361,6 +329,7 @@ function MeetingForm() {
             <textarea
               id="form-meeting-description"
               minLength={10}
+              maxLength={300}
               placeholder="미팅에 대한 설명을 입력하세요"
               onChange={handleDescriptionInput}
               required

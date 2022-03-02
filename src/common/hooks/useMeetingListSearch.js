@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import fetchMeetingList from "../api/fetchMeetingList";
+import getErrorMessage from "../util/getErrorMessage";
 import sleep from "../util/sleep";
 
 function useMeetingListSearch(query, lastId) {
@@ -31,11 +32,8 @@ function useMeetingListSearch(query, lastId) {
         setHasMore(!!data.meetingList.length);
         setIsLoading(false);
       } catch (err) {
-        let errorMessage = err.message;
+        const errorMessage = getErrorMessage(err);
 
-        if (err.response) {
-          errorMessage = err.response.data.errorMessage;
-        }
         setError({ isError: true, errorMessage });
       }
     }
