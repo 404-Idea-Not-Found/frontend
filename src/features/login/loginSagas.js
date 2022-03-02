@@ -5,6 +5,7 @@ import authenticate404Token from "../../common/api/authenticate404Token";
 import authenticateGoogleToken from "../../common/api/authenticateGoogleToken";
 import { TIME } from "../../common/util/constants";
 import getCookie from "../../common/util/getCookie";
+import getErrorMessage from "../../common/util/getErrorMessage";
 import { userLoggedIn, userLoginFailed } from "./loginSlice";
 
 export const loginSagaActionCreators = {
@@ -28,11 +29,7 @@ export function* logInWithGoogle() {
 
     yield put(userLoggedIn(res.data));
   } catch (error) {
-    let errorMessage = error.message;
-
-    if (error.response) {
-      errorMessage = error.response.data.errorMessage;
-    }
+    const errorMessage = getErrorMessage(error);
 
     yield put(userLoginFailed(errorMessage));
   }

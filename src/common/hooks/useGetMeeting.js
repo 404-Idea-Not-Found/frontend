@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import fetchMeeting from "../api/fetchMeeting";
+import getErrorMessage from "../util/getErrorMessage";
 import sleep from "../util/sleep";
 
 function useGetMeeting(meetingId) {
@@ -20,11 +21,8 @@ function useGetMeeting(meetingId) {
         setMeeting(data.meeting);
         setIsLoading(false);
       } catch (err) {
-        let errorMessage = err.message;
+        const errorMessage = getErrorMessage(err);
 
-        if (err.response) {
-          errorMessage = err.response.data.errorMessage;
-        }
         setError({ isError: true, errorMessage });
       }
     }

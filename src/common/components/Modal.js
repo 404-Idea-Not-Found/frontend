@@ -57,6 +57,32 @@ const Backdrop = styled.div`
   cursor: default;
 `;
 
+const ModalContentsContainer = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+  }
+
+  button {
+    font-size: 2rem;
+    font-weight: bold;
+    border: none;
+    background-color: ${COLOR.SALMON};
+    padding: 0.3rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  button:hover {
+    opacity: 0.3;
+  }
+`;
+
 function Modal({ children, onModalCloseClick }) {
   const $rootElement = document.querySelector("#root");
 
@@ -79,7 +105,9 @@ function Modal({ children, onModalCloseClick }) {
             x
           </div>
         </div>
-        <div className="modal-body">{children}</div>
+        <div className="modal-body">
+          <ModalContentsContainer>{children}</ModalContentsContainer>
+        </div>
       </ModalWrapper>
     </>,
     $rootElement

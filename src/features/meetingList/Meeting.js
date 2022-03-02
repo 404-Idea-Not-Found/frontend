@@ -16,11 +16,10 @@ const MeetingContainer = styled.li`
   margin-bottom: 2rem;
   margin-left: 1rem;
   cursor: pointer;
-  transition: border 0.4s;
   border-left: ${(props) =>
     props.isMeetingSelected ? "7px solid black" : "none"};
-
   padding: 0.5rem;
+  transition: all 0.4s;
 
   .meeting-title {
     font-size: 2rem;
@@ -55,6 +54,10 @@ const MeetingContainer = styled.li`
     display: block;
     width: 1.5rem;
     padding: 0.2rem;
+  }
+
+  &:hover {
+    opacity: 0.3;
   }
 `;
 
