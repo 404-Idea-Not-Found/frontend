@@ -6,23 +6,23 @@ import Loader from "../../common/components/Loader";
 import useGetMeeting from "../../common/hooks/useGetMeeting";
 import MeetingDetail from "./MeetingDetail";
 
-const ContentContainer = styled.div`
+const StyledDiv = styled.div`
   width: 100%;
   height: calc(100% - 1rem - 22px);
   box-sizing: border-box;
 `;
 
-function Content() {
+function MeetingDetailContainer() {
   const { meetingId } = useParams();
   const { isLoading, error, meeting } = useGetMeeting(meetingId);
 
   return (
-    <ContentContainer>
+    <StyledDiv>
       {!isLoading && <MeetingDetail meeting={meeting} />}
       {isLoading && <Loader spinnerWidth="300px" />}
       {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}
-    </ContentContainer>
+    </StyledDiv>
   );
 }
 
-export default Content;
+export default MeetingDetailContainer;

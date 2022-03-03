@@ -11,6 +11,7 @@ import { userLoggedIn, userLoginFailed } from "./loginSlice";
 export const loginSagaActionCreators = {
   logInWithGoogle: () => ({
     type: "LOG_IN_WITH_GOOGLE",
+    payload: () => {},
   }),
   verify404Token: () => ({
     type: "VERIFY_404_TOKEN",
@@ -50,7 +51,7 @@ export function* verify404Token() {
   }
 }
 
-export function* watchlogInWithGoogle() {
+export function* watchLogInWithGoogle() {
   yield takeEvery("LOG_IN_WITH_GOOGLE", logInWithGoogle);
 }
 

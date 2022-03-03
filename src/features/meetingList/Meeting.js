@@ -67,10 +67,10 @@ const Meeting = React.forwardRef(function Meeting(
 ) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isMeetingSelected = pathname.split("/")[3] === meeting._id;
+  const isMeetingSelected = pathname.split("/")[4] === meeting._id;
 
   function handleMeetingClick() {
-    navigate(`meeting/${meeting._id}`);
+    navigate(`meeting/detail/${meeting._id}`);
   }
 
   if (meetingListLength - 1 === index) {

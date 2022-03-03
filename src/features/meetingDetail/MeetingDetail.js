@@ -141,6 +141,10 @@ function MeetingDetail({ meeting }) {
     }
   }
 
+  function handleEnterMeetingClick() {
+    navigate(`/main/meeting/live/${meeting._id}`);
+  }
+
   function handleModalCloseClick() {
     setShowModal(false);
     setModalContents(null);
@@ -185,7 +189,11 @@ function MeetingDetail({ meeting }) {
           </button>
         )}
         {meeting.isLive && (
-          <button className="enter-meeting-button" type="button">
+          <button
+            className="enter-meeting-button"
+            type="button"
+            onClick={handleEnterMeetingClick}
+          >
             참여하기
           </button>
         )}
