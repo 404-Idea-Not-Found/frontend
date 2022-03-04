@@ -60,7 +60,7 @@ function Header() {
   }
 
   function handleSignInClick() {
-    dispatch(loginSagaActionCreators.loggedInWithGoogle());
+    dispatch(loginSagaActionCreators.logInWithGoogle());
   }
 
   return (

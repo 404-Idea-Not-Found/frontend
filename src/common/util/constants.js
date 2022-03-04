@@ -7,6 +7,7 @@ export const COLOR = {
   SALMON: "#FA7E7E",
   BRIGHT_GREEN: "#88FA7E",
   GREEN: "#4DB233",
+  LEMON: "#F5FF87",
 };
 
 export const TIME = {

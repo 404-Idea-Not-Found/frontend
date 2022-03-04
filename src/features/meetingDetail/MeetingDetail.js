@@ -10,7 +10,7 @@ import reserveMeeting from "../../common/api/reserveMeeting";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import getErrorMessage from "../../common/util/getErrorMessage";
-import { selectUserId } from "../login/selectors";
+import { selectIsLoggedIn, selectUserEmail } from "../login/selectors";
 
 const MeetingDetailContainer = styled.div`
   height: 100%;
@@ -79,14 +79,15 @@ function MeetingDetail({ meeting }) {
   const [modalContents, setModalContents] = useState(null);
 
   const navigate = useNavigate();
-  const userId = useSelector(selectUserId);
-  const isReserved = meeting.reservation.includes(userId);
+  const userEmail = useSelector(selectUserEmail);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const isReserved = meeting.reservation.includes(userEmail);
   const formattedStartTime = dayjs(meeting.startTime).format(
     "YYYY-MM-DD HH:mm"
   );
 
   async function handleMeetingReserveClick() {
-    if (!userId) {
+    if (!isLoggedIn) {
       setShowModal(true);
       setModalContents(<h2>로그인이 필요합니다!</h2>);
     }
@@ -98,7 +99,7 @@ function MeetingDetail({ meeting }) {
       setModalContents(
         <>
           <h2>미팅 예약에 성공했습니다!</h2>
-          <p>미팅 시작 5분전 알림메일이 발송됩니다.</p>
+          <p>미팅 시작시간이 되면 알림메일이 발송됩니다.</p>
         </>
       );
     } catch (error) {
@@ -116,7 +117,7 @@ function MeetingDetail({ meeting }) {
   }
 
   async function handleReservationCancelClick() {
-    if (!userId) {
+    if (!isLoggedIn) {
       setShowModal(true);
       setModalContents(<h2>로그인이 필요합니다!</h2>);
     }
@@ -138,6 +139,10 @@ function MeetingDetail({ meeting }) {
         </>
       );
     }
+  }
+
+  function handleEnterMeetingClick() {
+    navigate(`/main/meeting/live/${meeting._id}`);
   }
 
   function handleModalCloseClick() {
@@ -184,7 +189,11 @@ function MeetingDetail({ meeting }) {
           </button>
         )}
         {meeting.isLive && (
-          <button className="enter-meeting-button" type="button">
+          <button
+            className="enter-meeting-button"
+            type="button"
+            onClick={handleEnterMeetingClick}
+          >
             참여하기
           </button>
         )}

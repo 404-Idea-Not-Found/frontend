@@ -3,8 +3,6 @@ import { put, takeEvery, call } from "redux-saga/effects";
 
 import authenticate404Token from "../../common/api/authenticate404Token";
 import authenticateGoogleToken from "../../common/api/authenticateGoogleToken";
-import { TIME } from "../../common/util/constants";
-import getCookie from "../../common/util/getCookie";
 import getErrorMessage from "../../common/util/getErrorMessage";
 import { userLoggedIn, userLoginFailed } from "./loginSlice";
 
@@ -25,7 +23,7 @@ export function* logInWithGoogle() {
     const { user } = yield call(signInWithPopup, auth, provider);
     const res = yield authenticateGoogleToken(user.accessToken);
 
-    document.cookie = `fourOFourToken=${res.data.fourOFourToken}; max-age=${TIME.DAY_TO_SECONDS}`;
+    localStorage.setItem("fourOFourToken", res.data.fourOFourToken);
 
     yield put(userLoggedIn(res.data));
   } catch (error) {
@@ -37,9 +35,11 @@ export function* logInWithGoogle() {
 
 export function* verify404Token() {
   try {
-    const cookie = getCookie("fourOFourToken");
-    if (!cookie) return;
-    const res = yield authenticate404Token();
+    const fourOFourToken = localStorage.getItem("fourOFourToken");
+
+    if (!fourOFourToken) return;
+
+    const res = yield authenticate404Token(fourOFourToken);
 
     yield put(userLoggedIn(res.data));
   } catch (error) {
@@ -50,7 +50,7 @@ export function* verify404Token() {
   }
 }
 
-export function* watchlogInWithGoogle() {
+export function* watchLogInWithGoogle() {
   yield takeEvery("LOG_IN_WITH_GOOGLE", logInWithGoogle);
 }
 

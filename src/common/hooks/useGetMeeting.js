@@ -10,6 +10,7 @@ function useGetMeeting(meetingId) {
   const [meeting, setMeeting] = useState();
 
   useEffect(() => {
+    const controller = new AbortController();
     async function apiWrapper() {
       setIsLoading(true);
       setError(false);
@@ -28,6 +29,10 @@ function useGetMeeting(meetingId) {
     }
 
     apiWrapper();
+
+    return () => {
+      controller.abort();
+    };
   }, [meetingId]);
 
   return { isLoading, error, meeting };
