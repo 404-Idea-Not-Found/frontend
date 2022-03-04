@@ -92,7 +92,7 @@ export function* sokcetFlow() {
       yield take("DISCONNECT_SOCKET");
       socket.disconnect();
       yield cancel(task);
-      yield put({ type: "userDisconnectedSocket" });
+      yield put({ type: "meetingDisconnected" });
     } catch (error) {
       put({ type: "socketErrorHappened", payload: error.message });
     }

@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
+import PropTypes from "prop-types";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -31,6 +32,11 @@ const CanvasContainer = styled.div`
     margin: 0.5rem;
     background-color: black;
     cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  button:hover {
+    opacity: 0.3;
   }
 
   .erase-button {
@@ -38,6 +44,7 @@ const CanvasContainer = styled.div`
     display: block;
     background-color: white;
     border: 1px solid black;
+    transition: all 0.3s;
   }
 
   .color-select-red {
@@ -52,7 +59,7 @@ const CanvasContainer = styled.div`
     background-color: yellow;
   }
 `;
-function Whiteboard() {
+function Whiteboard({ isOwner }) {
   const canvasRef = useRef();
   const drawingRef = useRef(false);
   const colorRef = useRef("black");
@@ -224,20 +231,22 @@ function Whiteboard() {
     canvasPositionRef.current.top = top;
     canvasPositionRef.current.left = left;
 
-    canvasRef.current.width = window.innerWidth * 0.3;
-    canvasRef.current.height = window.innerHeight * 0.5;
+    canvasRef.current.width = window.innerWidth * 0.4;
+    canvasRef.current.height = window.innerHeight * 0.2;
   }
 
   return (
     <CanvasContainer>
       <div className="button-container">
-        <button
-          className="erase-button"
-          type="button"
-          onClick={handleClearCanvasEvent}
-        >
-          지우기
-        </button>
+        {isOwner && (
+          <button
+            className="erase-button"
+            type="button"
+            onClick={handleClearCanvasEvent}
+          >
+            지우기
+          </button>
+        )}
         <button
           className="color-select-black"
           type="button"
@@ -269,8 +278,8 @@ function Whiteboard() {
       </div>
       <div>
         <StyledCanvas
-          width={window.innerWidth * 0.3}
-          height={window.innerHeight * 0.5}
+          width={window.innerWidth * 0.4}
+          height={window.innerHeight * 0.2}
           ref={canvasRef}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
@@ -284,5 +293,9 @@ function Whiteboard() {
     </CanvasContainer>
   );
 }
+
+Whiteboard.propTypes = {
+  isOwner: PropTypes.bool.isRequired,
+};
 
 export default Whiteboard;
