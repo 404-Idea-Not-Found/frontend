@@ -2,8 +2,12 @@ import { eventChannel } from "redux-saga";
 import { call, cancel, fork, put, take, takeEvery } from "redux-saga/effects";
 import { io } from "socket.io-client";
 
+import getErrorMessage from "../../common/util/getErrorMessage";
 import {
+  chatSubmitted,
   meetingConnected,
+  meetingDisconnected,
+  meetingErrorHapeened,
   painterAdded,
   painterRemoved,
   whiteboardAllowed,
@@ -70,9 +74,7 @@ function createSokcetChannel(socket) {
     socket.once("initialChatLoaded", (chatList) =>
       emit({ type: "chatListReceived", payload: chatList })
     );
-    socket.on("receiveChat", (chat) =>
-      emit({ type: "chatReceived", payload: chat })
-    );
+    socket.on("chatReceived", (chat) => emit(chatSubmitted(chat)));
     socket.on("paintRequest", ({ username, requestorSocketId }) => {
       emit(painterAdded({ username, requestorSocketId }));
     });
@@ -86,7 +88,8 @@ function createSokcetChannel(socket) {
       emit(whiteboardDisallowed());
     });
     socket.on("DBError", (error) => {
-      emit(new Error(error.errorMessage));
+      const errorMessage = getErrorMessage(error);
+      emit(new Error(errorMessage));
     });
     socket.on("error", emit(new Error("socket error!")));
     socket.on("disconnect", (reason) => {
@@ -106,9 +109,10 @@ function* listenSocketEvent(socket) {
       const action = yield take(socketChannel);
       yield put(action);
     } catch (error) {
+      const errorMessage = getErrorMessage(error);
+
       socketChannel.close();
-      yield put({ type: actionType.DISCONNECT_SOCKET });
-      yield put({ type: "socketErrorHappened", payload: error.message });
+      yield put(meetingErrorHapeened(errorMessage));
     }
   }
 }
@@ -161,9 +165,11 @@ export function* sokcetFlow() {
       yield take(actionType.DISCONNECT_SOCKET);
       socket.disconnect();
       yield cancel(task);
-      yield put({ type: "meetingDisconnected" });
+      yield put(meetingDisconnected());
     } catch (error) {
-      put({ type: "socketErrorHappened", payload: error.message });
+      const errorMessage = getErrorMessage(error);
+      yield put(meetingErrorHapeened(errorMessage));
+      yield put(meetingDisconnected());
     }
   }
 }

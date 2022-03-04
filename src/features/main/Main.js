@@ -17,7 +17,7 @@ const Divider = styled.div`
 `;
 
 const ContentsContainer = styled.div`
-  min-width: 1200px;
+  min-width: 1500px;
   width: 100%;
   height: 100%;
 `;

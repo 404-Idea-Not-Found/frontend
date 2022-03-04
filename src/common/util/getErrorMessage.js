@@ -5,6 +5,10 @@ function getErrorMessage(error) {
     errorMessage = error.response.data.errorMessage;
   }
 
+  if (error.data) {
+    errorMessage = error.data;
+  }
+
   return errorMessage;
 }
 
