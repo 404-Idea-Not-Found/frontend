@@ -1,38 +1,57 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
 
 import ErrorMessage from "../../common/components/ErrorMessage";
 import Loader from "../../common/components/Loader";
-import useCheckOwner from "../../common/hooks/useCheckOwner";
+import useGetMeeting from "../../common/hooks/useGetMeeting";
 import { selectUserId } from "../login/selectors";
 import Whiteboard from "../whiteboard/Whiteboard";
 import ControlPanel from "./ControlPanel";
+import {
+  createConnectSocketAction,
+  createDisconnectSocketAction,
+} from "./liveMeetingSagas";
+
+const LiveMeetingContainer = styled.div`
+  height: calc(100% - 1rem - 21px);
+  display: flex;
+  flex-direction: column;
+`;
 
 function LiveMeeting() {
   const userId = useSelector(selectUserId);
   const dispatch = useDispatch();
   const { meetingId } = useParams();
-  const { isOwner, isCheckingOwner, ownerCheckError } = useCheckOwner(
-    meetingId,
-    userId
-  );
+  const { isLoading, error, meeting } = useGetMeeting(meetingId);
+  const isOwner = meeting?.owner === userId;
 
   useEffect(() => {
-    dispatch({ type: "CONNECT_SOCKET", payload: { room: meetingId } });
+    if (meeting) {
+      dispatch(createConnectSocketAction(meetingId, isOwner, meeting, userId));
+    }
 
-    return () => dispatch({ type: "DISCONNECT_SOCKET" });
-  });
+    return () => {
+      if (meeting) {
+        dispatch(createDisconnectSocketAction());
+      }
+    };
+  }, [meetingId, isOwner, meeting, dispatch, userId]);
 
   return (
-    <div>
+    <LiveMeetingContainer>
       <Whiteboard isOwner={isOwner} />
-      {isCheckingOwner && <Loader spinnerWidth="10%" containerHeight="30%" />}
-      {!isCheckingOwner && <ControlPanel isOwner={isOwner} />}
-      {ownerCheckError.isError && (
-        <ErrorMessage errorMessage={ownerCheckError.errorMessage} />
+      {isLoading && <Loader spinnerWidth="10%" containerHeight="30%" />}
+      {!isLoading && (
+        <ControlPanel
+          isOwner={isOwner}
+          ownerId={meeting.owner}
+          meetingId={meetingId}
+        />
       )}
-    </div>
+      {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}
+    </LiveMeetingContainer>
   );
 }
 

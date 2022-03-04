@@ -2,17 +2,61 @@ import { eventChannel } from "redux-saga";
 import { call, cancel, fork, put, take, takeEvery } from "redux-saga/effects";
 import { io } from "socket.io-client";
 
-async function connectSocket(room) {
-  const socket = io(`${process.env.REACT_APP_SERVER_URL}?room=${room}`);
+import {
+  meetingConnected,
+  painterAdded,
+  painterRemoved,
+  whiteboardAllowed,
+  whiteboardDisallowed,
+} from "./LiveMeetingSlice";
+
+const actionType = {
+  EMIT_SOCKET_EVENT: "EMIT_SOCKET_EVENT",
+  DISCONNECT_SOCKET: "DISCONNECT_SOCKET",
+  ATTACH_SOCKET_EVENT_LISTENER: "ATTACH_SOCKET_EVENT_LISTENER",
+  REMOVE_SOCKET_EVENT_LISTENER: "REMOVE_SOCKET_EVENT_LISTENER",
+  CONNECT_SOCKET: "CONNECT_SOCKET",
+  ALLOW_PAINTER: "ALLOW_PAINTER",
+};
+
+const liveMeetingSagaActionCreators = {
+  createConnectSocketAction: (room, isOwner, meetingData, userId) => ({
+    type: actionType.CONNECT_SOCKET,
+    payload: { room, isOwner, meetingData, userId },
+  }),
+  createEmitSocketEventAction: (socketEventName, socketPayload) => ({
+    type: actionType.EMIT_SOCKET_EVENT,
+    payload: { socketEventName, socketPayload },
+  }),
+  createDisconnectSocketAction: () => ({
+    type: actionType.DISCONNECT_SOCKET,
+  }),
+  createAttachSocketEventListenerAction: (socketEventName, callback) => ({
+    type: actionType.ATTACH_SOCKET_EVENT_LISTENER,
+    payload: { socketEventName, callback },
+  }),
+  createRemoveSocketEventListenerAction: (socketEventName) => ({
+    type: actionType.REMOVE_SOCKET_EVENT_LISTENER,
+    payload: { socketEventName },
+  }),
+  createAllowPainterAction: (socketId) => ({
+    type: actionType.ALLOW_PAINTER,
+    payload: { socketId },
+  }),
+};
+
+async function connectSocket(room, isOwner, userId) {
+  const socket = io(
+    `${process.env.REACT_APP_SERVER_URL}?room=${room}&isOwner=${isOwner}&userId=${userId}`
+  );
   return new Promise((resolve, reject) => {
     socket.on("connect", () => {
       // eslint-disable-next-line no-console
       console.log("socket: ", socket.id, "connected");
       resolve(socket);
     });
-    socket.on("connect_error", () => {
-      reject(new Error("failed to connect socket!"));
-      socket.disconnect();
+    socket.on("connect_error", (error) => {
+      reject(new Error(error.data));
     });
     socket.on("disconnect", () => {
       // eslint-disable-next-line no-console
@@ -29,7 +73,21 @@ function createSokcetChannel(socket) {
     socket.on("receiveChat", (chat) =>
       emit({ type: "chatReceived", payload: chat })
     );
-
+    socket.on("paintRequest", ({ username, requestorSocketId }) => {
+      emit(painterAdded({ username, requestorSocketId }));
+    });
+    socket.on("participantDisconnected", (socketId) => {
+      emit(painterRemoved(socketId));
+    });
+    socket.on("whiteboardAllowed", () => {
+      emit(whiteboardAllowed());
+    });
+    socket.on("whiteboardDisallowed", () => {
+      emit(whiteboardDisallowed());
+    });
+    socket.on("DBError", (error) => {
+      emit(new Error(error.errorMessage));
+    });
     socket.on("error", emit(new Error("socket error!")));
     socket.on("disconnect", (reason) => {
       if (reason !== "io client disconnect") {
@@ -49,8 +107,8 @@ function* listenSocketEvent(socket) {
       yield put(action);
     } catch (error) {
       socketChannel.close();
-      put({ type: "DISCONNECT_SOCKET" });
-      put({ type: "socketErrorHappened", payload: error.message });
+      yield put({ type: actionType.DISCONNECT_SOCKET });
+      yield put({ type: "socketErrorHappened", payload: error.message });
     }
   }
 }
@@ -64,14 +122,14 @@ function* emitSocketEvent(socket) {
 
 function* attachSocketEventListener(socket) {
   while (true) {
-    const { payload } = yield take("ATTACH_SOCKET_EVENT_LISTENER");
+    const { payload } = yield take(actionType.ATTACH_SOCKET_EVENT_LISTENER);
     socket.on(payload.socketEventName, payload.callback);
   }
 }
 
 function* removeSocketEventListener(socket) {
   while (true) {
-    const { payload } = yield take("REMOVE_SOCKET_EVENT_LISTENER");
+    const { payload } = yield take(actionType.REMOVE_SOCKET_EVENT_LISTENER);
     socket.off(payload.socketEventName);
   }
 }
@@ -86,10 +144,21 @@ function* handleIO(socket) {
 export function* sokcetFlow() {
   while (true) {
     try {
-      const { payload } = yield take("CONNECT_SOCKET");
-      const socket = yield call(connectSocket, payload.room);
+      const { payload } = yield take(actionType.CONNECT_SOCKET);
+      const socket = yield call(
+        connectSocket,
+        payload.room,
+        payload.isOwner,
+        payload.userId
+      );
+      yield put(
+        meetingConnected({
+          meetingData: payload.meetingData,
+          isOwner: payload.isOwner,
+        })
+      );
       const task = yield fork(handleIO, socket);
-      yield take("DISCONNECT_SOCKET");
+      yield take(actionType.DISCONNECT_SOCKET);
       socket.disconnect();
       yield cancel(task);
       yield put({ type: "meetingDisconnected" });
@@ -98,7 +167,15 @@ export function* sokcetFlow() {
     }
   }
 }
-
 export function* watchDisconnectSokcet() {
   yield takeEvery("CONN_SOCKET", () => {});
 }
+
+export const {
+  createConnectSocketAction,
+  createEmitSocketEventAction,
+  createDisconnectSocketAction,
+  createAttachSocketEventListenerAction,
+  createRemoveSocketEventListenerAction,
+  createAllowPainterAction,
+} = liveMeetingSagaActionCreators;

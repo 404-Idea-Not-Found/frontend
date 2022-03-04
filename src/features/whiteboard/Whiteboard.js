@@ -1,11 +1,17 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 import PropTypes from "prop-types";
 import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { COLOR } from "../../common/util/constants";
+import {
+  createAttachSocketEventListenerAction,
+  createEmitSocketEventAction,
+  createRemoveSocketEventListenerAction,
+} from "../LiveMeeting/liveMeetingSagas";
+import { selectIsWhiteboardAllowed } from "../LiveMeeting/selector";
 
 const StyledCanvas = styled.canvas`
   margin: 0 auto;
@@ -13,12 +19,15 @@ const StyledCanvas = styled.canvas`
   height: ${window.innerHeight * 0.5};
   display: block;
   background-color: ${COLOR.LIGHT_GREY};
+  pointer-events: ${(props) => (props.isWhiteboardAllowed ? "auto" : "none")};
 `;
 
 const CanvasContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: ${(props) => (props.isWhiteboardAllowed ? "default" : "not-allowed")};
+
   .button-container {
     display: flex;
     align-items: center;
@@ -68,6 +77,7 @@ function Whiteboard({ isOwner }) {
   const xyRef = useRef({});
   const dispatch = useDispatch();
   const { meetingId } = useParams();
+  const isWhiteboardAllowed = useSelector(selectIsWhiteboardAllowed);
 
   useEffect(() => {
     contextRef.current = canvasRef.current.getContext("2d");
@@ -78,26 +88,21 @@ function Whiteboard({ isOwner }) {
       canvasPositionRef.current.top = top;
       canvasPositionRef.current.left = left;
 
-      dispatch({
-        type: "ATTACH_SOCKET_EVENT_LISTENER",
-        payload: {
-          socketEventName: "drawing",
-          callback: onDrawingEvent,
-        },
-      });
-
-      dispatch({
-        type: "ATTACH_SOCKET_EVENT_LISTENER",
-        payload: {
-          socketEventName: "clearCanvas",
-          callback: clearCanvas,
-        },
-      });
-    }, 500);
+      dispatch(
+        createAttachSocketEventListenerAction("drawing", onDrawingEvent)
+      );
+      dispatch(
+        createAttachSocketEventListenerAction("clearCanvas", clearCanvas)
+      );
+    }, 1000);
 
     window.addEventListener("resize", onResize);
 
-    return () => window.removeEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      dispatch(createRemoveSocketEventListenerAction("drawing"));
+      dispatch(createRemoveSocketEventListenerAction("clearCanvas"));
+    };
   }, []);
 
   function onMouseDown(event) {
@@ -182,13 +187,9 @@ function Whiteboard({ isOwner }) {
       color,
     };
 
-    dispatch({
-      type: "EMIT_SOCKET_EVENT",
-      payload: {
-        socketEventName: "drawing",
-        socketPayload: { pathData, room: meetingId },
-      },
-    });
+    dispatch(
+      createEmitSocketEventAction("drawing", { pathData, room: meetingId })
+    );
   }
 
   function onDrawingEvent(pathData) {
@@ -216,13 +217,7 @@ function Whiteboard({ isOwner }) {
 
   function handleClearCanvasEvent() {
     clearCanvas();
-    dispatch({
-      type: "EMIT_SOCKET_EVENT",
-      payload: {
-        socketEventName: "clearCanvas",
-        socketPayload: { room: meetingId },
-      },
-    });
+    dispatch(createEmitSocketEventAction("clearCanvas", { room: meetingId }));
   }
 
   function onResize() {
@@ -230,13 +225,10 @@ function Whiteboard({ isOwner }) {
 
     canvasPositionRef.current.top = top;
     canvasPositionRef.current.left = left;
-
-    canvasRef.current.width = window.innerWidth * 0.4;
-    canvasRef.current.height = window.innerHeight * 0.2;
   }
 
   return (
-    <CanvasContainer>
+    <CanvasContainer isWhiteboardAllowed={isWhiteboardAllowed}>
       <div className="button-container">
         {isOwner && (
           <button
@@ -279,13 +271,13 @@ function Whiteboard({ isOwner }) {
       <div>
         <StyledCanvas
           width={window.innerWidth * 0.4}
-          height={window.innerHeight * 0.2}
+          height={window.innerHeight * 0.7}
           ref={canvasRef}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
           onMouseMove={throttle(onMouseMove, 10)}
           onMouseOut={onMouseUp}
-          // onLoad={test}
+          isWhiteboardAllowed={isWhiteboardAllowed}
         >
           drawings
         </StyledCanvas>

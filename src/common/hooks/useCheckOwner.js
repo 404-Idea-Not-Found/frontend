@@ -5,12 +5,12 @@ import getErrorMessage from "../util/getErrorMessage";
 import sleep from "../util/sleep";
 
 function useCheckOwner(meetingId, userId) {
-  const [isOwner, setIsOwner] = useState(false);
   const [isCheckingOwner, setIsCheckingOwner] = useState(true);
   const [ownerCheckError, setOwnerCheckError] = useState({
     isError: false,
     errorMessage: null,
   });
+  const [meetingData, setMeetingData] = useState(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -25,7 +25,8 @@ function useCheckOwner(meetingId, userId) {
         const { data } = await fetchMeeting(meetingId);
 
         await sleep(200);
-        setIsOwner(data.meeting.owner === userId);
+        setMeetingData(data.meeting);
+        // setIsOwner(data.meeting.owner === userId);
         setIsCheckingOwner(false);
       } catch (error) {
         const errorMessage = getErrorMessage(error);
@@ -43,7 +44,7 @@ function useCheckOwner(meetingId, userId) {
     };
   }, [meetingId, userId]);
 
-  return { isOwner, isCheckingOwner, ownerCheckError };
+  return { isCheckingOwner, ownerCheckError, meetingData };
 }
 
 export default useCheckOwner;

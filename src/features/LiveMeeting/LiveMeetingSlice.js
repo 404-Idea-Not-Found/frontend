@@ -6,23 +6,24 @@ export const liveMeetingSlice = createSlice({
     chatList: [],
     isWhiteBoardAllowed: false,
     isVoiceAllowed: false,
-    painterList: [],
+    painterList: {},
     speakerList: [],
     recruitmentList: [],
     error: { isError: false, errorMessage: null },
   },
   reducers: {
     meetingConnected: (state, action) => {
-      state.chatList = action.payload.chatList;
-      state.isWhiteBoardAllowed = action.payload.isWhiteBoardAllowed;
-      state.isVoiceAllowed = action.payload.isVoiceAllowed;
+      state.chatList = action.payload.meetingData.chatList;
       state.error = { isError: false, errorMessage: null };
+      if (action.payload.isOwner) {
+        state.isWhiteBoardAllowed = true;
+      }
     },
     meetingDisconnected: (state) => {
       state.chatList = [];
       state.isWhiteBoardAllowed = false;
       state.isVoiceAllowed = false;
-      state.painterList = [];
+      state.painterList = {};
       state.speakerList = [];
       state.recruitmentList = [];
       state.error = { isError: false, errorMessage: null };
@@ -31,7 +32,7 @@ export const liveMeetingSlice = createSlice({
       state.chatList = [];
       state.isWhiteBoardAllowed = false;
       state.isVoiceAllowed = false;
-      state.painterList = [];
+      state.painterList = {};
       state.speakerList = [];
       state.recruitmentList = [];
       state.error.isError = true;
@@ -42,12 +43,22 @@ export const liveMeetingSlice = createSlice({
       state.error.errorMessage = null;
     },
     painterAdded: (state, action) => {
-      state.painterList = [...new Set(state.painterList.push(action.payload))];
+      state.painterList[action.payload.requestorSocketId] = {
+        username: action.payload.username,
+        allowed: false,
+      };
+    },
+    painterAllowed: (state, action) => {
+      state.painterList[action.payload].allowed = true;
     },
     painterRemoved: (state, action) => {
-      state.painterList = state.painterList.filter(
-        (painter) => painter !== action.payload
-      );
+      delete state.painterList[action.payload];
+    },
+    whiteboardAllowed: (state) => {
+      state.isWhiteBoardAllowed = true;
+    },
+    whiteboardDisallowed: (state) => {
+      state.isWhiteBoardAllowed = false;
     },
     speakerAdded: (state, action) => {
       state.speakerList = [...new Set(state.speakerList.push(action.payload))];
@@ -73,6 +84,11 @@ export const {
   meetingDisconnected,
   meetingErrorHapeened,
   meetingErrorChecked,
+  painterAdded,
+  painterRemoved,
+  painterAllowed,
+  whiteboardAllowed,
+  whiteboardDisallowed,
 } = liveMeetingSlice.actions;
 
 export default liveMeetingSlice.reducer;
