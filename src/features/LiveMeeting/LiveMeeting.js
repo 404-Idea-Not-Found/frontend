@@ -6,6 +6,7 @@ import styled from "styled-components";
 import ErrorMessage from "../../common/components/ErrorMessage";
 import Loader from "../../common/components/Loader";
 import useGetMeeting from "../../common/hooks/useGetMeeting";
+import Chat from "../chat/Chatroom";
 import { selectUserId } from "../login/selectors";
 import Whiteboard from "../whiteboard/Whiteboard";
 import ControlPanel from "./ControlPanel";
@@ -18,6 +19,14 @@ const LiveMeetingContainer = styled.div`
   height: calc(100% - 1rem - 21px);
   display: flex;
   flex-direction: column;
+  min-width: 1450px;
+
+  .whiteboard-chat-wrapper {
+    width: 100%;
+    min-width: 1450px;
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 function LiveMeeting() {
@@ -41,7 +50,10 @@ function LiveMeeting() {
 
   return (
     <LiveMeetingContainer>
-      <Whiteboard isOwner={isOwner} />
+      <div className="whiteboard-chat-wrapper">
+        <Whiteboard isOwner={isOwner} />
+        <Chat />
+      </div>
       {isLoading && <Loader spinnerWidth="10%" containerHeight="30%" />}
       {!isLoading && (
         <ControlPanel
