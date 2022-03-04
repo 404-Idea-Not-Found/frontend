@@ -6,7 +6,8 @@ import searchbarIcon from "../../images/searchbarIcon.png";
 import MeetingList from "../meetingList/MeetingList";
 
 const SidebarContainer = styled.div`
-  width: 40%;
+  max-width: 410px;
+  min-width: 400px;
   height: 100%;
 
   .down-arrow {

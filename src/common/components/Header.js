@@ -9,8 +9,9 @@ import { COLOR } from "../util/constants";
 
 const HeaderContainer = styled.div`
   display: flex;
-  justify-content: space-evenly;
-  width: 20rem;
+  justify-content: flex-end;
+  min-width: 1300px;
+  width: 100%;
   margin-left: auto;
   margin-top: 1rem;
 `;

@@ -14,11 +14,12 @@ const ControlPanelContainer = styled.div`
   display: flex;
 
   .owner-control {
+    box-sizing: border-box;
     width: 80%;
     font-weight: bold;
     display: flex;
     justify-content: center;
-    margin: 2rem auto;
+    margin: 2rem auto 0 auto;
   }
 
   .participant-control {

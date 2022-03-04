@@ -12,11 +12,12 @@ const MainContainer = styled.div`
 
 const Divider = styled.div`
   height: 100%;
-  width: 0.5rem;
+  min-width: 0.5rem;
   background-color: black;
 `;
 
 const ContentsContainer = styled.div`
+  min-width: 1500px;
   width: 100%;
   height: 100%;
 `;
