@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -10,7 +10,11 @@ import reserveMeeting from "../../common/api/reserveMeeting";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import getErrorMessage from "../../common/util/getErrorMessage";
-import { selectIsLoggedIn, selectUserEmail } from "../login/selectors";
+import {
+  selectIsLoggedIn,
+  selectUserEmail,
+  selectUserId,
+} from "../login/selectors";
 
 const MeetingDetailContainer = styled.div`
   height: 100%;
@@ -40,9 +44,15 @@ const MeetingDetailContainer = styled.div`
     animation: 1s linear 0s infinite alternate glow;
   }
 
+  .meeting-waiting {
+    background-color: ${COLOR.LEMON};
+  }
+
   .reserve-button,
   .reserve-cancel-button,
-  .enter-meeting-button {
+  .enter-meeting-button,
+  .terminated-meeting-button,
+  .wait-meeting-button {
     font-size: 3rem;
     padding: 1rem 1rem 0.7rem 1rem;
     font-weight: bold;
@@ -58,6 +68,14 @@ const MeetingDetailContainer = styled.div`
 
   .enter-meeting-button {
     background-color: ${COLOR.BRIGHT_GREEN};
+  }
+
+  .wait-meeting-button {
+    background-color: ${COLOR.LEMON};
+  }
+
+  .terminated-meeting-button {
+    background-color: grey;
   }
 
   button:hover {
@@ -81,10 +99,20 @@ function MeetingDetail({ meeting }) {
   const navigate = useNavigate();
   const userEmail = useSelector(selectUserEmail);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const userId = useSelector(selectUserId);
   const isReserved = meeting.reservation.includes(userEmail);
+  const isOwner = userId === meeting.owner;
+  const isMeetingWaitingOwner =
+    new Date() - new Date(meeting.startTime) > 0 && !meeting.isLive;
   const formattedStartTime = dayjs(meeting.startTime).format(
     "YYYY-MM-DD HH:mm"
   );
+
+  useEffect(() => {
+    if (isMeetingWaitingOwner && isOwner) {
+      navigate(`/main/meeting/live/${meeting._id}`);
+    }
+  }, []);
 
   async function handleMeetingReserveClick() {
     if (!isLoggedIn) {
@@ -158,7 +186,7 @@ function MeetingDetail({ meeting }) {
       )}
       <MeetingDetailContainer>
         <h1 className="meeting-title">{meeting.title}</h1>
-        {!meeting.isLive && (
+        {!meeting.isLive && !isMeetingWaitingOwner && (
           <h2 className="meeting-time">미팅시작시간: {formattedStartTime}</h2>
         )}
         {meeting.isLive && (
@@ -166,35 +194,72 @@ function MeetingDetail({ meeting }) {
             미팅시작시간: <span className="meeting-started">현재 진행중!</span>
           </h2>
         )}
+        {isMeetingWaitingOwner && (
+          <>
+            <h2 className="meeting-time">
+              미팅시작시간:{" "}
+              <span className="meeting-waiting">{formattedStartTime}</span>
+            </h2>
+            <h2 className="meeting-waiting">
+              <span className="meeting-waiting">
+                주최자가 미팅을 시작하기를 기다리는 중입니다!
+              </span>
+            </h2>
+          </>
+        )}
         <h2 className="number-of-recruitment">
           모집인원: {meeting.recruitmentNumber}
         </h2>
         <p className="meeting-description">{meeting.description}</p>
-        {!isReserved && !meeting.isLive && (
-          <button
-            className="reserve-button"
-            type="button"
-            onClick={handleMeetingReserveClick}
-          >
-            미팅 참여 예약
-          </button>
-        )}
-        {isReserved && !meeting.isLive && (
-          <button
-            className="reserve-cancel-button"
-            type="button"
-            onClick={handleReservationCancelClick}
-          >
-            예약 취소
-          </button>
-        )}
-        {meeting.isLive && (
+        {!isMeetingWaitingOwner &&
+          !isReserved &&
+          !meeting.isLive &&
+          !meeting.isEnd && (
+            <button
+              className="reserve-button"
+              type="button"
+              onClick={handleMeetingReserveClick}
+            >
+              미팅 참여 예약
+            </button>
+          )}
+        {!isMeetingWaitingOwner &&
+          isReserved &&
+          !meeting.isLive &&
+          !meeting.isEnd && (
+            <button
+              className="reserve-cancel-button"
+              type="button"
+              onClick={handleReservationCancelClick}
+            >
+              예약 취소
+            </button>
+          )}
+        {meeting.isLive && !meeting.isEnd && (
           <button
             className="enter-meeting-button"
             type="button"
             onClick={handleEnterMeetingClick}
           >
             참여하기
+          </button>
+        )}
+        {isMeetingWaitingOwner && (
+          <button
+            className="wait-meeting-button"
+            type="button"
+            onClick={handleEnterMeetingClick}
+          >
+            방에서 대기하기
+          </button>
+        )}
+        {meeting.isEnd && (
+          <button
+            className="terminated-meeting-button"
+            type="button"
+            disabled={true}
+          >
+            종료된 미팅 입니다
           </button>
         )}
       </MeetingDetailContainer>
@@ -211,6 +276,8 @@ MeetingDetail.propTypes = {
     description: PropTypes.string,
     reservation: PropTypes.arrayOf(PropTypes.string),
     isLive: PropTypes.bool.isRequired,
+    isEnd: PropTypes.bool.isRequired,
+    owner: PropTypes.string.isRequired,
   }).isRequired,
 };
 

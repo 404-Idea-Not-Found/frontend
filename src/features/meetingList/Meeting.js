@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { COLOR } from "../../common/util/constants";
 import greenDot from "../../images/greenDot.png";
 import redDot from "../../images/redDot.png";
+import yellowDot from "../../images/yellowDot.png";
 
 const MeetingContainer = styled.li`
   display: flex;
@@ -68,6 +69,16 @@ const Meeting = React.forwardRef(function Meeting(
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isMeetingSelected = pathname.split("/")[4] === meeting._id;
+  const isMeetingWaitingOwner = new Date() - new Date(meeting.startTime) > 0;
+  let signalImage = redDot;
+
+  if (isMeetingWaitingOwner) {
+    signalImage = yellowDot;
+  }
+
+  if (meeting.isLive) {
+    signalImage = greenDot;
+  }
 
   function handleMeetingClick() {
     navigate(`meeting/detail/${meeting._id}`);
@@ -116,11 +127,7 @@ const Meeting = React.forwardRef(function Meeting(
           </div>
         </div>
       </div>
-      <img
-        className="dot"
-        src={meeting.isLive ? greenDot : redDot}
-        alt="meeting-not-ready-icon"
-      />
+      <img className="dot" src={signalImage} alt="meeting-ready-icon" />
     </MeetingContainer>
   );
 });
@@ -132,6 +139,7 @@ Meeting.propTypes = {
     title: PropTypes.string,
     tag: PropTypes.arrayOf(PropTypes.string),
     isLive: PropTypes.bool,
+    startTime: PropTypes.string,
   }).isRequired,
   index: PropTypes.number.isRequired,
 };

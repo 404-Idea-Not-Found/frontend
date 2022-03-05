@@ -55,7 +55,7 @@ function Header() {
   }
 
   function handleLogoutClikc() {
-    document.cookie = "fourOFourToken=; max-age=0";
+    localStorage.removeItem("fourOFourToken");
     dispatch({ type: "RESET_APP" });
     navigate("/");
   }

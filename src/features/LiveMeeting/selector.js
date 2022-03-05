@@ -5,3 +5,6 @@ export const selectIsWhiteboardAllowed = (state) =>
 export const selectChatList = (state) => state.liveMeeting.chatList;
 export const selectError = (state) => state.liveMeeting.error;
 export const selectIsLoading = (state) => state.liveMeeting.isLoading;
+export const selectRecruitList = (state) => state.liveMeeting.recruitList;
+export const selectIsRecruit = (state) => state.liveMeeting.isRecruit;
+export const selectIsVoiceAllowed = (state) => state.liveMeeting.isVoiceAllowed;

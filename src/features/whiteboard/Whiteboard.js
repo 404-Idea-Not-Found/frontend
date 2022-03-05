@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { COLOR } from "../../common/util/constants";
+import debounce from "../../common/util/debounce";
+import throttle from "../../common/util/throttle";
 import {
   createAttachSocketEventListenerAction,
   createEmitSocketEventAction,
@@ -96,10 +98,14 @@ function Whiteboard({ isOwner }) {
       );
     }, 1000);
 
-    window.addEventListener("resize", onResize);
+    const debouncedResizeHandler = debounce(onResize, 150);
+
+    window.addEventListener("resize", debouncedResizeHandler);
+    window.addEventListener("scroll", debouncedResizeHandler);
 
     return () => {
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", debouncedResizeHandler);
+      window.removeEventListener("scroll", debouncedResizeHandler);
       dispatch(createRemoveSocketEventListenerAction("drawing"));
       dispatch(createRemoveSocketEventListenerAction("clearCanvas"));
     };
@@ -140,18 +146,6 @@ function Whiteboard({ isOwner }) {
     );
     xyRef.current.x = event[0].clientX || event[0].touches[0].clientX;
     xyRef.current.y = event[0].clientY || event[0].touches[0].clientY;
-  }
-
-  function throttle(callback, delay) {
-    let previousCall = new Date().getTime();
-    return function (...args) {
-      const time = new Date().getTime();
-
-      if (time - previousCall >= delay) {
-        previousCall = time;
-        callback(args);
-      }
-    };
   }
 
   function drawLine(

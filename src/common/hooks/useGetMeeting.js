@@ -1,13 +1,16 @@
+/* eslint-disable no-console */
 import { useEffect, useState } from "react";
 
 import fetchMeeting from "../api/fetchMeeting";
 import getErrorMessage from "../util/getErrorMessage";
 import sleep from "../util/sleep";
 
-function useGetMeeting(meetingId) {
+function useGetMeeting(meetingId, isLiveMeetingLoading) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState({ isError: false, errorMessage: null });
   const [meeting, setMeeting] = useState();
+
+  console.log("use get meeting run!", meetingId, isLiveMeetingLoading);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -21,6 +24,7 @@ function useGetMeeting(meetingId) {
         await sleep(350);
         setMeeting(data.meeting);
         setIsLoading(false);
+        console.log("use get meeting done!");
       } catch (err) {
         const errorMessage = getErrorMessage(err);
 
@@ -31,6 +35,7 @@ function useGetMeeting(meetingId) {
     apiWrapper();
 
     return () => {
+      console.log("abortion!", meetingId, isLiveMeetingLoading);
       controller.abort();
     };
   }, [meetingId]);

@@ -7,14 +7,15 @@ export const liveMeetingSlice = createSlice({
     isLoading: true,
     isWhiteBoardAllowed: false,
     isVoiceAllowed: false,
+    isRecruit: false,
     painterList: {},
-    speakerList: [],
-    recruitmentList: [],
+    speakerList: {},
+    recruitList: {},
     error: { isError: false, errorMessage: null },
   },
   reducers: {
     meetingConnected: (state, action) => {
-      state.chatList = action.payload.meetingData.chatList;
+      // state.chatList = action.payload.chatList;
       state.isLoading = false;
       state.error = { isError: false, errorMessage: null };
       if (action.payload.isOwner) {
@@ -27,8 +28,8 @@ export const liveMeetingSlice = createSlice({
       state.isWhiteBoardAllowed = false;
       state.isVoiceAllowed = false;
       state.painterList = {};
-      state.speakerList = [];
-      state.recruitmentList = [];
+      state.speakerList = {};
+      state.recruitList = {};
       state.error = { isError: false, errorMessage: null };
     },
     meetingErrorHapeened: (state, action) => {
@@ -37,8 +38,8 @@ export const liveMeetingSlice = createSlice({
       state.isWhiteBoardAllowed = false;
       state.isVoiceAllowed = false;
       state.painterList = {};
-      state.speakerList = [];
-      state.recruitmentList = [];
+      state.speakerList = {};
+      state.recruitList = {};
       state.error.isError = true;
       state.error.errorMessage = action.payload;
     },
@@ -76,12 +77,20 @@ export const liveMeetingSlice = createSlice({
       state.chatList.push(action.payload);
     },
     recruitAdded: (state, action) => {
-      state.recruitList = [...new Set(state.recruitList.push(action.payload))];
+      state.recruitList[action.payload.requestorSocketId] = {
+        username: action.payload.username,
+        userId: action.payload.userId,
+        allowed: true,
+      };
     },
     recruitRemoved: (state, action) => {
-      state.recruitList = state.recruitList.filter(
-        (recruit) => recruit !== action.payload
-      );
+      delete state.recruitList[action.payload];
+    },
+    recruitRequestSuccessfullySent: (state) => {
+      state.isRecruit = true;
+    },
+    kickedFromRecruitList: (state) => {
+      state.isRecruit = false;
     },
   },
 });
@@ -97,6 +106,10 @@ export const {
   whiteboardAllowed,
   whiteboardDisallowed,
   chatSubmitted,
+  recruitAdded,
+  recruitRemoved,
+  recruitRequestSuccessfullySent,
+  kickedFromRecruitList,
 } = liveMeetingSlice.actions;
 
 export default liveMeetingSlice.reducer;

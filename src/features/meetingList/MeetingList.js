@@ -1,10 +1,12 @@
-import PropTypes from "prop-types";
 import React, { useCallback, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import ErrorMessage from "../../common/components/ErrorMessage";
 import Loader from "../../common/components/Loader";
 import useMeetingListSearch from "../../common/hooks/useMeetingListSearch";
+import { selectLastId, selectQuery } from "../sidebar/selector";
+import { lastIdChanged } from "../sidebar/SidebarSlice";
 import Meeting from "./Meeting";
 
 const MeetingListContainer = styled.ul`
@@ -15,17 +17,20 @@ const MeetingListContainer = styled.ul`
   overflow-y: auto;
   padding: 0;
   margin: 0;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
-const MeetingList = React.memo(function MeetingList({
-  query,
-  lastId,
-  onBottomScroll,
-}) {
+const MeetingList = React.memo(function MeetingList() {
+  const query = useSelector(selectQuery);
+  const lastId = useSelector(selectLastId);
   const { isLoading, error, meetingList, hasMore } = useMeetingListSearch(
     query,
     lastId
   );
+  const dispatch = useDispatch();
   const observer = useRef();
   const lastMeetingRef = useCallback(
     (meeting) => {
@@ -33,14 +38,15 @@ const MeetingList = React.memo(function MeetingList({
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          onBottomScroll(meetingList[meetingList.length - 1]._id);
+          dispatch(
+            lastIdChanged({ lastId: meetingList[meetingList.length - 1]._id })
+          );
         }
       });
       if (meeting) observer.current.observe(meeting);
     },
     [isLoading, hasMore, meetingList]
   );
-
   return (
     <MeetingListContainer>
       {meetingList.map((meeting, index) => (
@@ -57,16 +63,5 @@ const MeetingList = React.memo(function MeetingList({
     </MeetingListContainer>
   );
 });
-
-MeetingList.propTypes = {
-  query: PropTypes.string,
-  lastId: PropTypes.string,
-  onBottomScroll: PropTypes.func.isRequired,
-};
-
-MeetingList.defaultProps = {
-  query: "",
-  lastId: null,
-};
 
 export default MeetingList;
