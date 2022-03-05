@@ -9,6 +9,7 @@ import {
   meetingConnected,
   meetingDisconnected,
   meetingErrorHapeened,
+  ownerDisconnectedDuringMeeting,
   painterAdded,
   painterRemoved,
   recruitAdded,
@@ -99,6 +100,9 @@ function createSokcetChannel(socket) {
     });
     socket.on("kickedFromRecuitList", () => {
       emit(kickedFromRecruitList());
+    });
+    socket.on("ownerDisconnected", () => {
+      emit(ownerDisconnectedDuringMeeting());
     });
     socket.on("DBError", (error) => {
       const errorMessage = getErrorMessage(error);

@@ -1,12 +1,12 @@
-/* eslint-disable no-console */
 /* eslint-disable consistent-return */
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import ErrorMessage from "../../common/components/ErrorMessage";
 import Loader from "../../common/components/Loader";
+import Modal from "../../common/components/Modal";
 import useGetMeeting from "../../common/hooks/useGetMeeting";
 import { COLOR } from "../../common/util/constants";
 import Chat from "../chat/Chatroom";
@@ -17,7 +17,11 @@ import {
   createConnectSocketAction,
   createDisconnectSocketAction,
 } from "./liveMeetingSagas";
-import { selectError, selectIsLoading } from "./selector";
+import {
+  selectError,
+  selectIsLoading,
+  selectOwnerDisconnectedDuringMeeting,
+} from "./selector";
 
 const LiveMeetingContainer = styled.div`
   height: calc(100% - 1rem - 21px);
@@ -84,11 +88,8 @@ function LiveMeeting() {
   const userId = useSelector(selectUserId);
   const liveMeetingStoreError = useSelector(selectError);
   const isLiveMeetingLoading = useSelector(selectIsLoading);
-  console.log(
-    "initial state",
-    userId,
-    liveMeetingStoreError,
-    isLiveMeetingLoading
+  const ownerDisconnectedDuringMeeting = useSelector(
+    selectOwnerDisconnectedDuringMeeting
   );
   const [didOwnerStartedMeeting, setDidOwnerStartedMeeting] = useState(false);
   const dispatch = useDispatch();
@@ -132,6 +133,17 @@ function LiveMeeting() {
     dispatch,
     userId,
   ]);
+
+  const navigate = useNavigate();
+
+  if (!isOwner && ownerDisconnectedDuringMeeting) {
+    return (
+      <Modal onModalCloseClick={() => navigate("/main")}>
+        <h1>주최자의 연결이 끊겼습니다!</h1>
+        <p>미팅을 종료합니다...</p>
+      </Modal>
+    );
+  }
 
   if (!isLoading && !meeting.isLive && !meeting.isEnd) {
     if (isOwner) {

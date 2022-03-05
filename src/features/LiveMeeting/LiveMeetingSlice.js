@@ -11,6 +11,7 @@ export const liveMeetingSlice = createSlice({
     painterList: {},
     speakerList: {},
     recruitList: {},
+    ownerDisconnectedDuringMeeting: false,
     error: { isError: false, errorMessage: null },
   },
   reducers: {
@@ -30,6 +31,7 @@ export const liveMeetingSlice = createSlice({
       state.painterList = {};
       state.speakerList = {};
       state.recruitList = {};
+      state.ownerDisconnection = false;
       state.error = { isError: false, errorMessage: null };
     },
     meetingErrorHapeened: (state, action) => {
@@ -40,6 +42,7 @@ export const liveMeetingSlice = createSlice({
       state.painterList = {};
       state.speakerList = {};
       state.recruitList = {};
+      state.ownerDisconnection = false;
       state.error.isError = true;
       state.error.errorMessage = action.payload;
     },
@@ -92,6 +95,9 @@ export const liveMeetingSlice = createSlice({
     kickedFromRecruitList: (state) => {
       state.isRecruit = false;
     },
+    ownerDisconnectedDuringMeeting: (state) => {
+      state.ownerDisconnectedDuringMeeting = true;
+    },
   },
 });
 
@@ -110,6 +116,7 @@ export const {
   recruitRemoved,
   recruitRequestSuccessfullySent,
   kickedFromRecruitList,
+  ownerDisconnectedDuringMeeting,
 } = liveMeetingSlice.actions;
 
 export default liveMeetingSlice.reducer;
