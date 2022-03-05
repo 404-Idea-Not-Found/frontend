@@ -11,9 +11,9 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   min-width: 1300px;
+  min-height: calc(2rem + 2px);
   width: 100%;
   margin-left: auto;
-  margin-top: 1rem;
 `;
 
 const HeaderButton = styled.button`
@@ -55,7 +55,7 @@ function Header() {
   }
 
   function handleLogoutClikc() {
-    document.cookie = "fourOFourToken=; max-age=0";
+    localStorage.removeItem("fourOFourToken");
     dispatch({ type: "RESET_APP" });
     navigate("/");
   }

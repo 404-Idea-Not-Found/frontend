@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import refreshIcon from "../../images/refreshIcon.png";
 import searchbarIcon from "../../images/searchbarIcon.png";
 import MeetingList from "../meetingList/MeetingList";
+import { sidebarRefreshed, textSubmitted } from "./SidebarSlice";
 
 const SidebarContainer = styled.div`
   max-width: 410px;
@@ -66,14 +68,12 @@ const Searchbar = styled.form`
 
 function Sidebar() {
   const [enteredText, setEnteredText] = useState("");
-  const [query, setQuery] = useState("");
-  const [lastId, setLastId] = useState(null);
+  const dispatch = useDispatch();
 
   function handleTextSubmit(event) {
     event.preventDefault();
-    setQuery(enteredText);
-    setLastId(null);
     setEnteredText("");
+    dispatch(textSubmitted({ enteredText, lastId: null }));
   }
 
   function handleTextInput(event) {
@@ -81,10 +81,7 @@ function Sidebar() {
   }
 
   function handleRefreshButtonClick() {
-    setLastId(null);
-    setQuery((existingQuery) =>
-      existingQuery === query ? query + " " : existingQuery
-    );
+    dispatch(sidebarRefreshed());
   }
 
   return (
@@ -107,7 +104,7 @@ function Sidebar() {
           <img className="refreshIcon" src={refreshIcon} alt="refresh-icon" />
         </button>
       </SearchbarContainer>
-      <MeetingList query={query} onBottomScroll={setLastId} lastId={lastId} />
+      <MeetingList />
     </SidebarContainer>
   );
 }

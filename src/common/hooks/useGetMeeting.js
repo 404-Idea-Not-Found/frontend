@@ -4,10 +4,10 @@ import fetchMeeting from "../api/fetchMeeting";
 import getErrorMessage from "../util/getErrorMessage";
 import sleep from "../util/sleep";
 
-function useGetMeeting(meetingId) {
+function useGetMeeting(meetingId, isLiveMeetingLoading) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState({ isError: false, errorMessage: null });
-  const [meeting, setMeeting] = useState();
+  const [meeting, setMeeting] = useState({});
 
   useEffect(() => {
     const controller = new AbortController();
@@ -33,7 +33,7 @@ function useGetMeeting(meetingId) {
     return () => {
       controller.abort();
     };
-  }, [meetingId]);
+  }, [meetingId, isLiveMeetingLoading]);
 
   return { isLoading, error, meeting };
 }

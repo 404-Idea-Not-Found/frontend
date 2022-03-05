@@ -4,6 +4,7 @@ import { put, takeEvery, call } from "redux-saga/effects";
 import authenticate404Token from "../../common/api/authenticate404Token";
 import authenticateGoogleToken from "../../common/api/authenticateGoogleToken";
 import getErrorMessage from "../../common/util/getErrorMessage";
+import getLocalFourOFourToken from "../../common/util/getLocalFourOFourToken";
 import { userLoggedIn, userLoginFailed } from "./loginSlice";
 
 export const loginSagaActionCreators = {
@@ -35,7 +36,7 @@ export function* logInWithGoogle() {
 
 export function* verify404Token() {
   try {
-    const fourOFourToken = localStorage.getItem("fourOFourToken");
+    const fourOFourToken = getLocalFourOFourToken();
 
     if (!fourOFourToken) return;
 

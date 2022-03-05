@@ -50,7 +50,7 @@ const Backdrop = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background-color: ${COLOR.GREY};
   z-index: 2;
@@ -83,6 +83,15 @@ const ModalContentsContainer = styled.div`
   }
 `;
 
+const ModalAndBackdropContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  min-width: calc(400px + 0.5rem + 1500px);
+`;
+
 function Modal({ children, onModalCloseClick }) {
   const $rootElement = document.querySelector("#root");
 
@@ -91,7 +100,7 @@ function Modal({ children, onModalCloseClick }) {
   }
 
   return ReactDOM.createPortal(
-    <>
+    <ModalAndBackdropContainer>
       <Backdrop onClick={handleCloseClick} />
       <ModalWrapper>
         <div className="header">
@@ -109,7 +118,7 @@ function Modal({ children, onModalCloseClick }) {
           <ModalContentsContainer>{children}</ModalContentsContainer>
         </div>
       </ModalWrapper>
-    </>,
+    </ModalAndBackdropContainer>,
     $rootElement
   );
 }

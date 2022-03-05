@@ -5,11 +5,15 @@ import { io } from "socket.io-client";
 import getErrorMessage from "../../common/util/getErrorMessage";
 import {
   chatSubmitted,
+  kickedFromRecruitList,
   meetingConnected,
   meetingDisconnected,
   meetingErrorHapeened,
+  ownerDisconnectedDuringMeeting,
   painterAdded,
   painterRemoved,
+  recruitAdded,
+  recruitRequestSuccessfullySent,
   whiteboardAllowed,
   whiteboardDisallowed,
 } from "./LiveMeetingSlice";
@@ -24,9 +28,9 @@ const actionType = {
 };
 
 const liveMeetingSagaActionCreators = {
-  createConnectSocketAction: (room, isOwner, meetingData, userId) => ({
+  createConnectSocketAction: (room, isOwner, chatList, userId) => ({
     type: actionType.CONNECT_SOCKET,
-    payload: { room, isOwner, meetingData, userId },
+    payload: { room, isOwner, chatList, userId },
   }),
   createEmitSocketEventAction: (socketEventName, socketPayload) => ({
     type: actionType.EMIT_SOCKET_EVENT,
@@ -75,8 +79,8 @@ function createSokcetChannel(socket) {
       emit({ type: "chatListReceived", payload: chatList })
     );
     socket.on("chatReceived", (chat) => emit(chatSubmitted(chat)));
-    socket.on("paintRequest", ({ username, requestorSocketId }) => {
-      emit(painterAdded({ username, requestorSocketId }));
+    socket.on("paintRequest", (painter) => {
+      emit(painterAdded(painter));
     });
     socket.on("participantDisconnected", (socketId) => {
       emit(painterRemoved(socketId));
@@ -86,6 +90,19 @@ function createSokcetChannel(socket) {
     });
     socket.on("whiteboardDisallowed", () => {
       emit(whiteboardDisallowed());
+    });
+    socket.on("requestRecruitment", (recruit) => {
+      socket.emit("recruitRequestAccepted", recruit.requestorSocketId);
+      emit(recruitAdded(recruit));
+    });
+    socket.on("recruitRequestAccepted", () => {
+      emit(recruitRequestSuccessfullySent());
+    });
+    socket.on("kickedFromRecuitList", () => {
+      emit(kickedFromRecruitList());
+    });
+    socket.on("ownerDisconnected", () => {
+      emit(ownerDisconnectedDuringMeeting());
     });
     socket.on("DBError", (error) => {
       const errorMessage = getErrorMessage(error);
@@ -157,8 +174,9 @@ export function* sokcetFlow() {
       );
       yield put(
         meetingConnected({
-          meetingData: payload.meetingData,
+          chatList: payload.chatList,
           isOwner: payload.isOwner,
+          userId: payload.userId,
         })
       );
       const task = yield fork(handleIO, socket);

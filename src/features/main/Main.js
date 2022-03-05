@@ -6,7 +6,8 @@ import Sidebar from "../sidebar/Sidebar";
 
 const MainContainer = styled.div`
   display: flex;
-  width: 100vw;
+  min-width: calc(400px + 0.5rem + 1500px);
+  width: 100%;
   height: 100vh;
 `;
 
@@ -17,9 +18,9 @@ const Divider = styled.div`
 `;
 
 const ContentsContainer = styled.div`
+  flex: 1;
+  height: 100vh;
   min-width: 1500px;
-  width: 100%;
-  height: 100%;
 `;
 
 const DefaultContentScreen = styled.div`
