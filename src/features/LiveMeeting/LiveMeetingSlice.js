@@ -31,7 +31,7 @@ export const liveMeetingSlice = createSlice({
       state.painterList = {};
       state.speakerList = {};
       state.recruitList = {};
-      state.ownerDisconnection = false;
+      state.ownerDisconnectedDuringMeeting = false;
       state.error = { isError: false, errorMessage: null };
     },
     meetingErrorHapeened: (state, action) => {
@@ -42,7 +42,7 @@ export const liveMeetingSlice = createSlice({
       state.painterList = {};
       state.speakerList = {};
       state.recruitList = {};
-      state.ownerDisconnection = false;
+      state.ownerDisconnectedDuringMeeting = false;
       state.error.isError = true;
       state.error.errorMessage = action.payload;
     },

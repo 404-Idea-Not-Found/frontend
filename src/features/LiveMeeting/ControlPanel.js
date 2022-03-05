@@ -182,8 +182,9 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
       dispatch(createDisconnectSocketAction());
       dispatch(sidebarRefreshed());
     };
+    const isRecruitExist = !!Object.entries(recruitList).length;
 
-    if (!recruitList.length) {
+    if (!isRecruitExist) {
       setModalContent(
         <>
           <h2>동료 모집에 실패 했습니다 😥</h2>
