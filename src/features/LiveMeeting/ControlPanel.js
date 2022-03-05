@@ -183,25 +183,6 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
       dispatch(sidebarRefreshed());
     };
 
-    // try {
-    //   await terminateMeeting(meetingId);
-    // } catch (error) {
-    //   const errorMessage = getErrorMessage(error);
-    //   setModalContent(
-    //     <>
-    //       <h2>미팅 종료 에러가 발생했습니다...</h2>
-    //       <p>{errorMessage}</p>
-    //       <button type="button" onClick={closeMeetingModalClickHandler}>
-    //         메인으로
-    //       </button>
-    //     </>
-    //   );
-
-    //   setModalCloseHandler(() => () => setShowModal(false));
-    //   setShowModal(true);
-    //   return;
-    // }
-
     if (!recruitList.length) {
       setModalContent(
         <>

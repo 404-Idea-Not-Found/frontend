@@ -27,9 +27,9 @@ const actionType = {
 };
 
 const liveMeetingSagaActionCreators = {
-  createConnectSocketAction: (room, isOwner, meetingData, userId) => ({
+  createConnectSocketAction: (room, isOwner, chatList, userId) => ({
     type: actionType.CONNECT_SOCKET,
-    payload: { room, isOwner, meetingData, userId },
+    payload: { room, isOwner, chatList, userId },
   }),
   createEmitSocketEventAction: (socketEventName, socketPayload) => ({
     type: actionType.EMIT_SOCKET_EVENT,
@@ -170,7 +170,7 @@ export function* sokcetFlow() {
       );
       yield put(
         meetingConnected({
-          // meetingData: payload.meetingData,
+          chatList: payload.chatList,
           isOwner: payload.isOwner,
           userId: payload.userId,
         })

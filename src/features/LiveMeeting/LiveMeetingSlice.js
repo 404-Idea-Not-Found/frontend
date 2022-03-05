@@ -15,7 +15,7 @@ export const liveMeetingSlice = createSlice({
   },
   reducers: {
     meetingConnected: (state, action) => {
-      // state.chatList = action.payload.chatList;
+      state.chatList = action.payload.chatList;
       state.isLoading = false;
       state.error = { isError: false, errorMessage: null };
       if (action.payload.isOwner) {

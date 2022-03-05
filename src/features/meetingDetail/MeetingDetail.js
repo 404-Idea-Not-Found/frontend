@@ -48,6 +48,10 @@ const MeetingDetailContainer = styled.div`
     background-color: ${COLOR.LEMON};
   }
 
+  .meeting-end {
+    background-color: ${COLOR.GREY};
+  }
+
   .reserve-button,
   .reserve-cancel-button,
   .enter-meeting-button,
@@ -109,7 +113,7 @@ function MeetingDetail({ meeting }) {
   );
 
   useEffect(() => {
-    if (isMeetingWaitingOwner && isOwner) {
+    if (isMeetingWaitingOwner && isOwner && !meeting.isEnd) {
       navigate(`/main/meeting/live/${meeting._id}`);
     }
   }, []);
@@ -194,7 +198,7 @@ function MeetingDetail({ meeting }) {
             미팅시작시간: <span className="meeting-started">현재 진행중!</span>
           </h2>
         )}
-        {isMeetingWaitingOwner && (
+        {isMeetingWaitingOwner && !meeting.isEnd && (
           <>
             <h2 className="meeting-time">
               미팅시작시간:{" "}
@@ -206,6 +210,12 @@ function MeetingDetail({ meeting }) {
               </span>
             </h2>
           </>
+        )}
+        {meeting.isEnd && (
+          <h2 className="meeting-time">
+            미팅시작시간:{" "}
+            <span className="meeting-end">{formattedStartTime}</span>
+          </h2>
         )}
         <h2 className="number-of-recruitment">
           모집인원: {meeting.recruitmentNumber}
@@ -244,7 +254,7 @@ function MeetingDetail({ meeting }) {
             참여하기
           </button>
         )}
-        {isMeetingWaitingOwner && (
+        {isMeetingWaitingOwner && !meeting.isEnd && (
           <button
             className="wait-meeting-button"
             type="button"

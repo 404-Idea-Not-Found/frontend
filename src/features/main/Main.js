@@ -19,8 +19,8 @@ const Divider = styled.div`
 
 const ContentsContainer = styled.div`
   flex: 1;
+  height: 100vh;
   min-width: 1500px;
-  height: 100%;
 `;
 
 const DefaultContentScreen = styled.div`

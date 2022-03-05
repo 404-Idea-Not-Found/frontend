@@ -88,6 +88,7 @@ const ModalAndBackdropContainer = styled.div`
   top: 0;
   left: 0;
   height: 100%;
+  width: 100%;
   min-width: calc(400px + 0.5rem + 1500px);
 `;
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable consistent-return */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -90,6 +90,7 @@ function LiveMeeting() {
     liveMeetingStoreError,
     isLiveMeetingLoading
   );
+  const [didOwnerStartedMeeting, setDidOwnerStartedMeeting] = useState(false);
   const dispatch = useDispatch();
   const { meetingId } = useParams();
   const {
@@ -98,50 +99,41 @@ function LiveMeeting() {
     meeting,
   } = useGetMeeting(meetingId, isLiveMeetingLoading);
   const isOwner = meeting?.owner === userId;
-  console.log("=========================================");
 
   useEffect(() => {
-    console.log(
-      "UE start!",
-      userId,
-      isLiveMeetingLoading,
-      liveMeetingStoreError,
-      isOwner,
-      isLoading
-    );
-    if (
-      !isOwner &&
-      !isLoading &&
-      isLiveMeetingLoading &&
-      meeting.isLive &&
-      !meeting.isEnd
-    ) {
-      dispatch(createConnectSocketAction(meetingId, isOwner, userId));
-      console.log(
-        "UE CONECT!",
-        userId,
-        isLiveMeetingLoading,
-        liveMeetingStoreError,
-        isOwner,
-        isLoading
+    if (!isOwner && meeting.isLive && !meeting.isEnd) {
+      dispatch(
+        createConnectSocketAction(meetingId, isOwner, meeting.chatList, userId)
       );
 
       return () => {
-        console.log(
-          "UE DISCONECT!",
-          userId,
-          isLiveMeetingLoading,
-          liveMeetingStoreError,
-          isOwner,
-          isLoading
-        );
-
         dispatch(createDisconnectSocketAction());
       };
     }
-  }, [meetingId, isOwner, isLoading, dispatch, userId]);
+  }, [meetingId, isOwner, meeting.isLive, meeting.isEnd, dispatch, userId]);
 
-  if (!isLoading && !meeting.isLive) {
+  useEffect(() => {
+    if (isOwner && didOwnerStartedMeeting) {
+      dispatch(
+        createConnectSocketAction(meetingId, isOwner, meeting.chatList, userId)
+      );
+      setDidOwnerStartedMeeting(false);
+
+      return () => {
+        dispatch(createDisconnectSocketAction());
+      };
+    }
+  }, [
+    meetingId,
+    isOwner,
+    meeting.isLive,
+    didOwnerStartedMeeting,
+    meeting.isEnd,
+    dispatch,
+    userId,
+  ]);
+
+  if (!isLoading && !meeting.isLive && !meeting.isEnd) {
     if (isOwner) {
       return (
         <AccessDeniedCard>
@@ -151,11 +143,9 @@ function LiveMeeting() {
           <button
             className="meeting-start-button"
             type="button"
-            onClick={() =>
-              dispatch(
-                createConnectSocketAction(meetingId, isOwner, meeting, userId)
-              )
-            }
+            onClick={() => {
+              setDidOwnerStartedMeeting(true);
+            }}
           >
             미팅시작
           </button>
@@ -176,7 +166,11 @@ function LiveMeeting() {
   }
 
   if (!isLoading && meeting.isEnd) {
-    return <AccessDeniedCard>이미 종료된 미팅입니다!</AccessDeniedCard>;
+    return (
+      <AccessDeniedCard>
+        <h1>이미 종료된 미팅입니다!</h1>
+      </AccessDeniedCard>
+    );
   }
 
   return (

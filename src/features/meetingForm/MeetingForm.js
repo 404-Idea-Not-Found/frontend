@@ -8,8 +8,10 @@ import { COLOR } from "../../common/util/constants";
 import getErrorMessage from "../../common/util/getErrorMessage";
 
 const StyledForm = styled.form`
-  height: calc(100% - 3rem);
-  overflow-y: auto;
+  min-height: 400px;
+  width: 70%;
+  max-height: calc(100vh - 2rem - 2px);
+  margin: 3rem 0;
 
   label {
     display: block;
@@ -19,6 +21,9 @@ const StyledForm = styled.form`
   }
 
   button {
+    display: block;
+    width: 20rem;
+    margin: 0 auto;
     padding: 1rem 2rem;
     font-size: 2rem;
     font-weight: bold;
@@ -79,16 +84,18 @@ const StyledForm = styled.form`
 `;
 
 const InputContainer = styled.div`
+  margin: 0 auto;
   margin-bottom: 1rem;
   width: 70%;
 `;
 
-const InputWrapper = styled.div`
-  height: 100%;
+const FormWrapper = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: calc(100vh - 2rem - 2px);
+  width: 100%;
+  overflow-y: auto;
 `;
 
 const ErrorMessage = styled.div`
@@ -230,7 +237,7 @@ function MeetingForm() {
   }
 
   return (
-    <>
+    <FormWrapper>
       {submissionError && (
         <Modal onModalCloseClick={handleErrorModalCloseClick}>
           <h1>미팅생성에 실패했습니다.</h1>
@@ -256,94 +263,90 @@ function MeetingForm() {
         descriptionError={descriptionError}
         isFormValid={isFormValid}
       >
-        <InputWrapper>
-          <InputContainer>
-            <div className="space-taker" />
-            <label htmlFor="form-meeting-title">제목</label>
-            <input
-              id="form-meeting-title"
-              type="text"
-              placeholder="제목을 입력하세요"
-              onChange={handleTitleInput}
-              value={enteredTitle}
-              minLength={2}
-              required
-            />
-            {titleError && <ErrorMessage>{titleError}</ErrorMessage>}
-          </InputContainer>
-          <InputContainer>
-            <label htmlFor="form-meeting-tag-1">태그</label>
-            <input
-              id="form-meeting-tag-1"
-              type="text"
-              placeholder="태그1"
-              onChange={handleTag1Input}
-              value={enteredTag1}
-              maxLength={11}
-            />
-            <input
-              id="form-meeting-tag-2"
-              type="text"
-              placeholder="태그2"
-              onChange={handleTag2Input}
-              value={enteredTag2}
-              maxLength={11}
-            />
-            {tag1Error && <ErrorMessage>{tag1Error}</ErrorMessage>}
-            {tag2Error && <ErrorMessage>{tag2Error}</ErrorMessage>}
-          </InputContainer>
-          <InputContainer>
-            <label htmlFor="form-meeting-start-time">미팅 시작시간</label>
-            <input
-              id="form-meeting-start-time"
-              type="datetime-local"
-              onChange={handleStartTimeInput}
-              value={enteredStartTime}
-              required
-            />
-            {startTimeError && <ErrorMessage>{startTimeError}</ErrorMessage>}
-          </InputContainer>
-          <InputContainer>
-            <label htmlFor="form-meeting-recruitment-number">모집인원</label>
-            <input
-              id="form-meeting-recruitment-number"
-              type="number"
-              step={1}
-              min={0}
-              onChange={handleRecruitmentNumberInput}
-              value={enteredRecruitmentNumber}
-              required
-            />
-            {recruitmentNumberError && (
-              <ErrorMessage>{recruitmentNumberError}</ErrorMessage>
-            )}
-          </InputContainer>
-          <InputContainer>
-            <label
-              htmlFor="form-meeting-description"
-              onChange={handleDescriptionInput}
-              value={enteredDescription}
-            >
-              미팅 상세설명
-            </label>
-            <textarea
-              id="form-meeting-description"
-              minLength={10}
-              maxLength={300}
-              placeholder="미팅에 대한 설명을 입력하세요"
-              onChange={handleDescriptionInput}
-              required
-            />
-            {descriptionError && (
-              <ErrorMessage>{descriptionError}</ErrorMessage>
-            )}
-          </InputContainer>
-          <button type="submit" disabled={!isFormValid}>
-            미팅생성
-          </button>
-        </InputWrapper>
+        <InputContainer>
+          <div className="space-taker" />
+          <label htmlFor="form-meeting-title">제목</label>
+          <input
+            id="form-meeting-title"
+            type="text"
+            placeholder="제목을 입력하세요"
+            onChange={handleTitleInput}
+            value={enteredTitle}
+            minLength={2}
+            required
+          />
+          {titleError && <ErrorMessage>{titleError}</ErrorMessage>}
+        </InputContainer>
+        <InputContainer>
+          <label htmlFor="form-meeting-tag-1">태그</label>
+          <input
+            id="form-meeting-tag-1"
+            type="text"
+            placeholder="태그1"
+            onChange={handleTag1Input}
+            value={enteredTag1}
+            maxLength={11}
+          />
+          <input
+            id="form-meeting-tag-2"
+            type="text"
+            placeholder="태그2"
+            onChange={handleTag2Input}
+            value={enteredTag2}
+            maxLength={11}
+          />
+          {tag1Error && <ErrorMessage>{tag1Error}</ErrorMessage>}
+          {tag2Error && <ErrorMessage>{tag2Error}</ErrorMessage>}
+        </InputContainer>
+        <InputContainer>
+          <label htmlFor="form-meeting-start-time">미팅 시작시간</label>
+          <input
+            id="form-meeting-start-time"
+            type="datetime-local"
+            onChange={handleStartTimeInput}
+            value={enteredStartTime}
+            required
+          />
+          {startTimeError && <ErrorMessage>{startTimeError}</ErrorMessage>}
+        </InputContainer>
+        <InputContainer>
+          <label htmlFor="form-meeting-recruitment-number">모집인원</label>
+          <input
+            id="form-meeting-recruitment-number"
+            type="number"
+            step={1}
+            min={0}
+            onChange={handleRecruitmentNumberInput}
+            value={enteredRecruitmentNumber}
+            required
+          />
+          {recruitmentNumberError && (
+            <ErrorMessage>{recruitmentNumberError}</ErrorMessage>
+          )}
+        </InputContainer>
+        <InputContainer>
+          <label
+            htmlFor="form-meeting-description"
+            onChange={handleDescriptionInput}
+            value={enteredDescription}
+          >
+            미팅 상세설명
+          </label>
+          <textarea
+            id="form-meeting-description"
+            minLength={10}
+            maxLength={300}
+            placeholder="미팅에 대한 설명을 입력하세요"
+            onChange={handleDescriptionInput}
+            required
+          />
+          {descriptionError && <ErrorMessage>{descriptionError}</ErrorMessage>}
+        </InputContainer>
+        <button type="submit" disabled={!isFormValid}>
+          미팅생성
+        </button>
       </StyledForm>
-    </>
+    </FormWrapper>
   );
 }
 

@@ -6,8 +6,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
 
-  body {
-    overflow-y: hidden;
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 
