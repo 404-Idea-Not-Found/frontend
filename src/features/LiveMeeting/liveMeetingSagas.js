@@ -1,5 +1,5 @@
 import { eventChannel } from "redux-saga";
-import { call, cancel, fork, put, take, takeEvery } from "redux-saga/effects";
+import { call, cancel, fork, put, take } from "redux-saga/effects";
 import { io } from "socket.io-client";
 
 import getErrorMessage from "../../common/util/getErrorMessage";
@@ -101,6 +101,9 @@ function createSokcetChannel(socket) {
     socket.on("kickedFromRecuitList", () => {
       emit(kickedFromRecruitList());
     });
+    socket.on("requestOwnerVideo", () => {
+      emit();
+    });
     socket.on("ownerDisconnected", () => {
       emit(ownerDisconnectedDuringMeeting());
     });
@@ -190,9 +193,6 @@ export function* sokcetFlow() {
       yield put(meetingDisconnected());
     }
   }
-}
-export function* watchDisconnectSokcet() {
-  yield takeEvery("CONN_SOCKET", () => {});
 }
 
 export const {

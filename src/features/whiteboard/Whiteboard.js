@@ -14,6 +14,7 @@ import {
   createRemoveSocketEventListenerAction,
 } from "../LiveMeeting/liveMeetingSagas";
 import { selectIsWhiteboardAllowed } from "../LiveMeeting/selector";
+import Video from "../video/Video";
 
 const StyledCanvas = styled.canvas`
   margin: 0 auto;
@@ -263,6 +264,7 @@ function Whiteboard({ isOwner }) {
         />
       </div>
       <div>
+        <Video isOwner={isOwner} />
         <StyledCanvas
           width={window.innerWidth * 0.5 > 990 ? window.innerWidth * 0.5 : 990}
           height={window.innerHeight * 0.7}
@@ -272,9 +274,7 @@ function Whiteboard({ isOwner }) {
           onMouseMove={throttle(onMouseMove, 10)}
           onMouseOut={onMouseUp}
           isWhiteboardAllowed={isWhiteboardAllowed}
-        >
-          drawings
-        </StyledCanvas>
+        />
       </div>
     </CanvasContainer>
   );
