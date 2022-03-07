@@ -41,7 +41,7 @@ const MeetingDetailContainer = styled.div`
   }
 
   .meeting-started {
-    animation: 1s linear 0s infinite alternate glow;
+    animation: 0.7s linear 0s infinite alternate glow;
   }
 
   .meeting-waiting {
@@ -186,7 +186,7 @@ function MeetingDetail({ meeting }) {
   return (
     <>
       {showModal && (
-        <Modal onModalCloseClick={handleModalCloseClick}>{modalContents}</Modal>
+        <Modal onModalClose={handleModalCloseClick}>{modalContents}</Modal>
       )}
       <MeetingDetailContainer>
         <h1 className="meeting-title">{meeting.title}</h1>

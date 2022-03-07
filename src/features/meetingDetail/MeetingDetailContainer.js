@@ -12,6 +12,14 @@ const StyledDiv = styled.div`
   box-sizing: border-box;
 `;
 
+const LoaderContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 function MeetingDetailContainer() {
   const { meetingId } = useParams();
   const { isLoading, error, meeting } = useGetMeeting(meetingId);
@@ -19,7 +27,11 @@ function MeetingDetailContainer() {
   return (
     <StyledDiv>
       {!isLoading && <MeetingDetail meeting={meeting} />}
-      {isLoading && <Loader spinnerWidth="300px" />}
+      {isLoading && (
+        <LoaderContainer>
+          <Loader spinnerWidth="300px" />
+        </LoaderContainer>
+      )}
       {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}
     </StyledDiv>
   );

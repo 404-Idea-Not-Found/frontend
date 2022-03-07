@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import PropTypes, { arrayOf } from "prop-types";
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -20,11 +20,10 @@ import {
 } from "./LiveMeetingSlice";
 import {
   selectIsRecruit,
-  selectIsVoiceAllowed,
   selectIsWhiteboardAllowed,
   selectPainterList,
   selectRecruitList,
-} from "./selector";
+} from "./selectors";
 
 const ControlPanelContainer = styled.div`
   flex: 1;
@@ -48,17 +47,10 @@ const ControlPanelContainer = styled.div`
   }
 
   .paint-request-button {
-    height: 30%;
     background-color: ${COLOR.LEMON};
   }
 
-  .speak-request-button {
-    height: 30%;
-    background-color: ${COLOR.CYAN};
-  }
-
   .recruit-request-button {
-    height: 30%;
     background-color: ${COLOR.BRIGHT_GREEN};
   }
 
@@ -74,6 +66,10 @@ const ControlPanelContainer = styled.div`
     align-self: center;
   }
 
+  .exit-button {
+    background-color: ${COLOR.SALMON};
+  }
+
   .close-meeting-button:hover {
     opacity: 0.3;
   }
@@ -87,17 +83,17 @@ const ControlPanelContainer = styled.div`
   }
 
   .control-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 1.2rem;
     text-align: center;
+    height: 20%;
     width: 100%;
   }
 
   .painter-control-title {
     background-color: ${COLOR.LEMON};
-  }
-
-  .speaker-control-title {
-    background-color: ${COLOR.CYAN};
   }
 
   .recruit-control-title {
@@ -132,8 +128,10 @@ const AllowButton = styled.button`
 `;
 
 const RequestButton = styled.button`
+  display: block;
   margin: 0 0.3rem;
   width: 30%;
+  height: 100%;
   font-weight: bold;
   font-size: 1.2rem;
   border: none;
@@ -163,13 +161,12 @@ const RequestButton = styled.button`
   }
 `;
 
-function ControlPanel({ meetingId, isOwner, speakerList }) {
+function ControlPanel({ meetingId, isOwner }) {
   const dispatch = useDispatch();
   const username = useSelector(selectUsername);
   const painterList = useSelector(selectPainterList);
   const recruitList = useSelector(selectRecruitList);
   const isRecruit = useSelector(selectIsRecruit);
-  const isVoiceAllowed = useSelector(selectIsVoiceAllowed);
   const isWhiteBoardAllowed = useSelector(selectIsWhiteboardAllowed);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
@@ -177,7 +174,7 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
   const navigate = useNavigate();
 
   async function handleCloseMeetingClick() {
-    const closeMeetingModalClickHandler = () => {
+    const modalClickHandler = () => {
       navigate("/main");
       dispatch(createDisconnectSocketAction());
       dispatch(sidebarRefreshed());
@@ -189,7 +186,7 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
         <>
           <h2>동료 모집에 실패 했습니다 😥</h2>
           <p>다음기회를 노려봅시다...</p>
-          <button type="button" onClick={closeMeetingModalClickHandler}>
+          <button type="button" onClick={modalClickHandler}>
             메인으로
           </button>
         </>
@@ -199,14 +196,14 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
         <>
           <h2>동료 모집에 성공 했습니다 🥳</h2>
           <p>마이페이지에서 모집된 동료의 이메일을 확인할 수 있습니다. </p>
-          <button type="button" onClick={closeMeetingModalClickHandler}>
+          <button type="button" onClick={modalClickHandler}>
             메인으로
           </button>
         </>
       );
     }
     setShowModal(true);
-    setModalCloseHandler(() => () => closeMeetingModalClickHandler());
+    setModalCloseHandler(() => () => modalClickHandler());
   }
 
   function handlePaintRequest() {
@@ -244,10 +241,15 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
     dispatch(recruitRemoved(socketId));
   }
 
+  function handleExitClick() {
+    navigate("/main");
+    dispatch(sidebarRefreshed());
+  }
+
   return (
     <ControlPanelContainer>
       {showModal && (
-        <Modal onModalCloseClick={modalCloseHandler}>{modalContent}</Modal>
+        <Modal onModalClose={modalCloseHandler}>{modalContent}</Modal>
       )}
       {isOwner && (
         <div className="owner-control">
@@ -273,16 +275,6 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
                     {painter.allowed ? "그만 그려!" : "허락하기"}
                   </AllowButton>
                 </div>
-              ))}
-            </ul>
-          </div>
-          <div className="speaker-control list-container">
-            <div className="control-title speaker-control-title">
-              말하는 사람
-            </div>
-            <ul>
-              {speakerList.map(() => (
-                <li>test</li>
               ))}
             </ul>
           </div>
@@ -328,9 +320,6 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
           >
             {isWhiteBoardAllowed ? "그리는 중" : "그리고 싶어요"}
           </RequestButton>
-          <RequestButton className="speak-request-button" type="button">
-            {isVoiceAllowed ? "말하는 중" : "말하고 싶어요"}
-          </RequestButton>
           <RequestButton
             className="recruit-request-button"
             type="button"
@@ -338,6 +327,13 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
             onClick={handleRecruitRequestClick}
           >
             {isRecruit ? "동료가 되었어요!" : "동료가 될게요"}
+          </RequestButton>
+          <RequestButton
+            className="exit-button"
+            type="button"
+            onClick={handleExitClick}
+          >
+            나가기
           </RequestButton>
         </div>
       )}
@@ -348,11 +344,6 @@ function ControlPanel({ meetingId, isOwner, speakerList }) {
 ControlPanel.propTypes = {
   meetingId: PropTypes.string.isRequired,
   isOwner: PropTypes.bool.isRequired,
-  speakerList: arrayOf(PropTypes.object),
-};
-
-ControlPanel.defaultProps = {
-  speakerList: [],
 };
 
 export default ControlPanel;

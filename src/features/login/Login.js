@@ -52,7 +52,7 @@ function Login() {
   return (
     <div>
       {loginError.isError && (
-        <Modal onModalCloseClick={handleModalCloseClick}>
+        <Modal onModalClose={handleModalCloseClick}>
           <div>로그인에 실패 했습니다</div>
           <div>{loginError.errorMessage}</div>
         </Modal>

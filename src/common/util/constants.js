@@ -13,3 +13,16 @@ export const COLOR = {
 export const TIME = {
   DAY_TO_SECONDS: 86400,
 };
+
+export const ICE_SERVERS = {
+  iceServers: [
+    {
+      urls: process.env.REACT_APP_STUN_SERVER_URL,
+    },
+    {
+      urls: process.env.REACT_APP_TURN_SERVER_URL,
+      credential: process.env.REACT_APP_TURN_SERVER_CREDENTIAL,
+      username: process.env.REACT_APP_TURN_SERVER_USERNAME,
+    },
+  ],
+};

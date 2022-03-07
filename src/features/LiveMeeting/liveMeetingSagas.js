@@ -1,5 +1,5 @@
 import { eventChannel } from "redux-saga";
-import { call, cancel, fork, put, take, takeEvery } from "redux-saga/effects";
+import { call, cancel, fork, put, take } from "redux-saga/effects";
 import { io } from "socket.io-client";
 
 import getErrorMessage from "../../common/util/getErrorMessage";
@@ -59,16 +59,20 @@ async function connectSocket(room, isOwner, userId) {
   );
   return new Promise((resolve, reject) => {
     socket.on("connect", () => {
-      // eslint-disable-next-line no-console
-      console.log("socket: ", socket.id, "connected");
+      if (process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
+        console.log("socket: ", socket.id, "connected");
+      }
       resolve(socket);
     });
     socket.on("connect_error", (error) => {
       reject(new Error(error.data));
     });
     socket.on("disconnect", () => {
-      // eslint-disable-next-line no-console
-      console.log("socket: ", socket.id, "disconnected!");
+      if (process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
+        console.log("socket: ", socket.id, "disconnected!");
+      }
     });
   });
 }
@@ -100,6 +104,9 @@ function createSokcetChannel(socket) {
     });
     socket.on("kickedFromRecuitList", () => {
       emit(kickedFromRecruitList());
+    });
+    socket.on("requestOwnerVideo", () => {
+      emit();
     });
     socket.on("ownerDisconnected", () => {
       emit(ownerDisconnectedDuringMeeting());
@@ -190,9 +197,6 @@ export function* sokcetFlow() {
       yield put(meetingDisconnected());
     }
   }
-}
-export function* watchDisconnectSokcet() {
-  yield takeEvery("CONN_SOCKET", () => {});
 }
 
 export const {

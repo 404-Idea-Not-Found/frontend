@@ -13,7 +13,8 @@ import {
   createEmitSocketEventAction,
   createRemoveSocketEventListenerAction,
 } from "../LiveMeeting/liveMeetingSagas";
-import { selectIsWhiteboardAllowed } from "../LiveMeeting/selector";
+import { selectIsWhiteboardAllowed } from "../LiveMeeting/selectors";
+import Video from "../video/Video";
 
 const StyledCanvas = styled.canvas`
   margin: 0 auto;
@@ -70,6 +71,7 @@ const CanvasContainer = styled.div`
     background-color: yellow;
   }
 `;
+
 function Whiteboard({ isOwner }) {
   const canvasRef = useRef();
   const drawingRef = useRef(false);
@@ -263,6 +265,7 @@ function Whiteboard({ isOwner }) {
         />
       </div>
       <div>
+        <Video isOwner={isOwner} meetingId={meetingId} />
         <StyledCanvas
           width={window.innerWidth * 0.5 > 990 ? window.innerWidth * 0.5 : 990}
           height={window.innerHeight * 0.7}
@@ -272,9 +275,7 @@ function Whiteboard({ isOwner }) {
           onMouseMove={throttle(onMouseMove, 10)}
           onMouseOut={onMouseUp}
           isWhiteboardAllowed={isWhiteboardAllowed}
-        >
-          drawings
-        </StyledCanvas>
+        />
       </div>
     </CanvasContainer>
   );

@@ -27,7 +27,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["ATTACH_SOCKET_EVENT_LISTENER"],
+        ignoredActions: ["ATTACH_SOCKET_EVENT_LISTENER", "EMIT_SOCKET_EVENT"],
       },
     }).concat(sagaMiddleware),
 });
