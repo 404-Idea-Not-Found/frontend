@@ -1,17 +1,18 @@
-/* eslint-disable no-console */
 /* eslint-disable no-shadow */
 /* eslint-disable consistent-return */
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import Peer from "simple-peer";
+import io from "socket.io-client";
 import styled from "styled-components";
 
-import {
-  createAttachSocketEventListenerAction,
-  createEmitSocketEventAction,
-  createRemoveSocketEventListenerAction,
-} from "../LiveMeeting/liveMeetingSagas";
+import sleep from "../../common/util/sleep";
+// import {
+//   createAttachSocketEventListenerAction,
+//   createEmitSocketEventAction,
+//   createRemoveSocketEventListenerAction,
+// } from "../LiveMeeting/liveMeetingSagas";
 
 const StyledVideo = styled.video`
   position: absolute;
@@ -22,149 +23,117 @@ const StyledVideo = styled.video`
   height: 250px;
 `;
 
-function Video({ isOwner }) {
-  const [stream, setStream] = useState(null);
-  const videoRef = useRef();
-  const dispatch = useDispatch();
-  // const [peer, setPeer] = useState();
+function TestVideo({ isOwner, meetingId }) {
+  const [stream, setStream] = useState();
+  const [isCallincomming, setIsCallincomming] = useState(false);
+  const [callerSignal, setCallerSignal] = useState();
+  const [caller, setCaller] = useState();
+
+  const userVideo = useRef();
+  const socket = useRef();
 
   useEffect(() => {
-    if (isOwner) {
-      let ownerStream;
-      const apiWrapper = async () => {
-        try {
-          ownerStream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: true,
-            frameRate: { max: 30 },
-          });
-          setStream(ownerStream);
-          console.log(ownerStream);
-          if (videoRef.current) videoRef.current.srcObject = ownerStream;
-        } catch (error) {
-          console.dir(error, "error...");
-        }
-      };
+    socket.current = io.connect(
+      process.env.REACT_APP_SERVER_URL +
+        `/video?isOwner=${isOwner}&room=${meetingId}`
+    );
 
-      apiWrapper();
+    socket.current.on("requestVideo", ({ from, signal }) => {
+      setCallerSignal(signal);
+      setCaller(from);
+      setIsCallincomming(true);
+    });
 
-      return () => {
-        ownerStream.getTracks().forEach((track) => track.stop());
-      };
-    }
+    return () => {
+      socket.current.disconnect();
+    };
   }, []);
 
   useEffect(() => {
-    if (isOwner && stream) {
-      let peer;
+    async function apiWrapper() {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
 
-      dispatch(
-        createAttachSocketEventListenerAction(
-          "ownerVideoRequested",
-          ({ requestorSignal, requestorSocketId }) => {
-            console.log(
-              "ownerVideoRequested",
-              requestorSignal,
-              requestorSocketId
-            );
-            console.log(stream, "stream in OVR");
-            peer = new Peer({
-              initiator: false,
-              trickle: false,
-              stream,
-            });
+      setStream(stream);
 
-            peer.on("signal", (signal) => {
-              dispatch(
-                createEmitSocketEventAction("acceptOwnerVideoRequest", {
-                  signal,
-                  requestorSocketId,
-                })
-              );
-            });
+      if (isOwner) {
+        if (userVideo.current) {
+          userVideo.current.srcObject = stream;
+        }
+      }
+    }
 
-            peer.on("stream", (stream) => {
-              console.log(stream, "participant's stream!");
-            });
+    apiWrapper();
+  }, []);
 
-            peer.on("error", (error) => {
-              console.dir(error);
-            });
+  useEffect(() => {
+    if (isCallincomming) {
+      sleep(3000);
+      const peer = new Peer({
+        initiator: false,
+        trickle: false,
+        stream,
+      });
 
-            peer.signal(requestorSignal);
-          }
-        )
-      );
+      peer.on("signal", (signal) => {
+        socket.current.emit("acceptCall", { signal, caller });
+      });
+
+      peer.signal(callerSignal);
 
       return () => {
-        dispatch(
-          createRemoveSocketEventListenerAction("ownerVideoRequestAccepted")
-        );
         peer.destroy();
+        stream.getTracks().forEach((track) => track.stop());
       };
     }
-  }, [stream]);
+  }, [caller, callerSignal, isCallincomming, stream]);
 
-  // request owner's video stream
   useEffect(() => {
-    if (!isOwner) {
+    if (!isOwner && socket.current?.connected && stream) {
       const peer = new Peer({
         initiator: true,
         trickle: false,
         config: {
           iceServers: [
             {
-              urls: "stun:stun.stunprotocol.org",
-            },
-            {
               urls: "turn:numb.viagenie.ca",
-              username: "404IdeaNotFound404@gmail.com",
-              credential: "404turn404",
+              credential: "muazkh",
+              username: "webrtc@live.com",
             },
           ],
         },
+        stream,
       });
 
       peer.on("signal", (signal) => {
-        console.log("test!");
-        dispatch(createEmitSocketEventAction("requestOwnerVideo", signal));
+        socket.current.emit("requestVideo", signal);
       });
 
       peer.on("stream", (stream) => {
-        console.log("stream from owner!", stream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
+        if (userVideo.current) {
+          userVideo.current.srcObject = stream;
         }
       });
 
-      peer.on("error", (error) => {
-        console.dir(error);
+      socket.current.on("callAccepted", (signal) => {
+        peer.signal(signal);
       });
 
-      dispatch(
-        createAttachSocketEventListenerAction(
-          "ownerVideoRequestAccepted",
-          (signal) => {
-            console.log("ownerVideoRequestAccepted", signal);
-            peer.signal(signal);
-          }
-        )
-      );
-
       return () => {
-        dispatch(
-          createRemoveSocketEventListenerAction("ownerVideoRequestAccepted")
-        );
         peer.destroy();
+        stream.getTracks().forEach((track) => track.stop());
       };
     }
-  }, []);
+  }, [isOwner, socket.current?.connected, stream]);
 
-  return <StyledVideo autoPlay playsInline ref={videoRef} />;
+  return <StyledVideo playsInline autoPlay muted ref={userVideo} />;
 }
 
-Video.propTypes = {
+TestVideo.propTypes = {
+  meetingId: PropTypes.string.isRequired,
   isOwner: PropTypes.bool.isRequired,
 };
 
-export default Video;
+export default TestVideo;

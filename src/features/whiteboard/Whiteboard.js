@@ -264,7 +264,7 @@ function Whiteboard({ isOwner }) {
         />
       </div>
       <div>
-        <Video isOwner={isOwner} />
+        <Video isOwner={isOwner} meetingId={meetingId} />
         <StyledCanvas
           width={window.innerWidth * 0.5 > 990 ? window.innerWidth * 0.5 : 990}
           height={window.innerHeight * 0.7}
