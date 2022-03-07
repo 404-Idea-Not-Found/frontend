@@ -13,7 +13,7 @@ import {
   createEmitSocketEventAction,
   createRemoveSocketEventListenerAction,
 } from "../LiveMeeting/liveMeetingSagas";
-import { selectIsWhiteboardAllowed } from "../LiveMeeting/selector";
+import { selectIsWhiteboardAllowed } from "../LiveMeeting/selectors";
 import Video from "../video/Video";
 
 const StyledCanvas = styled.canvas`
@@ -71,6 +71,7 @@ const CanvasContainer = styled.div`
     background-color: yellow;
   }
 `;
+
 function Whiteboard({ isOwner }) {
   const canvasRef = useRef();
   const drawingRef = useRef(false);

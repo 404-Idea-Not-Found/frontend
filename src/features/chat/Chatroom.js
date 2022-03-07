@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { createEmitSocketEventAction } from "../LiveMeeting/liveMeetingSagas";
 import { chatSubmitted } from "../LiveMeeting/LiveMeetingSlice";
-import { selectChatList } from "../LiveMeeting/selector";
+import { selectChatList } from "../LiveMeeting/selectors";
 import { selectUsername } from "../login/selectors";
 
 const ChatroomContainer = styled.div`

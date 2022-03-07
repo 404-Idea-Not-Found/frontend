@@ -59,16 +59,20 @@ async function connectSocket(room, isOwner, userId) {
   );
   return new Promise((resolve, reject) => {
     socket.on("connect", () => {
-      // eslint-disable-next-line no-console
-      console.log("socket: ", socket.id, "connected");
+      if (process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
+        console.log("socket: ", socket.id, "connected");
+      }
       resolve(socket);
     });
     socket.on("connect_error", (error) => {
       reject(new Error(error.data));
     });
     socket.on("disconnect", () => {
-      // eslint-disable-next-line no-console
-      console.log("socket: ", socket.id, "disconnected!");
+      if (process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
+        console.log("socket: ", socket.id, "disconnected!");
+      }
     });
   });
 }

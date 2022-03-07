@@ -6,10 +6,8 @@ export const liveMeetingSlice = createSlice({
     chatList: [],
     isLoading: true,
     isWhiteBoardAllowed: false,
-    isVoiceAllowed: false,
     isRecruit: false,
     painterList: {},
-    speakerList: {},
     recruitList: {},
     ownerDisconnectedDuringMeeting: false,
     error: { isError: false, errorMessage: null },
@@ -27,9 +25,7 @@ export const liveMeetingSlice = createSlice({
       state.chatList = [];
       state.isLoading = true;
       state.isWhiteBoardAllowed = false;
-      state.isVoiceAllowed = false;
       state.painterList = {};
-      state.speakerList = {};
       state.recruitList = {};
       state.ownerDisconnectedDuringMeeting = false;
       state.error = { isError: false, errorMessage: null };
@@ -38,9 +34,7 @@ export const liveMeetingSlice = createSlice({
       state.chatList = [];
       state.isLoading = true;
       state.isWhiteBoardAllowed = false;
-      state.isVoiceAllowed = false;
       state.painterList = {};
-      state.speakerList = {};
       state.recruitList = {};
       state.ownerDisconnectedDuringMeeting = false;
       state.error.isError = true;
@@ -67,14 +61,6 @@ export const liveMeetingSlice = createSlice({
     },
     whiteboardDisallowed: (state) => {
       state.isWhiteBoardAllowed = false;
-    },
-    speakerAdded: (state, action) => {
-      state.speakerList = [...new Set(state.speakerList.push(action.payload))];
-    },
-    speakerRemoved: (state, action) => {
-      state.speakerList = state.speakerList.filter(
-        (speaker) => speaker !== action.payload
-      );
     },
     chatSubmitted: (state, action) => {
       state.chatList.push(action.payload);
@@ -117,6 +103,7 @@ export const {
   recruitRequestSuccessfullySent,
   kickedFromRecruitList,
   ownerDisconnectedDuringMeeting,
+  closedVideo,
 } = liveMeetingSlice.actions;
 
 export default liveMeetingSlice.reducer;

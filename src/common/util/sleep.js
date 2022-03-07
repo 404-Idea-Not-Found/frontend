@@ -1,7 +1,7 @@
 async function sleep(sleepTime) {
-  return new Promise((res) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      res("time!");
+      resolve("sleepEnd");
     }, sleepTime);
   });
 }

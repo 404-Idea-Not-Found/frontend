@@ -239,13 +239,13 @@ function MeetingForm() {
   return (
     <FormWrapper>
       {submissionError && (
-        <Modal onModalCloseClick={handleErrorModalCloseClick}>
+        <Modal onModalClose={handleErrorModalCloseClick}>
           <h1>미팅생성에 실패했습니다.</h1>
           <div>{submissionError}</div>
         </Modal>
       )}
       {showSuccessModal && (
-        <Modal onModalCloseClick={handleSuccessModalCloseClick}>
+        <Modal onModalClose={handleSuccessModalCloseClick}>
           <h2>미팅생성이 완료되었습니다!</h2>
           <p>마이페이지에서 약속 시간에 맞추어 미팅에 참여해 주세요!</p>
           <button type="button" onClick={handleSuccessModalCloseClick}>

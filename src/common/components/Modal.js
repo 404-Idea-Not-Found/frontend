@@ -92,11 +92,11 @@ const ModalAndBackdropContainer = styled.div`
   min-width: calc(400px + 0.5rem + 1500px);
 `;
 
-function Modal({ children, onModalCloseClick }) {
+function Modal({ children, onModalClose }) {
   const $rootElement = document.querySelector("#root");
 
   function handleCloseClick() {
-    onModalCloseClick();
+    onModalClose();
   }
 
   return ReactDOM.createPortal(
@@ -124,7 +124,7 @@ function Modal({ children, onModalCloseClick }) {
 }
 
 Modal.propTypes = {
-  onModalCloseClick: PropTypes.func,
+  onModalClose: PropTypes.func,
 };
 
 export default Modal;

@@ -11,6 +11,7 @@ import useGetMeeting from "../../common/hooks/useGetMeeting";
 import { COLOR } from "../../common/util/constants";
 import Chat from "../chat/Chatroom";
 import { selectUserId } from "../login/selectors";
+import { sidebarRefreshed } from "../sidebar/SidebarSlice";
 import Whiteboard from "../whiteboard/Whiteboard";
 import ControlPanel from "./ControlPanel";
 import {
@@ -21,7 +22,7 @@ import {
   selectError,
   selectIsLoading,
   selectOwnerDisconnectedDuringMeeting,
-} from "./selector";
+} from "./selectors";
 
 const LiveMeetingContainer = styled.div`
   height: calc(100% - 1rem - 21px);
@@ -93,6 +94,7 @@ function LiveMeeting() {
   );
   const [didOwnerStartedMeeting, setDidOwnerStartedMeeting] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { meetingId } = useParams();
   const {
     isLoading,
@@ -134,11 +136,14 @@ function LiveMeeting() {
     userId,
   ]);
 
-  const navigate = useNavigate();
-
   if (!isOwner && ownerDisconnectedDuringMeeting) {
     return (
-      <Modal onModalCloseClick={() => navigate("/main")}>
+      <Modal
+        onModalClose={() => {
+          navigate("/main");
+          dispatch(sidebarRefreshed());
+        }}
+      >
         <h1>주최자의 연결이 끊겼습니다!</h1>
         <p>미팅을 종료합니다...</p>
       </Modal>
