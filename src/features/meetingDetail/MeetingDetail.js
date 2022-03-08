@@ -113,7 +113,7 @@ function MeetingDetail({ meeting }) {
   );
 
   useEffect(() => {
-    if (isMeetingWaitingOwner && isOwner && !meeting.isEnd) {
+    if (isOwner && !meeting.isEnd) {
       navigate(`/main/meeting/live/${meeting._id}`);
     }
   }, []);
@@ -222,6 +222,7 @@ function MeetingDetail({ meeting }) {
         </h2>
         <p className="meeting-description">{meeting.description}</p>
         {!isMeetingWaitingOwner &&
+          !isOwner &&
           !isReserved &&
           !meeting.isLive &&
           !meeting.isEnd && (

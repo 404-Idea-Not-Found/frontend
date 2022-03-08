@@ -1,11 +1,10 @@
-const { default: axios } = require("axios");
+import axios from "axios";
 
 async function authenticate404Token(fourOFourToken) {
   const res = await axios.post(
     "auth/verify-404-token",
     {},
     {
-      withCredentials: true,
       headers: {
         Authorization: `Bearer ${fourOFourToken}`,
       },

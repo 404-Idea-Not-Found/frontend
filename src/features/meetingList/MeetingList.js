@@ -47,6 +47,7 @@ const MeetingList = React.memo(function MeetingList() {
     },
     [isLoading, hasMore, meetingList]
   );
+
   return (
     <MeetingListContainer>
       {meetingList.map((meeting, index) => (

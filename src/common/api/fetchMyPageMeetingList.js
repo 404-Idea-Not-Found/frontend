@@ -2,11 +2,10 @@ import axios from "axios";
 
 import getLocalFourOFourToken from "../util/getLocalFourOFourToken";
 
-async function createNewMeeting(meetingData) {
+async function fetchMyPageMeetingList(userId, email) {
   const fourOFourToken = getLocalFourOFourToken();
-  const res = await axios.post(
-    "meeting/new-meeting",
-    { meetingData },
+  const res = await axios.get(
+    `meeting/my-page?userId=${userId}&&email=${email}`,
     {
       headers: {
         Authorization: `Bearer ${fourOFourToken}`,
@@ -17,4 +16,4 @@ async function createNewMeeting(meetingData) {
   return res;
 }
 
-export default createNewMeeting;
+export default fetchMyPageMeetingList;

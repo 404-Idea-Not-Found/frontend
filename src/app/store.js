@@ -3,6 +3,7 @@ import createSagaMiddleware from "redux-saga";
 
 import liveMeetingReducer from "../features/LiveMeeting/LiveMeetingSlice";
 import loginReducer from "../features/login/loginSlice";
+import myPageReducer from "../features/MyPage/myPageSlice";
 import sidebarReducer from "../features/sidebar/SidebarSlice";
 import rootSaga from "./rootSaga";
 
@@ -12,6 +13,7 @@ const allReducers = combineReducers({
   login: loginReducer,
   liveMeeting: liveMeetingReducer,
   sidebar: sidebarReducer,
+  myPage: myPageReducer,
 });
 
 const rootReducer = (state, action) => {

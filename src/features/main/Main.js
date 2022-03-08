@@ -1,8 +1,11 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import Header from "../../common/components/Header";
 import Sidebar from "../sidebar/Sidebar";
+import { sidebarReset } from "../sidebar/SidebarSlice";
 
 const MainContainer = styled.div`
   display: flex;
@@ -36,6 +39,14 @@ const DefaultContentScreen = styled.div`
 function Main() {
   const { pathname } = useLocation();
   const isMeetingSelected = pathname !== "/main";
+  const dispatch = useDispatch();
+
+  useEffect(
+    () => () => {
+      dispatch(sidebarReset());
+    },
+    []
+  );
 
   return (
     <MainContainer>
