@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -83,6 +84,15 @@ const AccessDeniedCard = styled.div`
   .meeting-start-button:hover {
     opacity: 0.3;
   }
+
+  .existing-start-time {
+    background-color: ${COLOR.BRIGHT_GREEN};
+  }
+
+  .existing-start-time-warning {
+    font-size: 1rem;
+    color: red;
+  }
 `;
 
 function LiveMeeting() {
@@ -102,6 +112,8 @@ function LiveMeeting() {
     meeting,
   } = useGetMeeting(meetingId, isLiveMeetingLoading);
   const isOwner = meeting?.owner === userId;
+  const isMeetingWaitingOwner =
+    new Date() - new Date(meeting.startTime) > 0 && !meeting.isLive;
 
   useEffect(() => {
     if (!isOwner && meeting.isLive && !meeting.isEnd) {
@@ -155,6 +167,19 @@ function LiveMeeting() {
       return (
         <AccessDeniedCard>
           <h1>미팅을 시작해 주세요!</h1>
+          <p className="existing-start-time-paragraph">
+            설정해둔 미팅시작시간:
+            <span className="existing-start-time">
+              {dayjs(meeting.startTime).format("YYYY-MM-DD HH:mm:ss")}
+            </span>
+            <br />
+            {!isMeetingWaitingOwner && (
+              <span className="existing-start-time-warning">
+                (아직 기존에 설정한 미팅시간이 되지 않았습니다. 그래도
+                주최자니까 미리 시작하실수는 있어요!)
+              </span>
+            )}
+          </p>
           <p>미팅을 시작하시겠습니까?</p>
           <p>미팅을 시작해주셔야 다른 참여자가 입장할 수 있습니다.</p>
           <button

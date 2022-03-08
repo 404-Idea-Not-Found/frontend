@@ -29,6 +29,26 @@ const ControlPanelContainer = styled.div`
   flex: 1;
   display: flex;
 
+  button {
+    transition: all 0.3s;
+  }
+
+  button:hover {
+    opacity: 0.3;
+  }
+
+  button:active {
+    opacity: 1;
+  }
+
+  ul {
+    height: 14vh;
+    box-sizing: border-box;
+    padding: 0;
+    width: 100%;
+    overflow: auto;
+  }
+
   .owner-control {
     box-sizing: border-box;
     width: 80%;
@@ -74,6 +94,10 @@ const ControlPanelContainer = styled.div`
     opacity: 0.3;
   }
 
+  .close-meeting-button:active {
+    opacity: 1;
+  }
+
   .list-container {
     display: flex;
     flex-direction: column;
@@ -104,14 +128,6 @@ const ControlPanelContainer = styled.div`
     display: flex;
     justify-content: space-around;
   }
-
-  ul {
-    height: 14vh;
-    box-sizing: border-box;
-    padding: 0;
-    width: 100%;
-    overflow: auto;
-  }
 `;
 
 const AllowButton = styled.button`
@@ -121,10 +137,6 @@ const AllowButton = styled.button`
     props.isAllowed ? "red" : COLOR.BRIGHT_GREEN};
   cursor: pointer;
   transition: all 0.3s;
-
-  &:hover {
-    opacity: 0.3;
-  }
 `;
 
 const RequestButton = styled.button`
@@ -146,10 +158,6 @@ const RequestButton = styled.button`
     props.isWhiteBoardAllowed || props.isRecruit
       ? "4px 4px 5px black"
       : "none"};
-
-  &:hover {
-    opacity: 0.3;
-  }
 
   @keyframes glow {
     0% {

@@ -81,6 +81,10 @@ const ModalContentsContainer = styled.div`
   button:hover {
     opacity: 0.3;
   }
+
+  button: active {
+    opacity: 1;
+  }
 `;
 
 const ModalAndBackdropContainer = styled.div`

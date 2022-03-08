@@ -13,6 +13,7 @@ import { loginSagaActionCreators } from "./features/login/loginSagas";
 import Main from "./features/main/Main";
 import MeetingDetailContainer from "./features/meetingDetail/MeetingDetailContainer";
 import MeetingForm from "./features/meetingForm/MeetingForm";
+import MyPage from "./features/MyPage/MyPage";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 store.dispatch(loginSagaActionCreators.verify404Token());
@@ -32,6 +33,7 @@ ReactDOM.render(
             />
             <Route path="meeting/live/:meetingId" element={<LiveMeeting />} />
           </Route>
+          <Route path="my-page" element={<MyPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>

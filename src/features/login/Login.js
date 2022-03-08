@@ -58,7 +58,7 @@ function Login() {
         </Modal>
       )}
       <LoginButton onClick={handleGoogleLoginClick}>
-        <img src={googleGLogo} alt="googleGLogo" />
+        <img src={googleGLogo} alt="google logo" />
         Sign in with Google
       </LoginButton>
       <LoginButton onClick={handleLookaroundClick}>

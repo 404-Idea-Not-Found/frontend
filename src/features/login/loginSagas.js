@@ -16,7 +16,7 @@ export const loginSagaActionCreators = {
   }),
 };
 
-export function* logInWithGoogle() {
+function* logInWithGoogle() {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
 
@@ -34,15 +34,15 @@ export function* logInWithGoogle() {
   }
 }
 
-export function* verify404Token() {
+function* verify404Token() {
   try {
     const fourOFourToken = getLocalFourOFourToken();
 
     if (!fourOFourToken) return;
 
-    const res = yield authenticate404Token(fourOFourToken);
+    const { data } = yield authenticate404Token(fourOFourToken);
 
-    yield put(userLoggedIn(res.data));
+    yield put(userLoggedIn(data));
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn(

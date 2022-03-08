@@ -18,10 +18,14 @@ export const sidebarSlice = createSlice({
     lastIdChanged: (state, action) => {
       state.lastId = action.payload.lastId;
     },
+    sidebarReset: (state) => {
+      state.query = "";
+      state.lastId = null;
+    },
   },
 });
 
-export const { textSubmitted, sidebarRefreshed, lastIdChanged } =
+export const { textSubmitted, sidebarRefreshed, lastIdChanged, sidebarReset } =
   sidebarSlice.actions;
 
 export default sidebarSlice.reducer;

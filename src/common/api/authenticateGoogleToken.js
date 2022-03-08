@@ -1,15 +1,9 @@
 import axios from "axios";
 
 async function authenticateGoogleToken(accessToken) {
-  const res = await axios.post(
-    "auth/google",
-    {
-      googleUserIdToken: accessToken,
-    },
-    {
-      withCredentials: true,
-    }
-  );
+  const res = await axios.post("auth/google", {
+    googleUserIdToken: accessToken,
+  });
 
   return res;
 }

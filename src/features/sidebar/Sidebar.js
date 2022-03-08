@@ -101,7 +101,7 @@ function Sidebar() {
           type="button"
           onClick={handleRefreshButtonClick}
         >
-          <img className="refreshIcon" src={refreshIcon} alt="refresh-icon" />
+          <img className="refreshIcon" src={refreshIcon} alt="refresh icon" />
         </button>
       </SearchbarContainer>
       <MeetingList />

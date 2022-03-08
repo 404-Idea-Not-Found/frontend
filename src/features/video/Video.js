@@ -10,7 +10,7 @@ import styled from "styled-components";
 
 import Loader from "../../common/components/Loader";
 import Modal from "../../common/components/Modal";
-import { ICE_SERVERS } from "../../common/util/constants";
+import ICE_SERVERS from "../../common/config/webRTC";
 import getErrorMessage from "../../common/util/getErrorMessage";
 import {
   createAttachSocketEventListenerAction,

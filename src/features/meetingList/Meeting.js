@@ -105,7 +105,7 @@ const Meeting = React.forwardRef(function Meeting(
         <img
           className="dot"
           src={meeting.isLive ? greenDot : redDot}
-          alt="meeting-not-ready-icon"
+          alt="meeting not ready icon"
         />
       </MeetingContainer>
     );
