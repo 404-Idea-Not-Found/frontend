@@ -81,15 +81,15 @@ function Header() {
     <HeaderContainer>
       {isLoggedIn && (
         <>
-          <HeaderButton onClick={handleNewMeetingClick}>
-            New Meeting
-          </HeaderButton>
           {pathname.includes("my-page") && (
             <HeaderButton onClick={handleMainClick}>Main</HeaderButton>
           )}
           {!pathname.includes("my-page") && (
             <HeaderButton onClick={handleMyPageClick}>My Page</HeaderButton>
           )}
+          <HeaderButton onClick={handleNewMeetingClick}>
+            New Meeting
+          </HeaderButton>
           <HeaderButton onClick={handleLogoutClikc}>Logout</HeaderButton>
         </>
       )}

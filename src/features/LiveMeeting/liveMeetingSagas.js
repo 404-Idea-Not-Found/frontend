@@ -1,14 +1,18 @@
 import { eventChannel } from "redux-saga";
-import { call, cancel, fork, put, take } from "redux-saga/effects";
+import { call, cancel, fork, put, take, takeEvery } from "redux-saga/effects";
 import { io } from "socket.io-client";
 
+import fetchMeeting from "../../common/api/fetchMeeting";
 import getErrorMessage from "../../common/util/getErrorMessage";
+import sleep from "../../common/util/sleep";
 import {
   chatSubmitted,
+  fetchMeetingRequestSent,
   kickedFromRecruitList,
   meetingConnected,
   meetingDisconnected,
   meetingErrorHapeened,
+  meetingFetched,
   ownerDisconnectedDuringMeeting,
   painterAdded,
   painterRemoved,
@@ -19,6 +23,7 @@ import {
 } from "./LiveMeetingSlice";
 
 const actionType = {
+  GET_MEETING: "GET_MEETING",
   EMIT_SOCKET_EVENT: "EMIT_SOCKET_EVENT",
   DISCONNECT_SOCKET: "DISCONNECT_SOCKET",
   ATTACH_SOCKET_EVENT_LISTENER: "ATTACH_SOCKET_EVENT_LISTENER",
@@ -28,6 +33,10 @@ const actionType = {
 };
 
 const liveMeetingSagaActionCreators = {
+  createGetMeetingAction: (meetingId) => ({
+    type: actionType.GET_MEETING,
+    payload: { meetingId },
+  }),
   createConnectSocketAction: (room, isOwner, chatList, userId) => ({
     type: actionType.CONNECT_SOCKET,
     payload: { room, isOwner, chatList, userId },
@@ -169,6 +178,19 @@ function* handleIO(socket) {
   yield fork(removeSocketEventListener, socket);
 }
 
+function* getMeeting({ payload }) {
+  try {
+    yield put(fetchMeetingRequestSent());
+    const { data } = yield call(fetchMeeting, payload.meetingId);
+    yield sleep(350);
+    yield put(meetingFetched({ meeting: data.meeting }));
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+
+    yield put(meetingErrorHapeened(errorMessage));
+  }
+}
+
 export function* sokcetFlow() {
   while (true) {
     try {
@@ -199,7 +221,12 @@ export function* sokcetFlow() {
   }
 }
 
+export function* watchGetMeeting() {
+  yield takeEvery(actionType.GET_MEETING, getMeeting);
+}
+
 export const {
+  createGetMeetingAction,
   createConnectSocketAction,
   createEmitSocketEventAction,
   createDisconnectSocketAction,

@@ -8,7 +8,6 @@ import styled from "styled-components";
 import ErrorMessage from "../../common/components/ErrorMessage";
 import Loader from "../../common/components/Loader";
 import Modal from "../../common/components/Modal";
-import useGetMeeting from "../../common/hooks/useGetMeeting";
 import { COLOR } from "../../common/util/constants";
 import Chat from "../chat/Chatroom";
 import { selectUserId } from "../login/selectors";
@@ -18,10 +17,13 @@ import ControlPanel from "./ControlPanel";
 import {
   createConnectSocketAction,
   createDisconnectSocketAction,
+  createGetMeetingAction,
 } from "./liveMeetingSagas";
 import {
   selectError,
+  selectIsFetchingMeeting,
   selectIsLoading,
+  selectMeeting,
   selectOwnerDisconnectedDuringMeeting,
 } from "./selectors";
 
@@ -96,23 +98,30 @@ const AccessDeniedCard = styled.div`
 
 function LiveMeeting() {
   const userId = useSelector(selectUserId);
-  const liveMeetingStoreError = useSelector(selectError);
-  const isLiveMeetingLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const isSocketConnected = useSelector(selectIsLoading);
   const ownerDisconnectedDuringMeeting = useSelector(
     selectOwnerDisconnectedDuringMeeting
   );
   const [didOwnerStartedMeeting, setDidOwnerStartedMeeting] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { meetingId } = useParams();
-  const {
-    isLoading,
-    error: apiError,
-    meeting,
-  } = useGetMeeting(meetingId, isLiveMeetingLoading);
+  // const {
+  //   isLoading,
+  //   error: apiError,
+  //   meeting,
+  // } = useGetMeeting(meetingId, isSocketConnected);
+  const meeting = useSelector(selectMeeting);
+  const isFetchingMeeting = useSelector(selectIsFetchingMeeting);
   const isOwner = meeting?.owner === userId;
   const isMeetingWaitingOwner =
     new Date() - new Date(meeting.startTime) > 0 && !meeting.isLive;
+
+  useEffect(() => {
+    dispatch(createGetMeetingAction(meetingId));
+  }, [meetingId, dispatch]);
 
   useEffect(() => {
     if (!isOwner && meeting.isLive && !meeting.isEnd) {
@@ -131,9 +140,9 @@ function LiveMeeting() {
       dispatch(
         createConnectSocketAction(meetingId, isOwner, meeting.chatList, userId)
       );
-      setDidOwnerStartedMeeting(false);
 
       return () => {
+        setDidOwnerStartedMeeting(false);
         dispatch(createDisconnectSocketAction());
       };
     }
@@ -161,39 +170,45 @@ function LiveMeeting() {
     );
   }
 
-  if (!isLoading && !meeting.isLive && !meeting.isEnd) {
-    if (isOwner) {
-      return (
-        <AccessDeniedCard>
-          <h1>미팅을 시작해 주세요!</h1>
-          <p className="existing-start-time-paragraph">
-            설정해둔 미팅시작시간:
-            <span className="existing-start-time">
-              {dayjs(meeting.startTime).format("YYYY-MM-DD HH:mm:ss")}
+  if (
+    !isFetchingMeeting &&
+    !meeting.isLive &&
+    !meeting.isEnd &&
+    isOwner &&
+    !didOwnerStartedMeeting
+  ) {
+    return (
+      <AccessDeniedCard>
+        <h1>미팅을 시작해 주세요!</h1>
+        <p className="existing-start-time-paragraph">
+          설정해둔 미팅시작시간:
+          <span className="existing-start-time">
+            {dayjs(meeting.startTime).format("YYYY-MM-DD HH:mm:ss")}
+          </span>
+          <br />
+          {!isMeetingWaitingOwner && (
+            <span className="existing-start-time-warning">
+              (아직 기존에 설정한 미팅시간이 되지 않았습니다. 그래도 주최자니까
+              미리 시작하실수는 있어요!)
             </span>
-            <br />
-            {!isMeetingWaitingOwner && (
-              <span className="existing-start-time-warning">
-                (아직 기존에 설정한 미팅시간이 되지 않았습니다. 그래도
-                주최자니까 미리 시작하실수는 있어요!)
-              </span>
-            )}
-          </p>
-          <p>미팅을 시작하시겠습니까?</p>
-          <p>미팅을 시작해주셔야 다른 참여자가 입장할 수 있습니다.</p>
-          <button
-            className="meeting-start-button"
-            type="button"
-            onClick={() => {
-              setDidOwnerStartedMeeting(true);
-            }}
-          >
-            미팅시작
-          </button>
-        </AccessDeniedCard>
-      );
-    }
+          )}
+        </p>
+        <p>미팅을 시작하시겠습니까?</p>
+        <p>미팅을 시작해주셔야 다른 참여자가 입장할 수 있습니다.</p>
+        <button
+          className="meeting-start-button"
+          type="button"
+          onClick={() => {
+            setDidOwnerStartedMeeting(true);
+          }}
+        >
+          미팅시작
+        </button>
+      </AccessDeniedCard>
+    );
+  }
 
+  if (!isFetchingMeeting && !meeting.isLive && !meeting.isEnd && !isOwner) {
     return (
       <AccessDeniedCard>
         <h1>Please Wait...</h1>
@@ -206,7 +221,7 @@ function LiveMeeting() {
     );
   }
 
-  if (!isLoading && meeting.isEnd) {
+  if (!isFetchingMeeting && meeting.isEnd) {
     return (
       <AccessDeniedCard>
         <h1>이미 종료된 미팅입니다!</h1>
@@ -216,32 +231,23 @@ function LiveMeeting() {
 
   return (
     <LiveMeetingContainer>
-      {!isLiveMeetingLoading &&
-        !liveMeetingStoreError.isError &&
-        !apiError.isError && (
-          <div className="whiteboard-chat-wrapper">
-            <Whiteboard isOwner={isOwner} />
-            <Chat />
-          </div>
-        )}
-      {(isLiveMeetingLoading || isLoading || liveMeetingStoreError.isError) && (
+      {(didOwnerStartedMeeting || meeting.isLive) && (
+        <div className="whiteboard-chat-wrapper">
+          <Whiteboard isOwner={isOwner} />
+          <Chat />
+        </div>
+      )}
+      {(isSocketConnected || isFetchingMeeting || error.isError) && (
         <Loader spinnerWidth="10%" containerHeight="30%" />
       )}
-      {!isLiveMeetingLoading &&
-        !isLoading &&
-        !liveMeetingStoreError.isError && (
-          <ControlPanel
-            isOwner={isOwner}
-            ownerId={meeting.owner}
-            meetingId={meetingId}
-          />
-        )}
-      {apiError.isError && (
-        <ErrorMessage errorMessage={apiError.errorMessage} />
+      {!isSocketConnected && !isFetchingMeeting && !error.isError && (
+        <ControlPanel
+          isOwner={isOwner}
+          ownerId={meeting.owner}
+          meetingId={meetingId}
+        />
       )}
-      {liveMeetingStoreError.isError && (
-        <ErrorMessage errorMessage={liveMeetingStoreError.errorMessage} />
-      )}
+      {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}
     </LiveMeetingContainer>
   );
 }

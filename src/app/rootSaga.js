@@ -1,6 +1,9 @@
 import { all } from "redux-saga/effects";
 
-import { sokcetFlow } from "../features/LiveMeeting/liveMeetingSagas";
+import {
+  sokcetFlow,
+  watchGetMeeting,
+} from "../features/LiveMeeting/liveMeetingSagas";
 import {
   watchLogInWithGoogle,
   watchVerify404Token,
@@ -18,6 +21,7 @@ export default function* rootSaga() {
     watchVerify404Token(),
     sokcetFlow(),
     webRtcFlow(),
+    watchGetMeeting(),
     watchGetMyPageMeeting(),
     watchCancelMeeting(),
     watchCancelReservation(),
