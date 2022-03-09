@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import { eventChannel } from "redux-saga";
-import { call, fork, put, take } from "redux-saga/effects";
+import { call, cancel, fork, put, take } from "redux-saga/effects";
 import Peer from "simple-peer";
 
 import ICE_SERVERS from "../../common/config/webRTC";
@@ -9,38 +9,26 @@ import {
   createAttachSocketEventListenerAction,
   createEmitSocketEventAction,
 } from "../LiveMeeting/liveMeetingSagas";
-import { videoErrorHappened, videoLoaded } from "./videoSlice";
+import { videoErrorHappened, videoLoaded, videoReset } from "./videoSlice";
 
 const actionType = {
   GET_USER_MEDIA: "GET_USER_MEDIA",
-  DISCONNECT_SOCKET: "DISCONNECT_SOCKET",
   RTC_SIGNAL_RECEIVED: "RTC_SIGNAL_RECEIVED",
   RTC_CALL_END: "RTC_CALL_END",
 };
 
 const videoSagaActionCreators = {
-  createConnectSocketAction: (room, isOwner, chatList, userId) => ({
-    type: actionType.CONNECT_SOCKET,
-    payload: { room, isOwner, chatList, userId },
+  createGetUserMediaAction: (isOwner, userVideoRef, dispatch) => ({
+    type: actionType.GET_USER_MEDIA,
+    payload: { isOwner, userVideoRef, dispatch },
   }),
-  createEmitSocketEventAction: (socketEventName, socketPayload) => ({
-    type: actionType.EMIT_SOCKET_EVENT,
-    payload: { socketEventName, socketPayload },
+  createRtcSignalReceivedAction: (from, callerSignal) => ({
+    type: actionType.RTC_SIGNAL_RECEIVED,
+    payload: { caller: from, callerSignal },
   }),
-  createDisconnectSocketAction: () => ({
-    type: actionType.DISCONNECT_SOCKET,
-  }),
-  createAttachSocketEventListenerAction: (socketEventName, callback) => ({
-    type: actionType.ATTACH_SOCKET_EVENT_LISTENER,
-    payload: { socketEventName, callback },
-  }),
-  createRemoveSocketEventListenerAction: (socketEventName) => ({
-    type: actionType.REMOVE_SOCKET_EVENT_LISTENER,
-    payload: { socketEventName },
-  }),
-  createAllowPainterAction: (socketId) => ({
-    type: actionType.ALLOW_PAINTER,
-    payload: { socketId },
+  createRtcCallEndAction: () => ({
+    type: actionType.RTC_CALL_END,
+    payload: { terminate: true },
   }),
 };
 
@@ -67,10 +55,17 @@ function createOwnerPeerChannel(stream, callerSignal, caller, peerList) {
     });
 
     peer.signal(callerSignal);
+
+    return () => peer.destroy();
   });
 }
 
-function createParticipantPeerChannel(stream, userVideoRef, peerList) {
+function createParticipantPeerChannel(
+  stream,
+  userVideoRef,
+  peerList,
+  dispatch
+) {
   const peer = new Peer({
     initiator: true,
     trickle: false,
@@ -78,7 +73,7 @@ function createParticipantPeerChannel(stream, userVideoRef, peerList) {
     stream,
   });
 
-  put(
+  dispatch(
     createAttachSocketEventListenerAction("callAccepted", (signal) => {
       peer.signal(signal);
     })
@@ -102,6 +97,8 @@ function createParticipantPeerChannel(stream, userVideoRef, peerList) {
       const errorMessage = getErrorMessage(error);
       emit(new Error(errorMessage));
     });
+
+    return () => peer.destroy();
   });
 }
 
@@ -115,22 +112,31 @@ function* handleOwnerPeer(stream, callerSignal, caller, peerList) {
   );
 
   while (true) {
-    const action = yield take(peerChannel);
-    yield put(action);
+    try {
+      const action = yield take(peerChannel);
+      yield put(action);
+    } catch {
+      peerChannel.close();
+    }
   }
 }
 
-function* handleParticipantPeer(stream, userVideoRef, peerList) {
+function* handleParticipantPeer(stream, userVideoRef, peerList, dispatch) {
   const peerChannel = yield call(
     createParticipantPeerChannel,
     stream,
     userVideoRef,
-    peerList
+    peerList,
+    dispatch
   );
 
-  while (true) {
-    const action = yield take(peerChannel);
-    yield put(action);
+  try {
+    while (true) {
+      const action = yield take(peerChannel);
+      yield put(action);
+    }
+  } catch {
+    peerChannel.close();
   }
 }
 
@@ -138,6 +144,7 @@ export function* webRtcFlow() {
   while (true) {
     let stream;
     const peerList = [];
+    const taskList = [];
 
     try {
       const { payload } = yield take(actionType.GET_USER_MEDIA);
@@ -147,19 +154,27 @@ export function* webRtcFlow() {
       });
 
       if (payload.isOwner) {
-        payload.userVideoRef.current = stream;
+        payload.userVideoRef.current.srcObject = stream;
         yield put(videoLoaded());
 
         while (true) {
-          const { payload } = yield take(actionType.RTC_SIGNAL_RECEIVED);
+          const { payload } = yield take([
+            actionType.RTC_SIGNAL_RECEIVED,
+            actionType.RTC_CALL_END,
+          ]);
+
+          if (payload.terminate) break;
+
           // eslint-disable-next-line no-unused-vars
           const ownerTask = yield fork(
             handleOwnerPeer,
             stream,
-            payload.signal,
+            payload.callerSignal,
             payload.caller,
             peerList
           );
+
+          taskList.push(ownerTask);
         }
       }
 
@@ -169,19 +184,34 @@ export function* webRtcFlow() {
           handleParticipantPeer,
           stream,
           payload.userVideoRef,
-          peerList
+          peerList,
+          payload.dispatch
         );
-      }
 
-      yield take();
+        taskList.push(participantTask);
+
+        yield take(actionType.RTC_CALL_END);
+      }
     } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      yield put(videoErrorHappened(errorMessage));
+    } finally {
+      cancel(taskList);
+
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
       }
-      const errorMessage = getErrorMessage(error);
-      yield put(videoErrorHappened(errorMessage));
+
+      peerList.forEach((peer) => {
+        peer.destroy();
+      });
+      yield put(videoReset());
     }
   }
 }
 
-export const { GET_USER_MEDIA } = videoSagaActionCreators;
+export const {
+  createGetUserMediaAction,
+  createRtcSignalReceivedAction,
+  createRtcCallEndAction,
+} = videoSagaActionCreators;

@@ -29,7 +29,7 @@ export const videoSlice = createSlice({
     videoErrorHappened: (state, action) => {
       state.error = {
         isError: true,
-        errorMessage: action.payload.errorMessage,
+        errorMessage: action.payload,
       };
     },
     videoErrorChecked: (state) => {
@@ -37,6 +37,13 @@ export const videoSlice = createSlice({
         isError: false,
         errorMessage: null,
       };
+    },
+    videoReset: (state) => {
+      state.isCallIncomming = false;
+      state.callerSignal = false;
+      state.caller = null;
+      state.isVideoLoaded = false;
+      state.error = { isError: false, errorMessage: null };
     },
   },
 });
@@ -49,6 +56,7 @@ export const {
   sidebarReset,
   videoErrorHappened,
   videoErrorChecked,
+  videoReset,
 } = videoSlice.actions;
 
 export default videoSlice.reducer;

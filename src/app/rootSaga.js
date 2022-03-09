@@ -10,12 +10,14 @@ import {
   watchCancelMeeting,
   watchCancelReservation,
 } from "../features/MyPage/myPageSagas";
+import { webRtcFlow } from "../features/video/videoSagas";
 
 export default function* rootSaga() {
   yield all([
     watchLogInWithGoogle(),
     watchVerify404Token(),
     sokcetFlow(),
+    webRtcFlow(),
     watchGetMyPageMeeting(),
     watchCancelMeeting(),
     watchCancelReservation(),
