@@ -25,6 +25,12 @@ const LogoContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
 
+  div {
+    font-size: 5rem;
+    font-family: "Passion One", cursive;
+    font-family: "Paytone One", sans-serif;
+  }
+
   #IDEA {
     margin: 0;
     padding: 0;
@@ -84,13 +90,6 @@ const LogoContainer = styled.div`
     100% {
       opacity: 1;
     }
-  }
-
-  div {
-    font-size: 5rem;
-    font-family: "Passion One", cursive;
-    font-family: "Paytone One", sans-serif;
-    transition: all 2s;
   }
 `;
 

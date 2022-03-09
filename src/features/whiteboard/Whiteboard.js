@@ -44,11 +44,6 @@ const CanvasContainer = styled.div`
     margin: 0.5rem;
     background-color: black;
     cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  button:hover {
-    opacity: 0.3;
   }
 
   .erase-button {
@@ -56,7 +51,6 @@ const CanvasContainer = styled.div`
     display: block;
     background-color: white;
     border: 1px solid black;
-    transition: all 0.3s;
   }
 
   .color-select-red {

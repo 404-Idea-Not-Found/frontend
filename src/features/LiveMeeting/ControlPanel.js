@@ -29,18 +29,6 @@ const ControlPanelContainer = styled.div`
   flex: 1;
   display: flex;
 
-  button {
-    transition: all 0.3s;
-  }
-
-  button:hover {
-    opacity: 0.3;
-  }
-
-  button:active {
-    opacity: 1;
-  }
-
   ul {
     height: 14vh;
     box-sizing: border-box;
@@ -88,14 +76,6 @@ const ControlPanelContainer = styled.div`
 
   .exit-button {
     background-color: ${COLOR.SALMON};
-  }
-
-  .close-meeting-button:hover {
-    opacity: 0.3;
-  }
-
-  .close-meeting-button:active {
-    opacity: 1;
   }
 
   .list-container {

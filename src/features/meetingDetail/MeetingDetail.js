@@ -63,7 +63,6 @@ const MeetingDetailContainer = styled.div`
     border: none;
     background-color: ${COLOR.CYAN};
     cursor: pointer;
-    transition: all 0.3s;
   }
 
   .reserve-cancel-button {
@@ -80,10 +79,6 @@ const MeetingDetailContainer = styled.div`
 
   .terminated-meeting-button {
     background-color: grey;
-  }
-
-  button:hover {
-    opacity: 0.3;
   }
 
   @keyframes glow {

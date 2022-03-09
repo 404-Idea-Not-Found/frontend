@@ -64,15 +64,6 @@ const StyledForm = styled.form`
     border-bottom: none;
     border-right: none;
     cursor: pointer;
-    transition: all 0.4s;
-  }
-
-  button:hover {
-    opacity: 0.3;
-  }
-
-  button :active {
-    opacity: 1;
   }
 
   button:disabled {
