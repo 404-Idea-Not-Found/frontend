@@ -75,15 +75,6 @@ const ModalContentsContainer = styled.div`
     background-color: ${COLOR.SALMON};
     padding: 0.3rem 1rem;
     cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  button:hover {
-    opacity: 0.3;
-  }
-
-  button: active {
-    opacity: 1;
   }
 `;
 

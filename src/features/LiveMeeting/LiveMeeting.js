@@ -82,11 +82,6 @@ const AccessDeniedCard = styled.div`
     font-size: 3rem;
     font-weight: bold;
     padding: 1rem;
-    transition: all 0.4s;
-  }
-
-  .meeting-start-button:hover {
-    opacity: 0.3;
   }
 
   .existing-start-time {

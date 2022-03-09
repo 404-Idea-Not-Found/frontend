@@ -117,15 +117,6 @@ const MyMeetingCardContent = styled.ul`
     font-weight: bold;
     margin-left: auto;
     cursor: pointer;
-    transition: all 0.4s;
-  }
-
-  .meeting-cancel-button:hover {
-    opacity: 0.3;
-  }
-
-  .meeting-cancel-button:active {
-    opacity: 1;
   }
 
   .recruit-list {

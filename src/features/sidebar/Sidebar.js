@@ -35,9 +35,9 @@ const SearchbarContainer = styled.div`
     padding: 0;
     margin: 0 auto;
     width: 2rem;
-    transition: all 0.2s;
     border: none;
     background-color: transparent;
+    transition: all 0.2s;
   }
 
   .refreshIcon:hover {

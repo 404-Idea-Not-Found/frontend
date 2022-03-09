@@ -32,16 +32,11 @@ const StyledForm = styled.form`
     background-color: ${COLOR.BRIGHT_GREEN};
     border: none;
     cursor: pointer;
-    transition: all 0.3s;
   }
 
   button:disabled {
     background-color: ${COLOR.LIGHT_GREY};
     cursor: not-allowed;
-  }
-
-  button:hover {
-    opacity: 0.3;
   }
 
   #form-meeting-title {
