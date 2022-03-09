@@ -17,6 +17,9 @@ const SidebarContainer = styled.div`
     margin: 0 auto;
     width: 2rem;
   }
+  & ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const SearchbarContainer = styled.div`

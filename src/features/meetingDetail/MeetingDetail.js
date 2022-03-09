@@ -104,6 +104,7 @@ function MeetingDetail({ meeting }) {
   const userEmail = useSelector(selectUserEmail);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const userId = useSelector(selectUserId);
+
   const isReserved = meeting.reservation.includes(userEmail);
   const isOwner = userId === meeting.owner;
   const isMeetingWaitingOwner =

@@ -60,7 +60,7 @@ function MyPage() {
 
   useEffect(() => {
     if (userId && email) dispatch(createGetMyPageMeetingAction(userId, email));
-  }, [userId, email]);
+  }, [userId, email, dispatch]);
 
   useEffect(
     () => () => {

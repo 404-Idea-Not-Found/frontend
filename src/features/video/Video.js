@@ -52,12 +52,14 @@ function Video({ isOwner }) {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isSocketLoading = useSelector(selectIsLoading);
   const userVideo = useRef();
   const peerListRef = useRef([]);
   const streamRef = useRef(null);
+  const [stream, setStream] = useState(null);
 
   useEffect(() => {
     dispatch(sidebarRefreshed());
@@ -102,6 +104,7 @@ function Video({ isOwner }) {
             audio: true,
           });
 
+          setStream(stream);
           streamRef.current = stream;
 
           if (isOwner) {
@@ -134,7 +137,7 @@ function Video({ isOwner }) {
       const peer = new Peer({
         initiator: false,
         trickle: false,
-        stream: streamRef.current,
+        stream,
       });
 
       peer.on("signal", (signal) => {
@@ -165,15 +168,15 @@ function Video({ isOwner }) {
         );
       });
     }
-  }, [caller, callerSignal, dispatch, isCallincomming, streamRef.current]);
+  }, [caller, callerSignal, dispatch, isCallincomming, stream]);
 
   useEffect(() => {
-    if (!isOwner && !isSocketLoading && streamRef.current) {
+    if (!isOwner && !isSocketLoading && stream) {
       const peer = new Peer({
         initiator: true,
         trickle: false,
         config: ICE_SERVERS,
-        stream: streamRef.current,
+        stream,
       });
 
       peer.on("signal", (signal) => {
@@ -216,7 +219,7 @@ function Video({ isOwner }) {
         dispatch(createRemoveSocketEventListenerAction("callAccepted"));
       };
     }
-  }, [dispatch, isOwner, isSocketLoading, streamRef.current]);
+  }, [dispatch, isOwner, isSocketLoading, stream]);
 
   function modalCloseHandler() {
     navigate("/main");

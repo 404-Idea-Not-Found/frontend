@@ -52,7 +52,7 @@ const CanvasContainer = styled.div`
   }
 
   .erase-button {
-    width: 4rem;
+    width: fit-content;
     display: block;
     background-color: white;
     border: 1px solid black;
