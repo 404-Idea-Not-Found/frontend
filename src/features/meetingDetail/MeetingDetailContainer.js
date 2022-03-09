@@ -29,7 +29,7 @@ function MeetingDetailContainer() {
       {!isLoading && <MeetingDetail meeting={meeting} />}
       {isLoading && (
         <LoaderContainer>
-          <Loader spinnerWidth="300px" />
+          <Loader spinnerWidth="10%" containerHeight="30%" />
         </LoaderContainer>
       )}
       {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}

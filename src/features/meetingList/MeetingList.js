@@ -17,10 +17,6 @@ const MeetingListContainer = styled.ul`
   overflow-y: auto;
   padding: 0;
   margin: 0;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 const MeetingList = React.memo(function MeetingList() {
@@ -45,7 +41,7 @@ const MeetingList = React.memo(function MeetingList() {
       });
       if (meeting) observer.current.observe(meeting);
     },
-    [isLoading, hasMore, meetingList]
+    [isLoading, hasMore, dispatch, meetingList]
   );
 
   return (

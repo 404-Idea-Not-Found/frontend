@@ -2,12 +2,10 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   body {
+    min-width: calc(400px + 0.5rem + 1500px);
+    overflow-y: hidden;
     box-sizing: border-box;
     margin: 0;
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
   }
 
   button {

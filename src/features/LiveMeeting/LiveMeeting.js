@@ -72,6 +72,10 @@ const AccessDeniedCard = styled.div`
     opacity: 0.3;
   }
 
+  .end-meeting-access {
+    color: red;
+  }
+
   .meeting-start-button {
     border: none;
     background-color: ${COLOR.BRIGHT_GREEN};
