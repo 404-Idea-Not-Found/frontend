@@ -5,6 +5,8 @@ export const liveMeetingSlice = createSlice({
   initialState: {
     chatList: [],
     isLoading: true,
+    meeting: {},
+    isFetchingMeeting: true,
     isWhiteBoardAllowed: false,
     isRecruit: false,
     painterList: {},
@@ -24,6 +26,8 @@ export const liveMeetingSlice = createSlice({
     meetingDisconnected: (state) => {
       state.chatList = [];
       state.isLoading = true;
+      state.meeting = {};
+      state.isFetchingMeeting = false;
       state.isWhiteBoardAllowed = false;
       state.painterList = {};
       state.recruitList = {};
@@ -33,6 +37,8 @@ export const liveMeetingSlice = createSlice({
     meetingErrorHapeened: (state, action) => {
       state.chatList = [];
       state.isLoading = true;
+      state.meeting = {};
+      state.isFetchingMeeting = false;
       state.isWhiteBoardAllowed = false;
       state.painterList = {};
       state.recruitList = {};
@@ -43,6 +49,13 @@ export const liveMeetingSlice = createSlice({
     meetingErrorChecked: (state) => {
       state.error.isError = false;
       state.error.errorMessage = null;
+    },
+    meetingFetched: (state, action) => {
+      state.isFetchingMeeting = false;
+      state.meeting = action.payload.meeting;
+    },
+    fetchMeetingRequestSent: (state) => {
+      state.isFetchingMeeting = true;
     },
     painterAdded: (state, action) => {
       state.painterList[action.payload.requestorSocketId] = {
@@ -92,6 +105,8 @@ export const {
   meetingDisconnected,
   meetingErrorHapeened,
   meetingErrorChecked,
+  meetingFetched,
+  fetchMeetingRequestSent,
   painterAdded,
   painterRemoved,
   painterAllowed,

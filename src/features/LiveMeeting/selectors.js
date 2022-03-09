@@ -10,3 +10,6 @@ export const selectIsRecruit = (state) => state.liveMeeting.isRecruit;
 export const selectIsVoiceAllowed = (state) => state.liveMeeting.isVoiceAllowed;
 export const selectOwnerDisconnectedDuringMeeting = (state) =>
   state.liveMeeting.ownerDisconnectedDuringMeeting;
+export const selectIsFetchingMeeting = (state) =>
+  state.liveMeeting.isFetchingMeeting;
+export const selectMeeting = (state) => state.liveMeeting.meeting;
