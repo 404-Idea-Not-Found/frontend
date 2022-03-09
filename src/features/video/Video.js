@@ -94,11 +94,21 @@ function Video({ isOwner }) {
 
   useEffect(() => {
     if (error.isError) {
+      const isPermissionError = error.errorMessage.includes("Permission");
+
       setShowModal(true);
       setModalContent(
         <>
-          <h2>알수없는 에러발생 🤪</h2>
-          <p>아래의 메세지를 참조 해주세요</p>
+          <h2>
+            {isPermissionError
+              ? "카메라와 마이크에 접근할 수 없습니다. ⛔️"
+              : "알수없는 에러발생 🤪"}
+          </h2>
+          <p>
+            {isPermissionError
+              ? "카메라와 마이크를 허용해주셔야 입장할 수 있습니다."
+              : "아래의 메세지를 참조 해주세요"}
+          </p>
           <p>{error.errorMessage}</p>
           <button type="button" onClick={modalCloseHandler}>
             메인으로
