@@ -5,6 +5,7 @@ import liveMeetingReducer from "../features/LiveMeeting/LiveMeetingSlice";
 import loginReducer from "../features/login/loginSlice";
 import myPageReducer from "../features/MyPage/myPageSlice";
 import sidebarReducer from "../features/sidebar/SidebarSlice";
+import videoReducer from "../features/video/videoSlice";
 import rootSaga from "./rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -14,6 +15,7 @@ const allReducers = combineReducers({
   liveMeeting: liveMeetingReducer,
   sidebar: sidebarReducer,
   myPage: myPageReducer,
+  video: videoReducer,
 });
 
 const rootReducer = (state, action) => {
@@ -29,7 +31,11 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["ATTACH_SOCKET_EVENT_LISTENER", "EMIT_SOCKET_EVENT"],
+        ignoredActions: [
+          "ATTACH_SOCKET_EVENT_LISTENER",
+          "EMIT_SOCKET_EVENT",
+          "GET_USER_MEDIA",
+        ],
       },
     }).concat(sagaMiddleware),
 });
