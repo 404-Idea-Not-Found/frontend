@@ -20,6 +20,7 @@ import {
   createRtcCallEndAction,
   createRtcSignalReceivedAction,
 } from "./videoSagas";
+import { videoReset } from "./videoSlice";
 
 const StyledVideo = styled.video`
   background-color: white;
@@ -112,6 +113,7 @@ function Video({ isOwner }) {
     dispatch(createRtcCallEndAction());
     dispatch(createDisconnectSocketAction());
     dispatch(sidebarRefreshed());
+    dispatch(videoReset());
   }
 
   return (
