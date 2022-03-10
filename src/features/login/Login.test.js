@@ -17,8 +17,8 @@ import { initialState as loginInitialState } from "./loginSlice";
 jest.mock("firebase/auth", () => ({
   __esModule: true,
   ...jest.requireActual("firebase/auth"),
-  getAuth: jest.fn(() => "done"),
-  GoogleAuthProvider: jest.fn(() => "done"),
+  getAuth: jest.fn(),
+  GoogleAuthProvider: jest.fn(),
   signInWithPopup: jest.fn(),
 }));
 
