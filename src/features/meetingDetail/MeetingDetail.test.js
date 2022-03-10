@@ -21,7 +21,7 @@ jest.mock("../../common/hooks/useGetMeeting", () => ({
 jest.mock("react-router-dom", () => ({
   __esModule: true,
   ...jest.requireActual("react-router-dom"),
-  useNavigate: () => () => 2,
+  useNavigate: () => () => "done",
 }));
 
 jest.mock("../../common/api/reserveMeeting", () => ({

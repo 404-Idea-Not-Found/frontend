@@ -7,7 +7,6 @@ import {
   screen,
   runSagaMiddleware,
 } from "../../common/util/testUtils";
-// eslint-disable-next-line import/no-unresolved
 import LiveMeeting from "./liveMeeting";
 
 jest.mock("./liveMeetingSagas", () => ({
