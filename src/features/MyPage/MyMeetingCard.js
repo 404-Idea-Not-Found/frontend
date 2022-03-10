@@ -213,7 +213,7 @@ function MyMeetingCard({ meetingType, meeting }) {
             <ul className="recruit-list">
               {meeting.colleague.map((colleague) => (
                 <li
-                  key={colleague._id}
+                  key={colleague.email}
                 >{`${colleague.username}: ${colleague.email}`}</li>
               ))}
             </ul>

@@ -5,11 +5,6 @@ import { render, screen, runSagaMiddleware } from "../../common/util/testUtils";
 import MyPage from "./MyPage";
 import { createGetMyPageMeetingAction } from "./myPageSagas";
 
-// jest.mock("../../common/api/fetchMyPageMeetingList", () => ({
-//   __esModule: true,
-//   default: jest.fn(),
-// }));
-
 jest.mock("./myPageSagas", () => ({
   __esModule: true,
   ...jest.requireActual("./myPageSagas"),
@@ -46,11 +41,75 @@ describe("MyPage", () => {
   it("should show loaded meeting", async () => {
     initialState.login.userId = "test";
     initialState.login.email = "test@gmail.com";
-    initialState.liveMeeting.meetingList = {
+    initialState.myPage.isLoading = false;
+    initialState.myPage.meetingList = {
       plannedMeeting: [
         {
-          _id: "testId",
-          title: "testTitle",
+          _id: "testId1",
+          title: "testTitle1",
+          description: "testDescription",
+          owner: "testOwner",
+          reservation: ["testReservation@gmail.com"],
+          colleague: [
+            {
+              username: "testColleague",
+              currentSocketId: "testSocketId",
+              email: "testColleague@gmail.com",
+              profilePicture: "testProfilePicture",
+            },
+          ],
+          recruitmentNumber: 3,
+          startTime: "2100-12-12T10:10",
+          isLive: false,
+          isEnd: false,
+        },
+      ],
+      pastMeeting: [
+        {
+          _id: "testId2",
+          title: "testTitle2",
+          description: "testDescription",
+          owner: "testOwner",
+          reservation: ["testReservation@gmail.com"],
+          colleague: [
+            {
+              username: "testColleague",
+              currentSocketId: "testSocketId",
+              email: "testColleague@gmail.com",
+              profilePicture: "testProfilePicture",
+            },
+          ],
+          recruitmentNumber: 3,
+          startTime: "2100-12-12T10:10",
+          isLive: false,
+          isEnd: false,
+        },
+      ],
+      reservedMeeting: [
+        {
+          _id: "testId3",
+          title: "testTitle3",
+          description: "testDescription",
+          owner: "testOwner",
+          reservation: ["testReservation@gmail.com"],
+          colleague: [
+            {
+              username: "testColleague",
+              currentSocketId: "testSocketId",
+              email: "testColleague@gmail.com",
+              profilePicture: "testProfilePicture",
+            },
+          ],
+          recruitmentNumber: 3,
+          startTime: "2100-12-12T10:10",
+          isLive: false,
+          isEnd: false,
+        },
+      ],
+      participatingProject: [
+        {
+          _id: "testId4",
+          title: "testTitle4",
           description: "testDescription",
           owner: "testOwner",
           reservation: ["testReservation@gmail.com"],
@@ -74,6 +133,6 @@ describe("MyPage", () => {
 
     render(wrappedMyPageComponent, { preloadedState: initialState });
 
-    expect(screen.getByText("testTitle")).toBeInTheDocument();
+    expect(screen.getByText("testTitle1")).toBeInTheDocument();
   });
 });
