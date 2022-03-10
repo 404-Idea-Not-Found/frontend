@@ -6,7 +6,7 @@ import { initialState as loginInitialState } from "../login/loginSlice";
 import { initialState as myPageInitialState } from "../myPage/myPageSlice";
 import { initialState as videoInitialState } from "../video/videoSlice";
 import LiveMeeting from "./LiveMeeting";
-import { initialState as liveMeetingInitialState } from "./liveMeetingSlice";
+import { initialState as liveMeetingInitialState } from "./LiveMeetingSlice";
 
 jest.mock("./liveMeetingSagas", () => ({
   __esModule: true,
