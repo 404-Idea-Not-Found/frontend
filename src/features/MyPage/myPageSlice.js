@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const initialState = {
+  meetingList: {},
+  isLoading: true,
+  isApiLoading: false,
+  error: { isError: false, errorMessage: null },
+};
+
 export const myPageSlice = createSlice({
   name: "myPage",
-  initialState: {
-    meetingList: {},
-    isLoading: true,
-    isApiLoading: false,
-    error: { isError: false, errorMessage: null },
-  },
+  initialState,
   reducers: {
     meetingListLoaded: (state, action) => {
       state.meetingList = action.payload;

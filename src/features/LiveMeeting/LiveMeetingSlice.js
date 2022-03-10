@@ -1,19 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const initialState = {
+  chatList: [],
+  isLoading: true,
+  meeting: {},
+  isFetchingMeeting: true,
+  isWhiteBoardAllowed: false,
+  isRecruit: false,
+  painterList: {},
+  recruitList: {},
+  ownerDisconnectedDuringMeeting: false,
+  error: { isError: false, errorMessage: null },
+};
+
 export const liveMeetingSlice = createSlice({
   name: "liveMeeting",
-  initialState: {
-    chatList: [],
-    isLoading: true,
-    meeting: {},
-    isFetchingMeeting: true,
-    isWhiteBoardAllowed: false,
-    isRecruit: false,
-    painterList: {},
-    recruitList: {},
-    ownerDisconnectedDuringMeeting: false,
-    error: { isError: false, errorMessage: null },
-  },
+  initialState,
   reducers: {
     meetingConnected: (state, action) => {
       state.chatList = action.payload.chatList;

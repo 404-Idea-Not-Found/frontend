@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const initialState = {
+  query: "",
+  lastId: null,
+};
+
 export const sidebarSlice = createSlice({
   name: "sidebar",
-  initialState: {
-    query: "",
-    lastId: null,
-  },
+  initialState,
   reducers: {
     textSubmitted: (state, action) => {
       state.query = action.payload.enteredText;
