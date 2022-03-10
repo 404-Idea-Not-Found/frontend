@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { render, fireEvent, screen } from "../../common/util/testUtils";
@@ -6,7 +5,7 @@ import { initialState as loginInitialState } from "../login/loginSlice";
 import { initialState as myPageInitialState } from "../myPage/myPageSlice";
 import { initialState as videoInitialState } from "../video/videoSlice";
 import LiveMeeting from "./LiveMeeting";
-import { initialState as liveMeetingInitialState } from "./LiveMeetingSlice";
+import { initialState as liveMeetingInitialState } from "./liveMeetingSlice";
 
 jest.mock("./liveMeetingSagas", () => ({
   __esModule: true,

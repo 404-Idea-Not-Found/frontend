@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { createEmitSocketEventAction } from "../liveMeeting/liveMeetingSagas";
-import { chatSubmitted } from "../liveMeeting/LiveMeetingSlice";
+import { chatSubmitted } from "../liveMeeting/liveMeetingSlice";
 import { selectChatList } from "../liveMeeting/selectors";
 import { selectUsername } from "../login/selectors";
 

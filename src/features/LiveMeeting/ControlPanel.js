@@ -17,7 +17,7 @@ import {
   painterAllowed,
   painterRemoved,
   recruitRemoved,
-} from "./LiveMeetingSlice";
+} from "./liveMeetingSlice";
 import {
   selectIsRecruit,
   selectIsWhiteboardAllowed,
