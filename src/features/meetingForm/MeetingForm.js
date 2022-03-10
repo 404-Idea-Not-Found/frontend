@@ -115,6 +115,7 @@ function MeetingForm() {
   const [descriptionError, setDescriptionError] = useState(null);
   const [submissionError, setSubmissionError] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

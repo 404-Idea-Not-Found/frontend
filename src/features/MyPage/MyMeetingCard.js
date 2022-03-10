@@ -133,6 +133,7 @@ function MyMeetingCard({ meetingType, meeting }) {
   const [expand, setExpand] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const startDate = dayjs(meeting.startTime).format("YYYY-MM-DD HH:mm");
   const isColleague = !!meeting.colleague.length;
   const isMeetingStartTimeOver = new Date() - new Date(meeting.startTime) > 0;

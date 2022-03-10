@@ -205,6 +205,7 @@ export function* webRtcFlow() {
       peerList.forEach((peer) => {
         peer.destroy();
       });
+
       yield put(videoReset());
     }
   }

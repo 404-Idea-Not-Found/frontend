@@ -74,6 +74,7 @@ function Whiteboard({ isOwner }) {
   const contextRef = useRef();
   const canvasPositionRef = useRef({});
   const xyRef = useRef({});
+
   const dispatch = useDispatch();
   const { meetingId } = useParams();
   const isWhiteboardAllowed = useSelector(selectIsWhiteboardAllowed);

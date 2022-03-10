@@ -66,11 +66,11 @@ const Meeting = React.forwardRef(function Meeting(
   { meetingListLength, meeting, index },
   ref
 ) {
+  let signalImage = redDot;
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isMeetingSelected = pathname.split("/")[4] === meeting._id;
   const isMeetingWaitingOwner = new Date() - new Date(meeting.startTime) > 0;
-  let signalImage = redDot;
 
   if (isMeetingWaitingOwner) {
     signalImage = yellowDot;

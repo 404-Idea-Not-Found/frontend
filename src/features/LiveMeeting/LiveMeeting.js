@@ -103,18 +103,14 @@ function LiveMeeting() {
   const ownerDisconnectedDuringMeeting = useSelector(
     selectOwnerDisconnectedDuringMeeting
   );
+  const meeting = useSelector(selectMeeting);
+  const isFetchingMeeting = useSelector(selectIsFetchingMeeting);
   const [didOwnerStartedMeeting, setDidOwnerStartedMeeting] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { meetingId } = useParams();
-  // const {
-  //   isLoading,
-  //   error: apiError,
-  //   meeting,
-  // } = useGetMeeting(meetingId, isSocketConnected);
-  const meeting = useSelector(selectMeeting);
-  const isFetchingMeeting = useSelector(selectIsFetchingMeeting);
+
   const isOwner = meeting?.owner === userId;
   const isMeetingWaitingOwner =
     new Date() - new Date(meeting.startTime) > 0 && !meeting.isLive;

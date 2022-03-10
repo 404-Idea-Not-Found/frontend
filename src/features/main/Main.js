@@ -38,8 +38,9 @@ const DefaultContentScreen = styled.div`
 
 function Main() {
   const { pathname } = useLocation();
-  const isMeetingSelected = pathname !== "/main";
   const dispatch = useDispatch();
+
+  const isMeetingSelected = pathname !== "/main";
 
   useEffect(
     () => () => {
