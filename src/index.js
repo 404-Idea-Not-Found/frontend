@@ -9,14 +9,14 @@ import GlobalStyle from "./common/components/GlobalStyle";
 import "./common/config/firebase";
 import Landing from "./features/landing/Landing";
 import LiveMeeting from "./features/liveMeeting/LiveMeeting";
-import { loginSagaActionCreators } from "./features/login/loginSagas";
+import { createVerify404TokenAction } from "./features/login/loginSagas";
 import Main from "./features/main/Main";
 import MeetingDetailContainer from "./features/meetingDetail/MeetingDetailContainer";
 import MeetingForm from "./features/meetingForm/MeetingForm";
 import MyPage from "./features/myPage/MyPage";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
-store.dispatch(loginSagaActionCreators.verify404Token());
+store.dispatch(createVerify404TokenAction());
 
 ReactDOM.render(
   <React.StrictMode>

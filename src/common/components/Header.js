@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import { loginSagaActionCreators } from "../../features/login/loginSagas";
+import { createLogInWithGoogleAction } from "../../features/login/loginSagas";
 import { selectIsLoggedIn } from "../../features/login/selectors";
 import googleGLogo from "../../images/googleGLogo.png";
 import { COLOR } from "../util/constants";
@@ -74,7 +74,7 @@ function Header() {
   }
 
   function handleSignInClick() {
-    dispatch(loginSagaActionCreators.logInWithGoogle());
+    dispatch(createLogInWithGoogleAction());
   }
 
   return (

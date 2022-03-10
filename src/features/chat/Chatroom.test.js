@@ -19,7 +19,7 @@ describe("Chatroom", () => {
   beforeEach(() => render(<Chatroom />, { preloadedState: initialReduxState }));
 
   it("renders chat from the store", () => {
-    const chat = screen.getByText(/testing chat room/i);
+    const chat = screen.getByText("testing chat room");
 
     expect(chat).toBeInTheDocument();
   });

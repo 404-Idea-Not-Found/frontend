@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import googleGLogo from "../../images/googleGLogo.png";
-import { loginSagaActionCreators } from "./loginSagas";
+import { createLogInWithGoogleAction } from "./loginSagas";
 import { userCheckedLoginError } from "./loginSlice";
 import { selectLoginError } from "./selectors";
 
@@ -38,7 +38,7 @@ function Login() {
   const navigate = useNavigate();
 
   function handleGoogleLoginClick() {
-    dispatch(loginSagaActionCreators.logInWithGoogle());
+    dispatch(createLogInWithGoogleAction());
   }
 
   function handleLookaroundClick() {

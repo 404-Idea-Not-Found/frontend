@@ -1,6 +1,12 @@
+/* eslint-disable import/no-unresolved */
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { render, fireEvent, screen } from "../../common/util/testUtils";
+import {
+  render,
+  fireEvent,
+  screen,
+  runSagaMiddleware,
+} from "../../common/util/testUtils";
 import { initialState as loginInitialState } from "../login/loginSlice";
 import { initialState as myPageInitialState } from "../myPage/myPageSlice";
 import { initialState as videoInitialState } from "../video/videoSlice";
@@ -31,8 +37,12 @@ describe("LiveMeeting", () => {
     liveMeeting: JSON.parse(JSON.stringify(liveMeetingInitialState)),
   };
 
-  beforeEach(() => {
+  beforeAll(() => {
     render(<div id="root" />);
+    runSagaMiddleware();
+  });
+
+  beforeEach(() => {
     window.history.pushState({}, "", "/meeting/live/testMeetingId");
   });
 

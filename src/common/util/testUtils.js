@@ -50,13 +50,15 @@ function render(
     ...renderOptions
   } = {}
 ) {
-  sagaMiddleware.run(rootSaga);
-
   function Wrapper({ children }) {
     return <Provider store={store}>{children}</Provider>;
   }
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 }
 
+function runSagaMiddleware() {
+  sagaMiddleware.run(rootSaga);
+}
+
 export * from "@testing-library/react";
-export { render };
+export { render, runSagaMiddleware };
