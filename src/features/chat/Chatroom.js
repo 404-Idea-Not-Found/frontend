@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { createEmitSocketEventAction } from "../LiveMeeting/liveMeetingSagas";
-import { chatSubmitted } from "../LiveMeeting/LiveMeetingSlice";
-import { selectChatList } from "../LiveMeeting/selectors";
+import { createEmitSocketEventAction } from "../liveMeeting/liveMeetingSagas";
+import { chatSubmitted } from "../liveMeeting/liveMeetingSlice";
+import { selectChatList } from "../liveMeeting/selectors";
 import { selectUsername } from "../login/selectors";
 
 const ChatroomContainer = styled.div`

@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const initialState = {
+  isCallIncomming: false,
+  callerSignal: null,
+  caller: null,
+  isVideoLoaded: false,
+  error: { isError: false, errorMessage: null },
+};
+
 export const videoSlice = createSlice({
   name: "sidebar",
-  initialState: {
-    isCallIncomming: false,
-    callerSignal: null,
-    caller: null,
-    isVideoLoaded: false,
-    error: { isError: false, errorMessage: null },
-  },
+  initialState,
   reducers: {
     callReceived: (state) => {
       state.isCallIncomming = true;

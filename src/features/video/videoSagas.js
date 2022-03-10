@@ -8,7 +8,7 @@ import getErrorMessage from "../../common/util/getErrorMessage";
 import {
   createAttachSocketEventListenerAction,
   createEmitSocketEventAction,
-} from "../LiveMeeting/liveMeetingSagas";
+} from "../liveMeeting/liveMeetingSagas";
 import { videoErrorHappened, videoLoaded, videoReset } from "./videoSlice";
 
 const actionType = {
@@ -205,6 +205,7 @@ export function* webRtcFlow() {
       peerList.forEach((peer) => {
         peer.destroy();
       });
+
       yield put(videoReset());
     }
   }

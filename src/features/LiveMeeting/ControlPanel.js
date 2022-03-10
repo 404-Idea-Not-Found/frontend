@@ -17,7 +17,7 @@ import {
   painterAllowed,
   painterRemoved,
   recruitRemoved,
-} from "./LiveMeetingSlice";
+} from "./liveMeetingSlice";
 import {
   selectIsRecruit,
   selectIsWhiteboardAllowed,
@@ -150,7 +150,6 @@ const RequestButton = styled.button`
 `;
 
 function ControlPanel({ meetingId, isOwner }) {
-  const dispatch = useDispatch();
   const username = useSelector(selectUsername);
   const painterList = useSelector(selectPainterList);
   const recruitList = useSelector(selectRecruitList);
@@ -159,7 +158,9 @@ function ControlPanel({ meetingId, isOwner }) {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [modalCloseHandler, setModalCloseHandler] = useState(() => () => {});
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   async function handleCloseMeetingClick() {
     const modalClickHandler = () => {

@@ -20,7 +20,7 @@ import {
   recruitRequestSuccessfullySent,
   whiteboardAllowed,
   whiteboardDisallowed,
-} from "./LiveMeetingSlice";
+} from "./liveMeetingSlice";
 
 const actionType = {
   GET_MEETING: "GET_MEETING",

@@ -12,9 +12,8 @@ import {
   createAttachSocketEventListenerAction,
   createEmitSocketEventAction,
   createRemoveSocketEventListenerAction,
-} from "../LiveMeeting/liveMeetingSagas";
-import { selectIsWhiteboardAllowed } from "../LiveMeeting/selectors";
-// import Video from "../video/Video";
+} from "../liveMeeting/liveMeetingSagas";
+import { selectIsWhiteboardAllowed } from "../liveMeeting/selectors";
 import Video from "../video/Video";
 
 const StyledCanvas = styled.canvas`
@@ -74,6 +73,7 @@ function Whiteboard({ isOwner }) {
   const contextRef = useRef();
   const canvasPositionRef = useRef({});
   const xyRef = useRef({});
+
   const dispatch = useDispatch();
   const { meetingId } = useParams();
   const isWhiteboardAllowed = useSelector(selectIsWhiteboardAllowed);
@@ -262,6 +262,7 @@ function Whiteboard({ isOwner }) {
       <div>
         <Video isOwner={isOwner} meetingId={meetingId} />
         <StyledCanvas
+          data-testid="canvas"
           width={window.innerWidth * 0.5 > 990 ? window.innerWidth * 0.5 : 990}
           height={window.innerHeight * 0.7}
           ref={canvasRef}

@@ -36,6 +36,7 @@ function* getMyPageMeeting(action) {
       action.payload.userId,
       action.payload.email
     );
+
     yield put(meetingListLoaded(data.catagorizedMyPageMeeting));
   } catch (error) {
     const errorMessage = getErrorMessage(error);

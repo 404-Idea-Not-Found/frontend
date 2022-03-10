@@ -3,7 +3,7 @@ import { all } from "redux-saga/effects";
 import {
   sokcetFlow,
   watchGetMeeting,
-} from "../features/LiveMeeting/liveMeetingSagas";
+} from "../features/liveMeeting/liveMeetingSagas";
 import {
   watchLogInWithGoogle,
   watchVerify404Token,
@@ -12,7 +12,7 @@ import {
   watchGetMyPageMeeting,
   watchCancelMeeting,
   watchCancelReservation,
-} from "../features/MyPage/myPageSagas";
+} from "../features/myPage/myPageSagas";
 import { webRtcFlow } from "../features/video/videoSagas";
 
 export default function* rootSaga() {

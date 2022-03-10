@@ -1,9 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
-import liveMeetingReducer from "../features/LiveMeeting/LiveMeetingSlice";
+import liveMeetingReducer from "../features/liveMeeting/liveMeetingSlice";
 import loginReducer from "../features/login/loginSlice";
-import myPageReducer from "../features/MyPage/myPageSlice";
+import myPageReducer from "../features/myPage/myPageSlice";
 import sidebarReducer from "../features/sidebar/SidebarSlice";
 import videoReducer from "../features/video/videoSlice";
 import rootSaga from "./rootSaga";

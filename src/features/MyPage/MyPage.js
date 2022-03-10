@@ -75,7 +75,7 @@ function MyPage() {
       {(!userId || !email) && (
         <ErrorMessage errorMessage="로그인이 필요 합니다!" />
       )}
-      {isLoading && <Loader />}
+      {isLoading && <Loader spinnerWidth="300px" containerHeight="100%" />}
       {isApiLoading && <Loader spinnerWidth="300px" containerHeight="100%" />}
       {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}
       {!isApiLoading && !isLoading && !error.isError && (

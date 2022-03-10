@@ -7,11 +7,11 @@ import getErrorMessage from "../../common/util/getErrorMessage";
 import getLocalFourOFourToken from "../../common/util/getLocalFourOFourToken";
 import { userLoggedIn, userLoginFailed } from "./loginSlice";
 
-export const loginSagaActionCreators = {
-  logInWithGoogle: () => ({
+const loginSagaActionCreators = {
+  createLogInWithGoogleAction: () => ({
     type: "LOG_IN_WITH_GOOGLE",
   }),
-  verify404Token: () => ({
+  createVerify404TokenAction: () => ({
     type: "VERIFY_404_TOKEN",
   }),
 };
@@ -22,11 +22,12 @@ function* logInWithGoogle() {
 
   try {
     const { user } = yield call(signInWithPopup, auth, provider);
-    const res = yield authenticateGoogleToken(user.accessToken);
 
-    localStorage.setItem("fourOFourToken", res.data.fourOFourToken);
+    const { data } = yield call(authenticateGoogleToken, user.accessToken);
 
-    yield put(userLoggedIn(res.data));
+    localStorage.setItem("fourOFourToken", data.fourOFourToken);
+
+    yield put(userLoggedIn(data));
   } catch (error) {
     const errorMessage = getErrorMessage(error);
 
@@ -40,7 +41,7 @@ function* verify404Token() {
 
     if (!fourOFourToken) return;
 
-    const { data } = yield authenticate404Token(fourOFourToken);
+    const { data } = yield call(authenticate404Token, fourOFourToken);
 
     yield put(userLoggedIn(data));
   } catch (error) {
@@ -58,3 +59,6 @@ export function* watchLogInWithGoogle() {
 export function* watchVerify404Token() {
   yield takeEvery("VERIFY_404_TOKEN", verify404Token);
 }
+
+export const { createLogInWithGoogleAction, createVerify404TokenAction } =
+  loginSagaActionCreators;
