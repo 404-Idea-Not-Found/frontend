@@ -2,17 +2,14 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import authenticateGoogleToken from "../../common/api/authenticateGoogleToken";
+import testInitialReduxState from "../../common/util/initialState";
 import {
   render,
   fireEvent,
   screen,
   runSagaMiddleware,
 } from "../../common/util/testUtils";
-import { initialState as liveMeetingInitialState } from "../liveMeeting/liveMeetingSlice";
-import { initialState as myPageInitialState } from "../myPage/myPageSlice";
-import { initialState as videoInitialState } from "../video/videoSlice";
 import Login from "./Login";
-import { initialState as loginInitialState } from "./loginSlice";
 
 jest.mock("firebase/auth", () => ({
   __esModule: true,
@@ -37,12 +34,7 @@ const wrappedLoginComponent = (
 );
 
 describe("Login", () => {
-  let initialState = {
-    login: JSON.parse(JSON.stringify(loginInitialState)),
-    myPage: JSON.parse(JSON.stringify(myPageInitialState)),
-    video: JSON.parse(JSON.stringify(videoInitialState)),
-    liveMeeting: JSON.parse(JSON.stringify(liveMeetingInitialState)),
-  };
+  let initialState = JSON.parse(JSON.stringify(testInitialReduxState));
 
   beforeAll(() => {
     render(<div id="root" />);
@@ -55,12 +47,7 @@ describe("Login", () => {
   });
 
   afterEach(() => {
-    initialState = {
-      login: JSON.parse(JSON.stringify(loginInitialState)),
-      myPage: JSON.parse(JSON.stringify(myPageInitialState)),
-      video: JSON.parse(JSON.stringify(videoInitialState)),
-      liveMeeting: JSON.parse(JSON.stringify(liveMeetingInitialState)),
-    };
+    initialState = JSON.parse(JSON.stringify(testInitialReduxState));
   });
 
   it("should show two login button", () => {

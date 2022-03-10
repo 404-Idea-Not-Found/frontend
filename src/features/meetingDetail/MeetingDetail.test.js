@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import cancelMeetingReservation from "../../common/api/cancelMeetingReservation";
 import reserveMeeting from "../../common/api/reserveMeeting";
 import useGetMeeting from "../../common/hooks/useGetMeeting";
+import testInitialReduxState from "../../common/util/initialState";
 import mockMeeting from "../../common/util/mockMeeting";
 import {
   render,
@@ -10,10 +11,6 @@ import {
   screen,
   runSagaMiddleware,
 } from "../../common/util/testUtils";
-import { initialState as liveMeetingInitialState } from "../liveMeeting/liveMeetingSlice";
-import { initialState as loginInitialState } from "../login/loginSlice";
-import { initialState as myPageInitialState } from "../myPage/myPageSlice";
-import { initialState as videoInitialState } from "../video/videoSlice";
 import MeetingDetailContainer from "./MeetingDetailContainer";
 
 jest.mock("../../common/hooks/useGetMeeting", () => ({
@@ -49,12 +46,7 @@ const wrappedMeetingDetailComponent = (
 );
 
 describe("MeetingDetail", () => {
-  let initialState = {
-    login: JSON.parse(JSON.stringify(loginInitialState)),
-    myPage: JSON.parse(JSON.stringify(myPageInitialState)),
-    video: JSON.parse(JSON.stringify(videoInitialState)),
-    liveMeeting: JSON.parse(JSON.stringify(liveMeetingInitialState)),
-  };
+  let initialState = JSON.parse(JSON.stringify(testInitialReduxState));
   let mockMeetingCopy = JSON.parse(JSON.stringify(mockMeeting));
 
   beforeAll(() => {
@@ -68,12 +60,7 @@ describe("MeetingDetail", () => {
   });
 
   afterEach(() => {
-    initialState = {
-      login: JSON.parse(JSON.stringify(loginInitialState)),
-      myPage: JSON.parse(JSON.stringify(myPageInitialState)),
-      video: JSON.parse(JSON.stringify(videoInitialState)),
-      liveMeeting: JSON.parse(JSON.stringify(liveMeetingInitialState)),
-    };
+    initialState = JSON.parse(JSON.stringify(testInitialReduxState));
     mockMeetingCopy = JSON.parse(JSON.stringify(mockMeeting));
   });
 

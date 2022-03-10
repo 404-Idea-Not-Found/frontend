@@ -1,17 +1,14 @@
-/* eslint-disable import/no-unresolved */
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import testInitialReduxState from "../../common/util/initialState";
 import {
   render,
   fireEvent,
   screen,
   runSagaMiddleware,
 } from "../../common/util/testUtils";
-import { initialState as loginInitialState } from "../login/loginSlice";
-import { initialState as myPageInitialState } from "../myPage/myPageSlice";
-import { initialState as videoInitialState } from "../video/videoSlice";
-import LiveMeeting from "./LiveMeeting";
-import { initialState as liveMeetingInitialState } from "./liveMeetingSlice";
+// eslint-disable-next-line import/no-unresolved
+import LiveMeeting from "./liveMeeting";
 
 jest.mock("./liveMeetingSagas", () => ({
   __esModule: true,
@@ -30,12 +27,7 @@ const wrappedLiveMeetingComponent = (
 );
 
 describe("LiveMeeting", () => {
-  let initialState = {
-    login: JSON.parse(JSON.stringify(loginInitialState)),
-    myPage: JSON.parse(JSON.stringify(myPageInitialState)),
-    video: JSON.parse(JSON.stringify(videoInitialState)),
-    liveMeeting: JSON.parse(JSON.stringify(liveMeetingInitialState)),
-  };
+  let initialState = JSON.parse(JSON.stringify(testInitialReduxState));
 
   beforeAll(() => {
     render(<div id="root" />);
@@ -47,12 +39,7 @@ describe("LiveMeeting", () => {
   });
 
   afterEach(() => {
-    initialState = {
-      login: JSON.parse(JSON.stringify(loginInitialState)),
-      myPage: JSON.parse(JSON.stringify(myPageInitialState)),
-      video: JSON.parse(JSON.stringify(videoInitialState)),
-      liveMeeting: JSON.parse(JSON.stringify(liveMeetingInitialState)),
-    };
+    initialState = JSON.parse(JSON.stringify(testInitialReduxState));
   });
 
   it("should show ownerdisconnection screen when owner disconnect", () => {
