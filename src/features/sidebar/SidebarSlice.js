@@ -28,8 +28,10 @@ export const sidebarSlice = createSlice({
       state.meetingList = action.payload.meetingList;
       state.hasMore = !!action.payload.meetingList.length;
       state.query = action.payload.query;
-      state.lastId =
-        action.payload.meetingList[action.payload.meetingList.length - 1]._id;
+      if (action.payload.meetingList.length) {
+        state.lastId =
+          action.payload.meetingList[action.payload.meetingList.length - 1]._id;
+      }
       state.isLoading = false;
     },
     meetingListRequestFailed: (state, action) => {

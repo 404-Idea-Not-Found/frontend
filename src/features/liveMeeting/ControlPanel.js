@@ -124,7 +124,7 @@ const RequestButton = styled.button`
   display: block;
   margin: 0 0.3rem;
   width: 30%;
-  height: 100%;
+  height: 3rem;
   font-weight: bold;
   font-size: 1.2rem;
   border: none;
