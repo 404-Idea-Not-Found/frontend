@@ -13,7 +13,7 @@ import {
   createRemoveSocketEventListenerAction,
 } from "../liveMeeting/liveMeetingSagas";
 import { selectIsLoading } from "../liveMeeting/selectors";
-import { selectError, selectIsVideoLoaded } from "./setectors";
+import { selectError, selectIsVideoLoaded } from "./selectors";
 import {
   createGetUserMediaAction,
   createRtcCallEndAction,
