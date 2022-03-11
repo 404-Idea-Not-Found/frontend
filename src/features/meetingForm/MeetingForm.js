@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -7,7 +6,6 @@ import createNewMeeting from "../../common/api/createNewMeeting";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import getErrorMessage from "../../common/util/getErrorMessage";
-import { sidebarReset } from "../sidebar/SidebarSlice";
 
 const StyledForm = styled.form`
   min-height: 400px;
@@ -116,7 +114,6 @@ function MeetingForm() {
   const [submissionError, setSubmissionError] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const isFormValid =
@@ -129,13 +126,6 @@ function MeetingForm() {
     enteredDescription.trim().length &&
     !tag1Error &&
     !tag2Error;
-
-  useEffect(
-    () => () => {
-      dispatch(sidebarReset());
-    },
-    []
-  );
 
   function handleTitleInput(event) {
     setEnteredTitle(event.target.value);

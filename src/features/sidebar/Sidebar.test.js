@@ -1,4 +1,3 @@
-import useMeetingListSearch from "../../common/hooks/useMeetingListSearch";
 import testInitialReduxState from "../../common/util/initialState";
 import {
   render,
@@ -7,17 +6,12 @@ import {
   fireEvent,
 } from "../../common/util/testUtils";
 import Sidebar from "./Sidebar";
-import { textSubmitted } from "./SidebarSlice";
+import { createGetMeetingListAction } from "./sidebarSagas";
 
-jest.mock("../../common/hooks/useMeetingListSearch", () => ({
+jest.mock("./sidebarSagas", () => ({
   __esModule: true,
-  default: jest.fn(),
-}));
-
-jest.mock("./SidebarSlice", () => ({
-  __esModule: true,
-  ...jest.requireActual("./SidebarSlice"),
-  textSubmitted: jest.fn(),
+  ...jest.requireActual("./sidebarSagas"),
+  createGetMeetingListAction: jest.fn(),
 }));
 
 describe("Sidebar", () => {
@@ -34,24 +28,18 @@ describe("Sidebar", () => {
   });
 
   it("should submit the entered text", () => {
-    useMeetingListSearch.mockImplementation(() => ({
-      isLoading: false,
-      error: { isError: false, errorMessage: null },
-      meetingList: [],
-      hasMore: false,
-    }));
-    textSubmitted.mockImplementation(() => ({
-      type: "none",
-    }));
+    createGetMeetingListAction.mockImplementation(() => ({ type: "none" }));
 
     render(<Sidebar />, { preloadedState: initialState });
 
+    const testValue = "testValue";
     const textInputEl = screen.getByRole("textbox");
     const submitButtonEl = screen.getByRole("button");
 
-    fireEvent.input(textInputEl, { target: { value: "testValue" } });
+    fireEvent.input(textInputEl, { target: { value: testValue } });
     fireEvent.click(submitButtonEl);
 
-    expect(screen.queryByText("testValue")).not.toBeInTheDocument();
+    expect(createGetMeetingListAction.mock.calls[1][0]).toBe(testValue);
+    expect(screen.queryByText(testValue)).not.toBeInTheDocument();
   });
 });

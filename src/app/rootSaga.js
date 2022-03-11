@@ -13,12 +13,18 @@ import {
   watchCancelMeeting,
   watchCancelReservation,
 } from "../features/myPage/myPageSagas";
+import {
+  watchGetMeetingList,
+  watchLoadMoreWithSameQuery,
+} from "../features/sidebar/sidebarSagas";
 import { webRtcFlow } from "../features/video/videoSagas";
 
 export default function* rootSaga() {
   yield all([
     watchLogInWithGoogle(),
     watchVerify404Token(),
+    watchGetMeetingList(),
+    watchLoadMoreWithSameQuery(),
     sokcetFlow(),
     webRtcFlow(),
     watchGetMeeting(),

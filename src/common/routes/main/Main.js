@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-import Header from "../../common/components/Header";
-import Sidebar from "../sidebar/Sidebar";
-import { sidebarReset } from "../sidebar/SidebarSlice";
+import Sidebar from "../../../features/sidebar/Sidebar";
+import { sidebarReset } from "../../../features/sidebar/SidebarSlice";
+import Header from "../../components/Header";
 
 const MainContainer = styled.div`
   display: flex;
