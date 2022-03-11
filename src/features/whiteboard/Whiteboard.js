@@ -18,8 +18,6 @@ import Video from "../video/Video";
 
 const StyledCanvas = styled.canvas`
   margin: 0 auto;
-  width: ${window.innerWidth * 0.5};
-  height: ${window.innerHeight * 0.5};
   display: block;
   background-color: ${COLOR.LIGHT_GREY};
   pointer-events: ${(props) => (props.isWhiteboardAllowed ? "auto" : "none")};
