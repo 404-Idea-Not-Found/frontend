@@ -45,6 +45,5 @@
     "react/react-in-jsx-scope": 0,
     "prefer-arrow-callback": 0,
     "prefer-template": 0,
-    "import/extensions": 0
   }
 }
