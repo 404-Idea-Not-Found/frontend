@@ -44,7 +44,6 @@
     "import/no-extraneous-dependencies": 0,
     "react/react-in-jsx-scope": 0,
     "prefer-arrow-callback": 0,
-    "prefer-template": 0,
-    "import/no-unresolved": 0
+    "prefer-template": 0
   }
 }
