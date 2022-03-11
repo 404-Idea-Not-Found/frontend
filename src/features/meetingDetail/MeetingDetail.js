@@ -118,6 +118,8 @@ function MeetingDetail({ meeting }) {
     if (!isLoggedIn) {
       setShowModal(true);
       setModalContents(<h2>로그인이 필요합니다!</h2>);
+
+      return;
     }
 
     try {
@@ -148,6 +150,8 @@ function MeetingDetail({ meeting }) {
     if (!isLoggedIn) {
       setShowModal(true);
       setModalContents(<h2>로그인이 필요합니다!</h2>);
+
+      return;
     }
 
     try {
