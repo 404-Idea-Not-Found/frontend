@@ -32,7 +32,7 @@ const ControlPanelContainer = styled.div`
     margin-top: 0;
     height: 14vh;
     box-sizing: border-box;
-    padding: 0;
+    padding-top: 10px;
     width: 100%;
     overflow: auto;
     background-color: ${COLOR.LIGHTER_GREY};
@@ -106,8 +106,10 @@ const ControlPanelContainer = styled.div`
   }
 
   .list-wrapper {
+    margin-bottom: 0.5rem;
     display: flex;
     justify-content: space-around;
+    align-items: center;
   }
 `;
 
