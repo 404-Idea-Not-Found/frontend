@@ -30,11 +30,13 @@ const ControlPanelContainer = styled.div`
   display: flex;
 
   ul {
+    margin-top: 0;
     height: 14vh;
     box-sizing: border-box;
     padding: 0;
     width: 100%;
     overflow: auto;
+    background-color: ${COLOR.LIGHTER_GREY};
   }
 
   .owner-control {

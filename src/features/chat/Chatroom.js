@@ -16,7 +16,7 @@ const ChatroomContainer = styled.div`
 `;
 
 const ChatListContainer = styled.div`
-  height: calc(70vh - 4px - 2rem);
+  height: 100%;
   overflow-y: auto;
 `;
 
