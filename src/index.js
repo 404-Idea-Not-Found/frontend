@@ -8,7 +8,7 @@ import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
 import "./common/config/firebase";
 import Landing from "./features/landing/Landing";
-import LiveMeeting from "./features/liveMeeting/LiveMeeting";
+import LiveMeeting from "./features/LiveMeeting/LiveMeeting";
 import { createVerify404TokenAction } from "./features/login/loginSagas";
 import Main from "./features/main/Main";
 import MeetingDetailContainer from "./features/meetingDetail/MeetingDetailContainer";

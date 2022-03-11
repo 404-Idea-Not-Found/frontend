@@ -1,4 +1,4 @@
-import { initialState as liveMeetingInitialState } from "../../features/liveMeeting/liveMeetingSlice";
+import { initialState as liveMeetingInitialState } from "../../features/LiveMeeting/liveMeetingSlice";
 import { initialState as loginInitialState } from "../../features/login/loginSlice";
 import { initialState as myPageInitialState } from "../../features/myPage/myPageSlice";
 import { initialState as sidebarInitialState } from "../../features/sidebar/SidebarSlice";

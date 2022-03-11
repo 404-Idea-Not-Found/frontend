@@ -11,8 +11,8 @@ import {
   createAttachSocketEventListenerAction,
   createDisconnectSocketAction,
   createRemoveSocketEventListenerAction,
-} from "../liveMeeting/liveMeetingSagas";
-import { selectIsLoading } from "../liveMeeting/selectors";
+} from "../LiveMeeting/liveMeetingSagas";
+import { selectIsLoading } from "../LiveMeeting/selectors";
 import { sidebarRefreshed } from "../sidebar/SidebarSlice";
 import { selectError, selectIsVideoLoaded } from "./setectors";
 import {
