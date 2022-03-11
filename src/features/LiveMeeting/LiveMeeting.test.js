@@ -7,7 +7,7 @@ import {
   screen,
   runSagaMiddleware,
 } from "../../common/util/testUtils";
-import LiveMeeting from "./liveMeeting";
+import LiveMeeting from "./LiveMeeting";
 
 jest.mock("./liveMeetingSagas", () => ({
   __esModule: true,

@@ -8,7 +8,7 @@ import getErrorMessage from "../../common/util/getErrorMessage";
 import {
   createAttachSocketEventListenerAction,
   createEmitSocketEventAction,
-} from "../liveMeeting/liveMeetingSagas";
+} from "../LiveMeeting/liveMeetingSagas";
 import { videoErrorHappened, videoLoaded, videoReset } from "./videoSlice";
 
 const actionType = {
