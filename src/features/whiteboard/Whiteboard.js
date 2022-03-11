@@ -108,8 +108,8 @@ function Whiteboard({ isOwner }) {
 
   function onMouseDown(event) {
     drawingRef.current = true;
-    xyRef.current.x = event.clientX || event.touches.clientX;
-    xyRef.current.y = event.clientY || event.touches.clientY;
+    xyRef.current.x = event.clientX;
+    xyRef.current.y = event.clientY;
   }
 
   function onMouseUp(event) {
@@ -120,8 +120,8 @@ function Whiteboard({ isOwner }) {
     drawLine(
       xyRef.current.x,
       xyRef.current.y,
-      event.clientX || event.touches.clientX,
-      event.clientY || event.touches.clientY,
+      event.clientX,
+      event.clientY,
       colorRef.current,
       true
     );
@@ -134,27 +134,19 @@ function Whiteboard({ isOwner }) {
     drawLine(
       xyRef.current.x,
       xyRef.current.y,
-      event[0].clientX || event[0].touches[0].clientX,
-      event[0].clientY || event[0].touches[0].clientY,
+      event[0].clientX,
+      event[0].clientY,
       colorRef.current,
       true
     );
-    xyRef.current.x = event[0].clientX || event[0].touches[0].clientX;
-    xyRef.current.y = event[0].clientY || event[0].touches[0].clientY;
+    xyRef.current.x = event[0].clientX;
+    xyRef.current.y = event[0].clientY;
   }
 
-  function drawLine(
-    x0,
-    y0,
-    x1,
-    y1,
-    color,
-    emit,
-    top = canvasPositionRef.current.top,
-    left = canvasPositionRef.current.left
-  ) {
+  function drawLine(x0, y0, x1, y1, color, emit) {
     const w = canvasRef.current.width;
     const h = canvasRef.current.height;
+    const { top, left } = canvasPositionRef.current;
 
     contextRef.current.beginPath();
     contextRef.current.moveTo(x0 - left, y0 - top);
@@ -169,10 +161,10 @@ function Whiteboard({ isOwner }) {
     }
 
     const pathData = {
-      x0: x0 / w,
-      y0: y0 / h,
-      x1: x1 / w,
-      y1: y1 / h,
+      x0: (x0 - left) / w,
+      y0: (y0 - top) / h,
+      x1: (x1 - left) / w,
+      y1: (y1 - top) / h,
       color,
     };
 
@@ -184,12 +176,13 @@ function Whiteboard({ isOwner }) {
   function onDrawingEvent(pathData) {
     const w = canvasRef.current.width;
     const h = canvasRef.current.height;
+    const { top, left } = canvasPositionRef.current;
 
     drawLine(
-      pathData.x0 * w,
-      pathData.y0 * h,
-      pathData.x1 * w,
-      pathData.y1 * h,
+      pathData.x0 * w + left,
+      pathData.y0 * h + top,
+      pathData.x1 * w + left,
+      pathData.y1 * h + top,
       pathData.color,
       pathData.lineWidth
     );
