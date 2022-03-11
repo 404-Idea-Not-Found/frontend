@@ -76,8 +76,6 @@ describe("MeetingDetail", () => {
     });
 
     it("should show need login when not logged-in and clicked reservation button", async () => {
-      initialState.login.userId = "notOwner";
-
       render(wrappedMeetingDetailComponent, { preloadedState: initialState });
 
       const meetingReservationButtonEl = screen.getByText("미팅 참여 예약");
@@ -91,6 +89,7 @@ describe("MeetingDetail", () => {
 
     it("should show 'reservation success' when successfully reserved the meeting", async () => {
       initialState.login.userId = "notOwner";
+      initialState.login.isLoggedIn = true;
 
       render(wrappedMeetingDetailComponent, { preloadedState: initialState });
 
@@ -107,6 +106,7 @@ describe("MeetingDetail", () => {
 
     it("should show 'reservation failed' when meeting reservation failed", async () => {
       initialState.login.userId = "notOwner";
+      initialState.login.isLoggedIn = true;
       reserveMeeting.mockImplementation(() => {
         throw new Error("test");
       });
@@ -125,6 +125,8 @@ describe("MeetingDetail", () => {
     });
 
     it("should show 'reservation cancel success' when successfully canceled reservation", async () => {
+      initialState.login.userId = "notOwner";
+      initialState.login.isLoggedIn = true;
       initialState.login.email = "test@gmail.com";
 
       cancelMeetingReservation.mockImplementation(() => "success");
@@ -143,6 +145,8 @@ describe("MeetingDetail", () => {
     });
 
     it("should show 'reservation cancel failed' when canceled reservation failed", async () => {
+      initialState.login.userId = "notOwner";
+      initialState.login.isLoggedIn = true;
       initialState.login.email = "test@gmail.com";
 
       cancelMeetingReservation.mockImplementation(() => {

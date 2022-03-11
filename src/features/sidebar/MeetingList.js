@@ -4,10 +4,14 @@ import styled from "styled-components";
 
 import ErrorMessage from "../../common/components/ErrorMessage";
 import Loader from "../../common/components/Loader";
-import useMeetingListSearch from "../../common/hooks/useMeetingListSearch";
-import { selectLastId, selectQuery } from "../sidebar/selector";
-import { lastIdChanged } from "../sidebar/SidebarSlice";
 import Meeting from "./Meeting";
+import {
+  selectError,
+  selectHasMore,
+  selectIsLoading,
+  selectMeetingList,
+} from "./selector";
+import { createLoadMoreWithSameQueryAction } from "./sidebarSagas";
 
 const MeetingListContainer = styled.ul`
   box-sizing: border-box;
@@ -20,28 +24,26 @@ const MeetingListContainer = styled.ul`
 `;
 
 const MeetingList = React.memo(function MeetingList() {
-  const query = useSelector(selectQuery);
-  const lastId = useSelector(selectLastId);
-  const { isLoading, error, meetingList, hasMore } = useMeetingListSearch(
-    query,
-    lastId
-  );
+  const meetingList = useSelector(selectMeetingList);
+  const isLoading = useSelector(selectIsLoading);
+  const hasMore = useSelector(selectHasMore);
+  const error = useSelector(selectError);
+
   const dispatch = useDispatch();
   const observer = useRef();
+
   const lastMeetingRef = useCallback(
     (meeting) => {
       if (isLoading) return;
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          dispatch(
-            lastIdChanged({ lastId: meetingList[meetingList.length - 1]._id })
-          );
+          dispatch(createLoadMoreWithSameQueryAction());
         }
       });
       if (meeting) observer.current.observe(meeting);
     },
-    [isLoading, hasMore, dispatch, meetingList]
+    [isLoading, dispatch]
   );
 
   return (

@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import Login from "../login/Login";
-import { selectIsLoggedIn } from "../login/selectors";
+import Login from "../../../features/login/Login";
+import { selectIsLoggedIn } from "../../../features/login/selectors";
 
 const StyledDiv = styled.div`
   width: 100vw;

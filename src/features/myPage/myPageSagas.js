@@ -14,7 +14,7 @@ import {
   reservationCanceled,
 } from "./myPageSlice";
 
-const mayPageSagaActionCreators = {
+const myPageSagaActionCreators = {
   createGetMyPageMeetingAction: (userId, email) => ({
     type: "GET_MY_PAGE_MEETING",
     payload: { userId, email },
@@ -86,4 +86,4 @@ export const {
   createGetMyPageMeetingAction,
   createCancelMeetingAction,
   createCancelReservationAction,
-} = mayPageSagaActionCreators;
+} = myPageSagaActionCreators;

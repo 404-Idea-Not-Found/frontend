@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import refreshIcon from "../../images/refreshIcon.png";
 import searchbarIcon from "../../images/searchbarIcon.png";
-import MeetingList from "../meetingList/MeetingList";
-import { sidebarRefreshed, textSubmitted } from "./SidebarSlice";
+import MeetingList from "./MeetingList";
+import { createGetMeetingListAction } from "./sidebarSagas";
+import { sidebarReset } from "./SidebarSlice";
 
 const SidebarContainer = styled.div`
   max-width: 410px;
@@ -73,10 +74,16 @@ function Sidebar() {
   const [enteredText, setEnteredText] = useState("");
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(createGetMeetingListAction("", null));
+
+    return () => dispatch(sidebarReset());
+  }, []);
+
   function handleTextSubmit(event) {
     event.preventDefault();
     setEnteredText("");
-    dispatch(textSubmitted({ enteredText, lastId: null }));
+    dispatch(createGetMeetingListAction(enteredText, null));
   }
 
   function handleTextInput(event) {
@@ -84,7 +91,7 @@ function Sidebar() {
   }
 
   function handleRefreshButtonClick() {
-    dispatch(sidebarRefreshed());
+    dispatch(createGetMeetingListAction(enteredText));
   }
 
   return (

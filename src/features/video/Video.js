@@ -13,7 +13,6 @@ import {
   createRemoveSocketEventListenerAction,
 } from "../liveMeeting/liveMeetingSagas";
 import { selectIsLoading } from "../liveMeeting/selectors";
-import { sidebarRefreshed } from "../sidebar/SidebarSlice";
 import { selectError, selectIsVideoLoaded } from "./setectors";
 import {
   createGetUserMediaAction,
@@ -57,10 +56,6 @@ function Video({ isOwner }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userVideoRef = useRef();
-
-  useEffect(() => {
-    dispatch(sidebarRefreshed());
-  }, []);
 
   useEffect(
     () => () => {
@@ -122,7 +117,6 @@ function Video({ isOwner }) {
     navigate("/main");
     dispatch(createRtcCallEndAction());
     dispatch(createDisconnectSocketAction());
-    dispatch(sidebarRefreshed());
     dispatch(videoReset());
   }
 

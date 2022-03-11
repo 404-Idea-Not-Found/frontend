@@ -11,7 +11,6 @@ import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import Chat from "../chat/Chatroom";
 import { selectUserId } from "../login/selectors";
-import { sidebarRefreshed } from "../sidebar/SidebarSlice";
 import Whiteboard from "../whiteboard/Whiteboard";
 import ControlPanel from "./ControlPanel";
 import {
@@ -157,7 +156,6 @@ function LiveMeeting() {
       <Modal
         onModalClose={() => {
           navigate("/main");
-          dispatch(sidebarRefreshed());
         }}
       >
         <h1>주최자의 연결이 끊겼습니다!</h1>

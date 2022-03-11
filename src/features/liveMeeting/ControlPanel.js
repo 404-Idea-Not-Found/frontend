@@ -8,7 +8,6 @@ import styled from "styled-components";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import { selectUsername } from "../login/selectors";
-import { sidebarRefreshed } from "../sidebar/SidebarSlice";
 import {
   createDisconnectSocketAction,
   createEmitSocketEventAction,
@@ -168,7 +167,6 @@ function ControlPanel({ meetingId, isOwner }) {
     const modalClickHandler = () => {
       navigate("/main");
       dispatch(createDisconnectSocketAction());
-      dispatch(sidebarRefreshed());
     };
     const isRecruitExist = !!Object.entries(recruitList).length;
 
@@ -234,7 +232,6 @@ function ControlPanel({ meetingId, isOwner }) {
 
   function handleExitClick() {
     navigate("/main");
-    dispatch(sidebarRefreshed());
   }
 
   return (
