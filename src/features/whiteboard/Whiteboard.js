@@ -12,8 +12,8 @@ import {
   createAttachSocketEventListenerAction,
   createEmitSocketEventAction,
   createRemoveSocketEventListenerAction,
-} from "../LiveMeeting/liveMeetingSagas";
-import { selectIsWhiteboardAllowed } from "../LiveMeeting/selectors";
+} from "../liveMeeting/liveMeetingSagas";
+import { selectIsWhiteboardAllowed } from "../liveMeeting/selectors";
 import Video from "../video/Video";
 
 const StyledCanvas = styled.canvas`

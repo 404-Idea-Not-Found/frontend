@@ -3,7 +3,7 @@ import { all } from "redux-saga/effects";
 import {
   sokcetFlow,
   watchGetMeeting,
-} from "../features/LiveMeeting/liveMeetingSagas";
+} from "../features/liveMeeting/liveMeetingSagas";
 import {
   watchLogInWithGoogle,
   watchVerify404Token,
