@@ -42,7 +42,6 @@ function* verify404Token() {
     if (!fourOFourToken) return;
 
     const { data } = yield call(authenticate404Token, fourOFourToken);
-
     yield put(userLoggedIn(data));
   } catch (error) {
     // eslint-disable-next-line no-console

@@ -1,4 +1,4 @@
-import testInitialReduxState from "../../common/util/initialState";
+import testInitialReduxState from "../../common/util/testInitialReduxState";
 import {
   render,
   screen,
@@ -20,11 +20,6 @@ describe("Sidebar", () => {
   beforeAll(() => {
     render(<div id="root" />);
     runSagaMiddleware();
-  });
-
-  beforeEach(() => {
-    render(<div id="root" />);
-    window.history.pushState({}, "", "/my-page");
   });
 
   it("should submit the entered text", () => {

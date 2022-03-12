@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import testInitialReduxState from "../../common/util/initialState";
+import testInitialReduxState from "../../common/util/testInitialReduxState";
 import {
   render,
   fireEvent,

@@ -3,8 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import cancelMeetingReservation from "../../common/api/cancelMeetingReservation";
 import reserveMeeting from "../../common/api/reserveMeeting";
 import useGetMeeting from "../../common/hooks/useGetMeeting";
-import testInitialReduxState from "../../common/util/initialState";
 import mockMeeting from "../../common/util/mockMeeting";
+import testInitialReduxState from "../../common/util/testInitialReduxState";
 import {
   render,
   fireEvent,

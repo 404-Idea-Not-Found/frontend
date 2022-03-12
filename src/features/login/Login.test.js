@@ -2,7 +2,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import authenticateGoogleToken from "../../common/api/authenticateGoogleToken";
-import testInitialReduxState from "../../common/util/initialState";
+import testInitialReduxState from "../../common/util/testInitialReduxState";
 import {
   render,
   fireEvent,
