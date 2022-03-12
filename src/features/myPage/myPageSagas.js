@@ -14,17 +14,23 @@ import {
   reservationCanceled,
 } from "./myPageSlice";
 
+const actionType = {
+  GET_MY_PAGE_MEETING: "GET_MY_PAGE_MEETING",
+  CANCEL_MEETING: "CANCEL_MEETING",
+  CANCEL_RESERVATION: "CANCEL_RESERVATION",
+};
+
 const myPageSagaActionCreators = {
   createGetMyPageMeetingAction: (userId, email) => ({
-    type: "GET_MY_PAGE_MEETING",
+    type: actionType.GET_MY_PAGE_MEETING,
     payload: { userId, email },
   }),
   createCancelMeetingAction: (meetingId) => ({
-    type: "CANCEL_MEETING",
+    type: actionType.CANCEL_MEETING,
     payload: { meetingId },
   }),
   createCancelReservationAction: (meetingId) => ({
-    type: "CANCEL_RESERVATION",
+    type: actionType.CANCEL_RESERVATION,
     payload: { meetingId },
   }),
 };
@@ -71,15 +77,15 @@ function* cancelReservation(action) {
 }
 
 export function* watchGetMyPageMeeting() {
-  yield takeEvery("GET_MY_PAGE_MEETING", getMyPageMeeting);
+  yield takeEvery(actionType.GET_MY_PAGE_MEETING, getMyPageMeeting);
 }
 
 export function* watchCancelMeeting() {
-  yield takeEvery("CANCEL_MEETING", cancelMeeting);
+  yield takeEvery(actionType.CANCEL_MEETING, cancelMeeting);
 }
 
 export function* watchCancelReservation() {
-  yield takeEvery("CANCEL_RESERVATION", cancelReservation);
+  yield takeEvery(actionType.CANCEL_RESERVATION, cancelReservation);
 }
 
 export const {

@@ -42,7 +42,7 @@ jest.mock("../../common/config/socket", () => ({
   default: jest.fn(),
 }));
 
-describe("liveMeetingSaga", () => {
+describe("liveMeetingSagas", () => {
   describe("watchGetMeeting", () => {
     it("should dispatch returned meeting from api", () => {
       const testMeeting = "testMeeting";

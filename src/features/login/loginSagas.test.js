@@ -35,7 +35,7 @@ jest.mock("../../common/util/getLocalFourOFourToken", () => ({
   default: jest.fn(),
 }));
 
-describe("loginSaga", () => {
+describe("loginSagas", () => {
   it("should log in user with successful login attempt", () => {
     const testValue = "helloSagaTest";
     signInWithPopup.mockImplementation(() => ({ user: "done" }));
