@@ -1,8 +1,8 @@
 import { eventChannel } from "redux-saga";
 import { call, cancel, fork, put, take, takeEvery } from "redux-saga/effects";
-import { io } from "socket.io-client";
 
 import fetchMeeting from "../../common/api/fetchMeeting";
+import connectSocket from "../../common/config/socket";
 import getErrorMessage from "../../common/util/getErrorMessage";
 import sleep from "../../common/util/sleep";
 import {
@@ -62,30 +62,6 @@ const liveMeetingSagaActionCreators = {
   }),
 };
 
-async function connectSocket(room, isOwner, userId) {
-  const socket = io(
-    `${process.env.REACT_APP_SERVER_URL}?room=${room}&isOwner=${isOwner}&userId=${userId}`
-  );
-  return new Promise((resolve, reject) => {
-    socket.on("connect", () => {
-      if (process.env.NODE_ENV === "development") {
-        // eslint-disable-next-line no-console
-        console.log("socket: ", socket.id, "connected");
-      }
-      resolve(socket);
-    });
-    socket.on("connect_error", (error) => {
-      reject(new Error(error.data));
-    });
-    socket.on("disconnect", () => {
-      if (process.env.NODE_ENV === "development") {
-        // eslint-disable-next-line no-console
-        console.log("socket: ", socket.id, "disconnected!");
-      }
-    });
-  });
-}
-
 function createSokcetChannel(socket) {
   return eventChannel((emit) => {
     socket.once("initialChatLoaded", (chatList) =>
@@ -137,6 +113,7 @@ function createSokcetChannel(socket) {
 
 function* listenSocketEvent(socket) {
   const socketChannel = yield call(createSokcetChannel, socket);
+
   while (true) {
     try {
       const action = yield take(socketChannel);
@@ -152,7 +129,7 @@ function* listenSocketEvent(socket) {
 
 function* emitSocketEvent(socket) {
   while (true) {
-    const { payload } = yield take("EMIT_SOCKET_EVENT");
+    const { payload } = yield take(actionType.EMIT_SOCKET_EVENT);
     socket.emit(payload.socketEventName, payload.socketPayload);
   }
 }
@@ -201,6 +178,7 @@ export function* sokcetFlow() {
         payload.isOwner,
         payload.userId
       );
+
       yield put(
         meetingConnected({
           chatList: payload.chatList,
