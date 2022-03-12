@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import testInitialReduxState from "../../common/util/initialState";
+import testInitialReduxState from "../../common/util/testInitialReduxState";
 import { render, screen, runSagaMiddleware } from "../../common/util/testUtils";
 import MyPage from "./MyPage";
 import { createGetMyPageMeetingAction } from "./myPageSagas";

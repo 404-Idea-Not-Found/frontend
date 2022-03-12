@@ -2,7 +2,7 @@ import userEvent from "@testing-library/user-event";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import createNewMeeting from "../../common/api/createNewMeeting";
-import testInitialReduxState from "../../common/util/initialState";
+import testInitialReduxState from "../../common/util/testInitialReduxState";
 import {
   render,
   fireEvent,
