@@ -19,7 +19,7 @@ const MeetingListContainer = styled.ul`
   height: calc(100% - 6rem - 15px);
   list-style: none;
   overflow-y: auto;
-  padding: 0;
+  padding-left: 1rem;
   margin: 0;
 `;
 

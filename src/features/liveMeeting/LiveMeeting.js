@@ -27,35 +27,45 @@ import {
 } from "./selectors";
 
 const LiveMeetingContainer = styled.div`
-  height: calc(100% - 1rem - 21px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 1450px;
+  height: calc(100vh - 1rem - 21px);
+
+  background-color: white;
+  margin: 0 1rem;
+  overflow-x: auto;
 
   .whiteboard-chat-wrapper {
-    width: 100%;
-    min-width: 1450px;
     display: flex;
+    align-items: center;
     justify-content: center;
   }
 `;
 
 const AccessDeniedCard = styled.div`
-  height: calc(100% - 1rem - 21px);
+  height: calc(100vh - 1rem - 21px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-width: 1450px;
+  background-color: white;
 
   h1 {
     font-size: 5rem;
+
+    @media (max-width: 1440px) {
+      font-size: 4rem;
+    }
   }
 
   p {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     font-weight: bold;
     font-size: 2rem;
+
+    @media (max-width: 1440px) {
+      font-size: 1.4rem;
+    }
   }
 
   a {
@@ -79,10 +89,27 @@ const AccessDeniedCard = styled.div`
 
   .meeting-start-button {
     border: none;
+    border-radius: 7px;
     background-color: ${COLOR.BRIGHT_GREEN};
     font-size: 3rem;
     font-weight: bold;
     padding: 1rem;
+
+    @media (max-width: 1440px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  .existing-start-time-outer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .existing-start-time-inner-wrapper {
+    display: flex;
   }
 
   .existing-start-time {
@@ -174,19 +201,20 @@ function LiveMeeting() {
     return (
       <AccessDeniedCard>
         <h1>미팅을 시작해 주세요!</h1>
-        <p className="existing-start-time-paragraph">
-          설정해둔 미팅시작시간:
-          <span className="existing-start-time">
-            {dayjs(meeting.startTime).format("YYYY-MM-DD HH:mm:ss")}
-          </span>
-          <br />
+        <div className="existing-start-time-outer-wrapper">
+          <div className="existing-start-time-inner-wrapper">
+            설정해둔 미팅시작시간:
+            <span className="existing-start-time">
+              {dayjs(meeting.startTime).format("YYYY-MM-DD HH:mm:ss")}
+            </span>
+          </div>
           {!isMeetingWaitingOwner && (
-            <span className="existing-start-time-warning">
+            <div className="existing-start-time-warning">
               (아직 기존에 설정한 미팅시간이 되지 않았습니다. 그래도 주최자니까
               미리 시작하실수는 있어요!)
-            </span>
+            </div>
           )}
-        </p>
+        </div>
         <p>미팅을 시작하시겠습니까?</p>
         <p>미팅을 시작해주셔야 다른 참여자가 입장할 수 있습니다.</p>
         <button
@@ -232,7 +260,7 @@ function LiveMeeting() {
         </div>
       )}
       {(isSocketConnected || isFetchingMeeting || error.isError) && (
-        <Loader spinnerWidth="10%" containerHeight="30%" />
+        <Loader spinnerWidth="10%" containerHeight="100%" />
       )}
       {!isSocketConnected && !isFetchingMeeting && !error.isError && (
         <ControlPanel

@@ -9,9 +9,12 @@ import Header from "../../components/Header";
 
 const MainContainer = styled.div`
   display: flex;
-  min-width: calc(400px + 0.5rem + 1500px);
   width: 100%;
   height: 100vh;
+
+  @media (max-width: 1440px) {
+    width: 1440px;
+  }
 `;
 
 const Divider = styled.div`
@@ -21,17 +24,21 @@ const Divider = styled.div`
 `;
 
 const ContentsContainer = styled.div`
-  flex: 1;
+  width: calc(80vw - 0.5rem);
   height: 100vh;
-  min-width: 1500px;
+
+  @media (max-width: 1440px) {
+    width: calc(75vw - 0.5rem);
+  }
 `;
 
 const DefaultContentScreen = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   font-size: 3rem;
   font-weight: bold;
-  width: fit-content;
+  width: 100%;
   height: calc(100% - 1rem - 22px);
   margin: 0 auto;
 `;

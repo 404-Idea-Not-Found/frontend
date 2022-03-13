@@ -2,10 +2,15 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   body {
-    min-width: calc(400px + 0.5rem + 1500px);
+    width: 100%;
+    height: 100vh;
     overflow-y: hidden;
     box-sizing: border-box;
     margin: 0;
+  }
+
+  #root {
+    width: 100%;
   }
 
   button {
@@ -21,6 +26,12 @@ const GlobalStyle = createGlobalStyle`
     button:hover {
       opacity: 0.3;
     }
+
+  @media (max-width: 1440px) {
+    body {
+      background-color: white;
+    }
+  }
 `;
 
 export default GlobalStyle;

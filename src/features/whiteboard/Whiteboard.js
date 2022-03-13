@@ -254,9 +254,9 @@ function Whiteboard({ isOwner }) {
         <Video isOwner={isOwner} meetingId={meetingId} />
         <StyledCanvas
           data-testid="canvas"
-          width={window.innerWidth * 0.5 > 990 ? window.innerWidth * 0.5 : 990}
-          height={window.innerHeight * 0.7}
           ref={canvasRef}
+          width={window.innerWidth * 0.5}
+          height={window.innerHeight * 0.5}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
           onMouseMove={throttle(onMouseMove, 10)}

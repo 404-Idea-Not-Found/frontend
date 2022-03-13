@@ -27,12 +27,20 @@ const MeetingDetailContainer = styled.div`
   .meeting-title {
     margin: 1rem 0;
     font-size: 3rem;
+
+    @media (max-width: 1440px) {
+      font-size: 2.5rem;
+    }
   }
 
   .meeting-time,
   .number-of-recruitment {
     margin: 1rem 0;
     font-size: 3rem;
+
+    @media (max-width: 1440px) {
+      font-size: 2.5rem;
+    }
   }
 
   .meeting-description {
@@ -57,12 +65,17 @@ const MeetingDetailContainer = styled.div`
   .enter-meeting-button,
   .terminated-meeting-button,
   .wait-meeting-button {
+    border-radius: 7px;
     font-size: 3rem;
     padding: 1rem 1rem 0.7rem 1rem;
     font-weight: bold;
     border: none;
     background-color: ${COLOR.CYAN};
     cursor: pointer;
+
+    @media (max-width: 1440px) {
+      font-size: 2rem;
+    }
   }
 
   .reserve-cancel-button {

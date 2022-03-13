@@ -8,12 +8,17 @@ import { selectChatList } from "../liveMeeting/selectors";
 import { selectUsername } from "../login/selectors";
 
 const ChatroomContainer = styled.div`
-  height: calc(${window.innerHeight * 0.7}px - 4px);
+  /* height: calc(${window.innerHeight * 0.7}px - 4px); */
+  height: ${window.innerHeight * 0.5}px;
   width: 350px;
   margin-top: 3rem;
   border: 2px solid black;
   display: flex;
   flex-direction: column;
+
+  & ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ChatListContainer = styled.div`

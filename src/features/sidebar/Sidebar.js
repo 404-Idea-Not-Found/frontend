@@ -9,17 +9,14 @@ import { createGetMeetingListAction } from "./sidebarSagas";
 import { sidebarReset } from "./SidebarSlice";
 
 const SidebarContainer = styled.div`
-  max-width: 410px;
-  min-width: 400px;
-  height: 100%;
+  width: calc(100vw * 0.25);
 
-  .down-arrow {
-    display: block;
-    margin: 0 auto;
-    width: 2rem;
-  }
   & ::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (min-width: 1600px) {
+    width: calc(100vw * 0.2);
   }
 `;
 
