@@ -27,12 +27,20 @@ const MeetingDetailContainer = styled.div`
   .meeting-title {
     margin: 1rem 0;
     font-size: 3rem;
+
+    @media (max-width: 1440px) {
+      font-size: 2.5rem;
+    }
   }
 
   .meeting-time,
   .number-of-recruitment {
     margin: 1rem 0;
     font-size: 3rem;
+
+    @media (max-width: 1440px) {
+      font-size: 2.5rem;
+    }
   }
 
   .meeting-description {
@@ -57,12 +65,17 @@ const MeetingDetailContainer = styled.div`
   .enter-meeting-button,
   .terminated-meeting-button,
   .wait-meeting-button {
+    border-radius: 7px;
     font-size: 3rem;
     padding: 1rem 1rem 0.7rem 1rem;
     font-weight: bold;
     border: none;
     background-color: ${COLOR.CYAN};
     cursor: pointer;
+
+    @media (max-width: 1440px) {
+      font-size: 2rem;
+    }
   }
 
   .reserve-cancel-button {
@@ -94,6 +107,7 @@ const MeetingDetailContainer = styled.div`
 function MeetingDetail({ meeting }) {
   const [showModal, setShowModal] = useState(false);
   const [modalContents, setModalContents] = useState(null);
+  const [ownerChecked, setOwnerChecked] = useState(false);
 
   const navigate = useNavigate();
   const userEmail = useSelector(selectUserEmail);
@@ -111,6 +125,8 @@ function MeetingDetail({ meeting }) {
   useEffect(() => {
     if (isOwner && !meeting.isEnd) {
       navigate(`/main/meeting/live/${meeting._id}`);
+    } else {
+      setOwnerChecked(true);
     }
   }, []);
 
@@ -188,92 +204,95 @@ function MeetingDetail({ meeting }) {
       {showModal && (
         <Modal onModalClose={handleModalCloseClick}>{modalContents}</Modal>
       )}
-      <MeetingDetailContainer>
-        <h1 className="meeting-title">{meeting.title}</h1>
-        {!meeting.isLive && !isMeetingWaitingOwner && (
-          <h2 className="meeting-time">미팅시작시간: {formattedStartTime}</h2>
-        )}
-        {meeting.isLive && (
-          <h2 className="meeting-time">
-            미팅시작시간: <span className="meeting-started">현재 진행중!</span>
-          </h2>
-        )}
-        {isMeetingWaitingOwner && !meeting.isEnd && (
-          <>
+      {ownerChecked && (
+        <MeetingDetailContainer>
+          <h1 className="meeting-title">{meeting.title}</h1>
+          {!meeting.isLive && !isMeetingWaitingOwner && (
+            <h2 className="meeting-time">미팅시작시간: {formattedStartTime}</h2>
+          )}
+          {meeting.isLive && (
             <h2 className="meeting-time">
               미팅시작시간:{" "}
-              <span className="meeting-waiting">{formattedStartTime}</span>
+              <span className="meeting-started">현재 진행중!</span>
             </h2>
-            <h2 className="meeting-waiting">
-              <span className="meeting-waiting">
-                주최자가 미팅을 시작하기를 기다리는 중입니다!
-              </span>
+          )}
+          {isMeetingWaitingOwner && !meeting.isEnd && (
+            <>
+              <h2 className="meeting-time">
+                미팅시작시간:{" "}
+                <span className="meeting-waiting">{formattedStartTime}</span>
+              </h2>
+              <h2 className="meeting-waiting">
+                <span className="meeting-waiting">
+                  주최자가 미팅을 시작하기를 기다리는 중입니다!
+                </span>
+              </h2>
+            </>
+          )}
+          {meeting.isEnd && (
+            <h2 className="meeting-time">
+              미팅시작시간:{" "}
+              <span className="meeting-end">{formattedStartTime}</span>
             </h2>
-          </>
-        )}
-        {meeting.isEnd && (
-          <h2 className="meeting-time">
-            미팅시작시간:{" "}
-            <span className="meeting-end">{formattedStartTime}</span>
+          )}
+          <h2 className="number-of-recruitment">
+            모집인원: {meeting.recruitmentNumber}
           </h2>
-        )}
-        <h2 className="number-of-recruitment">
-          모집인원: {meeting.recruitmentNumber}
-        </h2>
-        <p className="meeting-description">{meeting.description}</p>
-        {!isMeetingWaitingOwner &&
-          !isOwner &&
-          !isReserved &&
-          !meeting.isLive &&
-          !meeting.isEnd && (
+          <p className="meeting-description">{meeting.description}</p>
+          {!isMeetingWaitingOwner &&
+            !isOwner &&
+            !isReserved &&
+            !meeting.isLive &&
+            !meeting.isEnd && (
+              <button
+                className="reserve-button"
+                type="button"
+                onClick={handleMeetingReserveClick}
+              >
+                미팅 참여 예약
+              </button>
+            )}
+          {!isMeetingWaitingOwner &&
+            isReserved &&
+            !meeting.isLive &&
+            !meeting.isEnd && (
+              <button
+                className="reserve-cancel-button"
+                type="button"
+                onClick={handleReservationCancelClick}
+              >
+                예약 취소
+              </button>
+            )}
+          {meeting.isLive && !meeting.isEnd && (
             <button
-              className="reserve-button"
+              className="enter-meeting-button"
               type="button"
-              onClick={handleMeetingReserveClick}
+              onClick={handleEnterMeetingClick}
             >
-              미팅 참여 예약
+              참여하기
             </button>
           )}
-        {!isMeetingWaitingOwner &&
-          isReserved &&
-          !meeting.isLive &&
-          !meeting.isEnd && (
+          {isMeetingWaitingOwner && !meeting.isEnd && (
             <button
-              className="reserve-cancel-button"
+              className="wait-meeting-button"
               type="button"
-              onClick={handleReservationCancelClick}
+              onClick={handleEnterMeetingClick}
             >
-              예약 취소
+              방에서 대기하기
             </button>
           )}
-        {meeting.isLive && !meeting.isEnd && (
-          <button
-            className="enter-meeting-button"
-            type="button"
-            onClick={handleEnterMeetingClick}
-          >
-            참여하기
-          </button>
-        )}
-        {isMeetingWaitingOwner && !meeting.isEnd && (
-          <button
-            className="wait-meeting-button"
-            type="button"
-            onClick={handleEnterMeetingClick}
-          >
-            방에서 대기하기
-          </button>
-        )}
-        {meeting.isEnd && (
-          <button
-            className="terminated-meeting-button"
-            type="button"
-            disabled={true}
-          >
-            종료된 미팅 입니다
-          </button>
-        )}
-      </MeetingDetailContainer>
+          {meeting.isEnd && (
+            <button
+              className="terminated-meeting-button"
+              type="button"
+              disabled={true}
+            >
+              종료된 미팅 입니다
+            </button>
+          )}
+        </MeetingDetailContainer>
+      )}
     </>
   );
 }

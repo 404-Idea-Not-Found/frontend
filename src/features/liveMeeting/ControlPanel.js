@@ -25,7 +25,6 @@ import {
 } from "./selectors";
 
 const ControlPanelContainer = styled.div`
-  flex: 1;
   display: flex;
 
   ul {

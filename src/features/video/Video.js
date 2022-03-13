@@ -23,22 +23,24 @@ import { videoReset } from "./videoSlice";
 
 const StyledVideo = styled.video`
   background-color: white;
-  width: 250px;
-  height: 250px;
+  width: 14vw;
+  height: 20vh;
 `;
 
 const VideoContainer = styled.div`
   position: absolute;
+  top: 0;
+  left: 0;
   border: 1px solid black;
   background-color: white;
-  width: 250px;
-  height: 250px;
+  width: 14vw;
+  height: 20vh;
 
   .loader-container {
     display: flex;
     align-items: center;
-    width: 250px;
-    height: 250px;
+    width: 14vw;
+    height: 20vh;
     position: absolute;
     font-size: 2rem;
     font-weight: bold;

@@ -72,11 +72,11 @@ function MyPage() {
   return (
     <MyPageContainer>
       <Header />
+      {isLoading && <Loader spinnerWidth="300px" containerHeight="50%" />}
+      {isApiLoading && <Loader spinnerWidth="300px" containerHeight="50%" />}
       {(!userId || !email) && (
         <ErrorMessage errorMessage="로그인이 필요 합니다!" />
       )}
-      {isLoading && <Loader spinnerWidth="300px" containerHeight="100%" />}
-      {isApiLoading && <Loader spinnerWidth="300px" containerHeight="100%" />}
       {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}
       {!isApiLoading && !isLoading && !error.isError && (
         <div className="meeting-list-wrapper">

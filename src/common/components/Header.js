@@ -10,10 +10,10 @@ import { COLOR } from "../util/constants";
 const HeaderContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  min-width: 1300px;
   min-height: calc(2rem + 2px);
+  background-color: white;
+  margin-left: auto;
   width: 100%;
-  margin-right: 10rem;
 `;
 
 const HeaderButton = styled.button`

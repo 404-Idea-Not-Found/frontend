@@ -12,43 +12,61 @@ const MeetingContainer = styled.li`
   display: flex;
   box-sizing: border-box;
   align-items: center;
-  width: calc(100% - 1rem);
-  margin-top: 2rem;
+  width: 100%;
   margin-bottom: 2rem;
-  margin-left: 1rem;
+  padding-left: 1rem;
   cursor: pointer;
   border-left: ${(props) =>
     props.isMeetingSelected ? "7px solid black" : "none"};
-  padding: 0.5rem;
   transition: all 0.4s;
 
   .meeting-title {
     font-size: 2rem;
     font-weight: bold;
+
+    @media (max-width: 1440px) {
+      font-size: 1.7rem;
+    }
   }
 
   .tag-container {
     display: flex;
+    align-items: center;
   }
 
   .text-container {
-    width: 100%;
+    border-radius: 7px;
+    box-sizing: border-box;
+    width: 93%;
+    height: 100%;
     transition: all 0.6s;
+    padding: 0.3rem;
     background-color: ${(props) =>
       props.isMeetingSelected ? COLOR.LIGHT_GREY : "none"};
   }
 
   .meeting-title {
-    width: 330px;
+    width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
   .tag {
+    max-width: 8rem;
     margin-right: 1rem;
     font-size: 1.2rem;
     white-space: pre;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    @media (max-width: 1440px) {
+      font-size: 1.1rem;
+    }
+  }
+
+  .image-container {
+    margin-left: auto;
   }
 
   .dot {
@@ -59,6 +77,11 @@ const MeetingContainer = styled.li`
 
   &:hover {
     opacity: 0.3;
+  }
+
+  @media (max-width: 1440px) {
+    font-size: 1.7rem;
+    margin-bottom: 1.5rem;
   }
 `;
 
@@ -100,13 +123,15 @@ const Meeting = React.forwardRef(function Meeting(
             <div className="tag">
               {meeting.tag[1].length ? "#" + meeting.tag[1] : " "}
             </div>
+            <div className="image-container">
+              <img
+                className="dot"
+                src={meeting.isLive ? greenDot : redDot}
+                alt="meeting not ready icon"
+              />
+            </div>
           </div>
         </div>
-        <img
-          className="dot"
-          src={meeting.isLive ? greenDot : redDot}
-          alt="meeting not ready icon"
-        />
       </MeetingContainer>
     );
   }
@@ -125,9 +150,11 @@ const Meeting = React.forwardRef(function Meeting(
           <div className="tag">
             {meeting.tag[1].length ? "#" + meeting.tag[1] : " "}
           </div>
+          <div className="image-container">
+            <img className="dot" src={signalImage} alt="meeting-ready-icon" />
+          </div>
         </div>
       </div>
-      <img className="dot" src={signalImage} alt="meeting-ready-icon" />
     </MeetingContainer>
   );
 });

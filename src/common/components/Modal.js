@@ -10,8 +10,8 @@ const ModalWrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
-  height: 50%;
+  width: 80vw;
+  height: 50vh;
   background-color: white;
   border-radius: 0.5rem;
   overflow: hidden;
@@ -50,7 +50,7 @@ const Backdrop = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background-color: ${COLOR.GREY};
   z-index: 2;
@@ -84,7 +84,6 @@ const ModalAndBackdropContainer = styled.div`
   left: 0;
   height: 100%;
   width: 100%;
-  min-width: calc(400px + 0.5rem + 1500px);
 `;
 
 function Modal({ children, onModalClose }) {
