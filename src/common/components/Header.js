@@ -12,6 +12,8 @@ const HeaderContainer = styled.div`
   justify-content: flex-end;
   min-height: calc(2rem + 2px);
   background-color: white;
+  margin-left: auto;
+  width: 100%;
 `;
 
 const HeaderButton = styled.button`

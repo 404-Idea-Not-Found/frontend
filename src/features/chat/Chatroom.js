@@ -8,13 +8,12 @@ import { selectChatList } from "../liveMeeting/selectors";
 import { selectUsername } from "../login/selectors";
 
 const ChatroomContainer = styled.div`
-  /* height: calc(${window.innerHeight * 0.7}px - 4px); */
-  height: ${window.innerHeight * 0.5}px;
+  height: ${(props) => props.innerHeight}px;
   width: 350px;
-  margin-top: 3rem;
   border: 2px solid black;
   display: flex;
   flex-direction: column;
+  align-self: flex-end;
 
   & ::-webkit-scrollbar {
     display: none;
@@ -107,7 +106,7 @@ function Chatroom() {
   }
 
   return (
-    <ChatroomContainer>
+    <ChatroomContainer innerHeight={window.innerHeight * 0.6 - 4}>
       <ChatListContainer>
         {chatList.map((chat) => (
           <ChatContainer

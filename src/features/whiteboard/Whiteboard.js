@@ -5,6 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
+import {
+  selectTopDelta,
+  selectLeftDelta,
+} from "../../common/routes/main/selectors";
 import { COLOR } from "../../common/util/constants";
 import debounce from "../../common/util/debounce";
 import throttle from "../../common/util/throttle";
@@ -62,6 +66,10 @@ const CanvasContainer = styled.div`
   .color-select-yellow {
     background-color: yellow;
   }
+
+  .wrapper {
+    position: relative;
+  }
 `;
 
 function Whiteboard({ isOwner }) {
@@ -75,6 +83,8 @@ function Whiteboard({ isOwner }) {
   const dispatch = useDispatch();
   const { meetingId } = useParams();
   const isWhiteboardAllowed = useSelector(selectIsWhiteboardAllowed);
+  const topDelta = useSelector(selectTopDelta);
+  const leftDelta = useSelector(selectLeftDelta);
 
   useEffect(() => {
     contextRef.current = canvasRef.current.getContext("2d");
@@ -95,12 +105,10 @@ function Whiteboard({ isOwner }) {
 
     const debouncedResizeHandler = debounce(onResize, 150);
 
-    window.addEventListener("resize", debouncedResizeHandler);
-    window.addEventListener("scroll", debouncedResizeHandler);
+    window.addEventListener("resize", debouncedResizeHandler, true);
 
     return () => {
-      window.removeEventListener("resize", debouncedResizeHandler);
-      window.removeEventListener("scroll", debouncedResizeHandler);
+      window.removeEventListener("resize", debouncedResizeHandler, true);
       dispatch(createRemoveSocketEventListenerAction("drawing"));
       dispatch(createRemoveSocketEventListenerAction("clearCanvas"));
     };
@@ -149,8 +157,8 @@ function Whiteboard({ isOwner }) {
     const { top, left } = canvasPositionRef.current;
 
     contextRef.current.beginPath();
-    contextRef.current.moveTo(x0 - left, y0 - top);
-    contextRef.current.lineTo(x1 - left, y1 - top);
+    contextRef.current.moveTo(x0 - left - leftDelta, y0 - top - topDelta);
+    contextRef.current.lineTo(x1 - left - leftDelta, y1 - top - topDelta);
     contextRef.current.strokeStyle = color;
     contextRef.current.lineWidth = 2;
     contextRef.current.stroke();
@@ -161,10 +169,10 @@ function Whiteboard({ isOwner }) {
     }
 
     const pathData = {
-      x0: (x0 - left) / w,
-      y0: (y0 - top) / h,
-      x1: (x1 - left) / w,
-      y1: (y1 - top) / h,
+      x0: (x0 - left - leftDelta) / w,
+      y0: (y0 - top - topDelta) / h,
+      x1: (x1 - left - leftDelta) / w,
+      y1: (y1 - top - topDelta) / h,
       color,
     };
 
@@ -250,13 +258,13 @@ function Whiteboard({ isOwner }) {
           }}
         />
       </div>
-      <div>
+      <div className="wrapper">
         <Video isOwner={isOwner} meetingId={meetingId} />
         <StyledCanvas
           data-testid="canvas"
           ref={canvasRef}
-          width={window.innerWidth * 0.5}
-          height={window.innerHeight * 0.5}
+          width={window.innerWidth * 0.55}
+          height={window.innerHeight * 0.6}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
           onMouseMove={throttle(onMouseMove, 10)}

@@ -8,7 +8,7 @@ import MeetingDetail from "./MeetingDetail";
 
 const StyledDiv = styled.div`
   width: 100%;
-  height: calc(100% - 1rem - 22px);
+  height: calc(100vh - 3.5rem);
   box-sizing: border-box;
 `;
 
@@ -29,7 +29,7 @@ function MeetingDetailContainer() {
       {!isLoading && <MeetingDetail meeting={meeting} />}
       {isLoading && (
         <LoaderContainer>
-          <Loader spinnerWidth="10%" containerHeight="30%" />
+          <Loader spinnerWidth="200px" containerHeight="90%" />
         </LoaderContainer>
       )}
       {error.isError && <ErrorMessage errorMessage={error.errorMessage} />}

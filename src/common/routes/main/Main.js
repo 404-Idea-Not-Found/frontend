@@ -1,20 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import Sidebar from "../../../features/sidebar/Sidebar";
-import { sidebarReset } from "../../../features/sidebar/SidebarSlice";
 import Header from "../../components/Header";
+import debounce from "../../util/debounce";
+import { containerScrolled, deltaReset } from "./mainSlice";
 
 const MainContainer = styled.div`
   display: flex;
-  width: 100%;
   height: 100vh;
-
-  @media (max-width: 1440px) {
-    width: 1440px;
-  }
 `;
 
 const Divider = styled.div`
@@ -26,6 +22,7 @@ const Divider = styled.div`
 const ContentsContainer = styled.div`
   width: calc(80vw - 0.5rem);
   height: 100vh;
+  overflow-x: auto;
 
   @media (max-width: 1440px) {
     width: calc(75vw - 0.5rem);
@@ -41,26 +38,49 @@ const DefaultContentScreen = styled.div`
   width: 100%;
   height: calc(100% - 1rem - 22px);
   margin: 0 auto;
+
+  @media (max-width: 1440px) {
+    font-size: 2rem;
+  }
 `;
 
 function Main() {
   const { pathname } = useLocation();
+  const contentsContainerRef = useRef();
   const dispatch = useDispatch();
-
   const isMeetingSelected = pathname !== "/main";
 
-  useEffect(
-    () => () => {
-      dispatch(sidebarReset());
-    },
-    []
-  );
+  useEffect(() => {
+    let isScrollHandlerCalled = false;
+    const initialScrollTopLeft = { top: null, left: null };
+    const scrollHandler = debounce(() => {
+      if (!isScrollHandlerCalled) {
+        initialScrollTopLeft.top = contentsContainerRef.current.scrollTop;
+        initialScrollTopLeft.left = contentsContainerRef.current.scrollLeft;
+        isScrollHandlerCalled = true;
+      }
+      const topDelta =
+        initialScrollTopLeft.top - contentsContainerRef.current.scrollTop;
+      const leftDelta =
+        initialScrollTopLeft.left - contentsContainerRef.current.scrollLeft;
+
+      dispatch(containerScrolled({ topDelta, leftDelta }));
+    }, 200);
+
+    contentsContainerRef.current.addEventListener("scroll", scrollHandler);
+    const memoizedEl = contentsContainerRef.current;
+
+    return () => {
+      memoizedEl.removeEventListener("scroll", scrollHandler);
+      dispatch(deltaReset());
+    };
+  }, []);
 
   return (
     <MainContainer>
       <Sidebar />
       <Divider />
-      <ContentsContainer>
+      <ContentsContainer ref={contentsContainerRef}>
         <Header />
         {!isMeetingSelected && (
           <DefaultContentScreen>

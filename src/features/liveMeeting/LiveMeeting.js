@@ -27,14 +27,18 @@ import {
 } from "./selectors";
 
 const LiveMeetingContainer = styled.div`
-  height: calc(100vh - 1rem - 21px);
-
+  height: calc(100vh - 3.5rem);
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  justify-content: center;
   background-color: white;
-  margin: 0 1rem;
-  overflow-x: auto;
+  margin: 0 auto;
+  padding: 0 1rem;
 
   .whiteboard-chat-wrapper {
     display: flex;
+    width: fit-content;
     align-items: center;
     justify-content: center;
   }
@@ -260,7 +264,7 @@ function LiveMeeting() {
         </div>
       )}
       {(isSocketConnected || isFetchingMeeting || error.isError) && (
-        <Loader spinnerWidth="10%" containerHeight="100%" />
+        <Loader spinnerWidth="200px" containerHeight="90%" />
       )}
       {!isSocketConnected && !isFetchingMeeting && !error.isError && (
         <ControlPanel
