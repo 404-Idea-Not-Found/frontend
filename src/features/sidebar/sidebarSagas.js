@@ -3,7 +3,7 @@ import { call, put, select, takeEvery } from "redux-saga/effects";
 import fetchMeetingList from "../../common/api/fetchMeetingList";
 import getErrorMessage from "../../common/util/getErrorMessage";
 import sleep from "../../common/util/sleep";
-import { selectHasMore, selectLastId, selectQuery } from "./selector";
+import { selectHasMore, selectLastId, selectQuery } from "./selectors";
 import {
   firstMeetingListRequestSent,
   getMeetingListApiEnd,

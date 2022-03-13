@@ -10,7 +10,7 @@ import {
   selectHasMore,
   selectIsLoading,
   selectMeetingList,
-} from "./selector";
+} from "./selectors";
 import { createLoadMoreWithSameQueryAction } from "./sidebarSagas";
 
 const MeetingListContainer = styled.ul`
