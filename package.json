@@ -1,6 +1,6 @@
 {
   "name": "404-idea-not-found",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.2",
