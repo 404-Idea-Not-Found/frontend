@@ -5,10 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import {
-  selectTopDelta,
-  selectLeftDelta,
-} from "../../common/routes/main/selectors";
 import { COLOR } from "../../common/util/constants";
 import debounce from "../../common/util/debounce";
 import throttle from "../../common/util/throttle";
@@ -83,8 +79,6 @@ function Whiteboard({ isOwner }) {
   const dispatch = useDispatch();
   const { meetingId } = useParams();
   const isWhiteboardAllowed = useSelector(selectIsWhiteboardAllowed);
-  const topDelta = useSelector(selectTopDelta);
-  const leftDelta = useSelector(selectLeftDelta);
 
   useEffect(() => {
     contextRef.current = canvasRef.current.getContext("2d");
@@ -101,14 +95,16 @@ function Whiteboard({ isOwner }) {
       dispatch(
         createAttachSocketEventListenerAction("clearCanvas", clearCanvas)
       );
-    }, 1000);
+    }, 2000);
 
     const debouncedResizeHandler = debounce(onResize, 150);
 
-    window.addEventListener("resize", debouncedResizeHandler, true);
+    window.addEventListener("resize", debouncedResizeHandler);
+    document.body.addEventListener("scroll", debouncedResizeHandler, true);
 
     return () => {
-      window.removeEventListener("resize", debouncedResizeHandler, true);
+      window.removeEventListener("resize", debouncedResizeHandler);
+      document.body.removeEventListener("scroll", debouncedResizeHandler, true);
       dispatch(createRemoveSocketEventListenerAction("drawing"));
       dispatch(createRemoveSocketEventListenerAction("clearCanvas"));
     };
@@ -157,8 +153,8 @@ function Whiteboard({ isOwner }) {
     const { top, left } = canvasPositionRef.current;
 
     contextRef.current.beginPath();
-    contextRef.current.moveTo(x0 - left - leftDelta, y0 - top - topDelta);
-    contextRef.current.lineTo(x1 - left - leftDelta, y1 - top - topDelta);
+    contextRef.current.moveTo(x0 - left, y0 - top);
+    contextRef.current.lineTo(x1 - left, y1 - top);
     contextRef.current.strokeStyle = color;
     contextRef.current.lineWidth = 2;
     contextRef.current.stroke();
@@ -169,10 +165,10 @@ function Whiteboard({ isOwner }) {
     }
 
     const pathData = {
-      x0: (x0 - left - leftDelta) / w,
-      y0: (y0 - top - topDelta) / h,
-      x1: (x1 - left - leftDelta) / w,
-      y1: (y1 - top - topDelta) / h,
+      x0: (x0 - left) / w,
+      y0: (y0 - top) / h,
+      x1: (x1 - left) / w,
+      y1: (y1 - top) / h,
       color,
     };
 
@@ -211,10 +207,11 @@ function Whiteboard({ isOwner }) {
   }
 
   function onResize() {
-    const { top, left } = canvasRef.current.getBoundingClientRect();
-
-    canvasPositionRef.current.top = top;
-    canvasPositionRef.current.left = left;
+    if (canvasRef.current) {
+      const { top, left } = canvasRef.current.getBoundingClientRect();
+      canvasPositionRef.current.top = top;
+      canvasPositionRef.current.left = left;
+    }
   }
 
   return (

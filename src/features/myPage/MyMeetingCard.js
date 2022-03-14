@@ -85,7 +85,7 @@ const MyMeetingCardContent = styled.ul`
   justify-content: center;
   width: 90%;
   list-style-position: inside;
-  height: ${(props) => (props.expand ? "12rem" : "0")};
+  height: ${(props) => (props.expand ? "16rem" : "0")};
   margin: 0;
   overflow: hidden;
   transition: height 0.3s ease-in-out;

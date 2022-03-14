@@ -1,7 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 
-import mainReducer from "../common/routes/main/mainSlice";
 import liveMeetingReducer from "../features/liveMeeting/liveMeetingSlice";
 import loginReducer from "../features/login/loginSlice";
 import myPageReducer from "../features/myPage/myPageSlice";
@@ -17,7 +16,6 @@ const allReducers = combineReducers({
   sidebar: sidebarReducer,
   myPage: myPageReducer,
   video: videoReducer,
-  main: mainReducer,
 });
 
 const rootReducer = (state, action) => {

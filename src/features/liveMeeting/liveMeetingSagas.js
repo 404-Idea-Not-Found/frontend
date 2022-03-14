@@ -10,7 +10,6 @@ import {
   fetchMeetingRequestSent,
   kickedFromRecruitList,
   meetingConnected,
-  meetingDisconnected,
   meetingErrorHapeened,
   meetingFetched,
   ownerDisconnectedDuringMeeting,
@@ -190,11 +189,9 @@ export function* sokcetFlow() {
       yield take(actionType.DISCONNECT_SOCKET);
       socket.disconnect();
       yield cancel(task);
-      yield put(meetingDisconnected());
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       yield put(meetingErrorHapeened(errorMessage));
-      yield put(meetingDisconnected());
     }
   }
 }

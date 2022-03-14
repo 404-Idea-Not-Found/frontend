@@ -25,7 +25,7 @@ export const liveMeetingSlice = createSlice({
         state.isWhiteBoardAllowed = true;
       }
     },
-    meetingDisconnected: (state) => {
+    meetingReset: (state) => {
       state.chatList = [];
       state.isLoading = true;
       state.meeting = {};
@@ -104,7 +104,7 @@ export const liveMeetingSlice = createSlice({
 
 export const {
   meetingConnected,
-  meetingDisconnected,
+  meetingReset,
   meetingErrorHapeened,
   meetingErrorChecked,
   meetingFetched,
