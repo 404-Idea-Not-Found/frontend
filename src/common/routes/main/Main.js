@@ -1,12 +1,8 @@
-import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 import Sidebar from "../../../features/sidebar/Sidebar";
 import Header from "../../components/Header";
-import debounce from "../../util/debounce";
-import { containerScrolled, deltaReset } from "./mainSlice";
 
 const MainContainer = styled.div`
   display: flex;
@@ -46,41 +42,13 @@ const DefaultContentScreen = styled.div`
 
 function Main() {
   const { pathname } = useLocation();
-  const contentsContainerRef = useRef();
-  const dispatch = useDispatch();
   const isMeetingSelected = pathname !== "/main";
-
-  useEffect(() => {
-    let isScrollHandlerCalled = false;
-    const initialScrollTopLeft = { top: null, left: null };
-    const scrollHandler = debounce(() => {
-      if (!isScrollHandlerCalled) {
-        initialScrollTopLeft.top = contentsContainerRef.current.scrollTop;
-        initialScrollTopLeft.left = contentsContainerRef.current.scrollLeft;
-        isScrollHandlerCalled = true;
-      }
-      const topDelta =
-        initialScrollTopLeft.top - contentsContainerRef.current.scrollTop;
-      const leftDelta =
-        initialScrollTopLeft.left - contentsContainerRef.current.scrollLeft;
-
-      dispatch(containerScrolled({ topDelta, leftDelta }));
-    }, 200);
-
-    contentsContainerRef.current.addEventListener("scroll", scrollHandler);
-    const memoizedEl = contentsContainerRef.current;
-
-    return () => {
-      memoizedEl.removeEventListener("scroll", scrollHandler);
-      dispatch(deltaReset());
-    };
-  }, []);
 
   return (
     <MainContainer>
       <Sidebar />
       <Divider />
-      <ContentsContainer ref={contentsContainerRef}>
+      <ContentsContainer>
         <Header />
         {!isMeetingSelected && (
           <DefaultContentScreen>

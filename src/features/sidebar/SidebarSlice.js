@@ -26,7 +26,7 @@ export const sidebarSlice = createSlice({
     },
     meetingListLoaded: (state, action) => {
       state.meetingList = action.payload.meetingList;
-      state.hasMore = !!action.payload.meetingList.length;
+      state.hasMore = action.payload.meetingList.length >= 10;
       state.query = action.payload.query;
       if (action.payload.meetingList.length) {
         state.lastId =
@@ -49,7 +49,7 @@ export const sidebarSlice = createSlice({
           ...action.payload.meetingList,
         ];
       }
-      state.hasMore = !!action.payload.meetingList.length;
+      state.hasMore = action.payload.meetingList.length >= 10;
       state.isLoading = false;
     },
     getMeetingListApiEnd: (state) => {

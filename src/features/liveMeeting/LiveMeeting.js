@@ -11,6 +11,7 @@ import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import Chat from "../chat/Chatroom";
 import { selectUserId } from "../login/selectors";
+import { createGetMeetingListAction } from "../sidebar/sidebarSagas";
 import { createRtcCallEndAction } from "../video/videoSagas";
 import Whiteboard from "../whiteboard/Whiteboard";
 import ControlPanel from "./ControlPanel";
@@ -182,6 +183,13 @@ function LiveMeeting() {
     dispatch,
     userId,
   ]);
+
+  useEffect(
+    () => () => {
+      dispatch(createGetMeetingListAction(""));
+    },
+    []
+  );
 
   if (!isOwner && ownerDisconnectedDuringMeeting) {
     return (
