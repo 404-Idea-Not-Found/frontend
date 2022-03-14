@@ -20,6 +20,7 @@ import {
   createDisconnectSocketAction,
   createGetMeetingAction,
 } from "./liveMeetingSagas";
+import { meetingReset } from "./liveMeetingSlice";
 import {
   selectError,
   selectIsFetchingMeeting,
@@ -159,6 +160,7 @@ function LiveMeeting() {
 
       return () => {
         dispatch(createDisconnectSocketAction());
+        dispatch(createGetMeetingListAction(""));
       };
     }
   }, [meetingId, isOwner, meeting.isLive, meeting.isEnd, dispatch, userId]);
@@ -172,6 +174,7 @@ function LiveMeeting() {
       return () => {
         setDidOwnerStartedMeeting(false);
         dispatch(createDisconnectSocketAction());
+        dispatch(createGetMeetingListAction(""));
       };
     }
   }, [
@@ -186,7 +189,7 @@ function LiveMeeting() {
 
   useEffect(
     () => () => {
-      dispatch(createGetMeetingListAction(""));
+      dispatch(meetingReset());
     },
     []
   );
@@ -201,6 +204,21 @@ function LiveMeeting() {
       >
         <h1>주최자의 연결이 끊겼습니다!</h1>
         <p>미팅을 종료합니다...</p>
+      </Modal>
+    );
+  }
+
+  if (isOwner && meeting.isLive) {
+    return (
+      <Modal
+        onModalClose={() => {
+          dispatch(createRtcCallEndAction());
+          navigate("/main");
+        }}
+      >
+        <h1>이미 접속중인 인스턴스가 존재합니다!</h1>
+        <p>⛔️이미 주최자 님이 미팅을 시작한 창이 존재하는거 같은데요?⛔️</p>
+        <p>기존의 창을 이용해주세요!</p>
       </Modal>
     );
   }

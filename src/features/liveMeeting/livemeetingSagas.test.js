@@ -15,7 +15,6 @@ import {
 import {
   fetchMeetingRequestSent,
   meetingConnected,
-  meetingDisconnected,
   meetingErrorHapeened,
   meetingFetched,
 } from "./liveMeetingSlice";
@@ -101,7 +100,6 @@ describe("liveMeetingSagas", () => {
             userId,
           })
         )
-        .put(meetingDisconnected())
         .dispatch(createConnectSocketAction(room, isOwner, chatList, userId))
         .dispatch(
           createEmitSocketEventAction(testSocketEventName, testSocketPayload)
@@ -156,7 +154,6 @@ describe("liveMeetingSagas", () => {
       return expectSaga(sokcetFlow)
         .dispatch(createConnectSocketAction())
         .put(meetingErrorHapeened(testError))
-        .put(meetingDisconnected())
         .silentRun();
     });
   });
