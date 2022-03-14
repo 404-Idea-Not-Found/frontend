@@ -198,13 +198,13 @@ export function* webRtcFlow() {
     } finally {
       cancel(taskList);
 
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-
       peerList.forEach((peer) => {
         peer.destroy();
       });
+
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
 
       yield put(videoReset());
     }

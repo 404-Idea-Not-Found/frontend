@@ -11,6 +11,7 @@ import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import Chat from "../chat/Chatroom";
 import { selectUserId } from "../login/selectors";
+import { createRtcCallEndAction } from "../video/videoSagas";
 import Whiteboard from "../whiteboard/Whiteboard";
 import ControlPanel from "./ControlPanel";
 import {
@@ -186,6 +187,7 @@ function LiveMeeting() {
     return (
       <Modal
         onModalClose={() => {
+          dispatch(createRtcCallEndAction());
           navigate("/main");
         }}
       >

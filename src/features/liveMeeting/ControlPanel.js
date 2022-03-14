@@ -8,6 +8,7 @@ import styled from "styled-components";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import { selectUsername } from "../login/selectors";
+import { createRtcCallEndAction } from "../video/videoSagas";
 import {
   createDisconnectSocketAction,
   createEmitSocketEventAction,
@@ -192,6 +193,7 @@ function ControlPanel({ meetingId, isOwner }) {
         </>
       );
     }
+    dispatch(createRtcCallEndAction());
     setShowModal(true);
     setModalCloseHandler(() => () => modalClickHandler());
   }
