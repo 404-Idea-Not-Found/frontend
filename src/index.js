@@ -1,3 +1,5 @@
+import * as process from "process";
+
 import axios from "axios";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -14,6 +16,10 @@ import { createVerify404TokenAction } from "./features/login/loginSagas";
 import MeetingDetailContainer from "./features/meetingDetail/MeetingDetailContainer";
 import MeetingForm from "./features/meetingForm/MeetingForm";
 import MyPage from "./features/myPage/MyPage";
+
+window.global = window;
+window.process = process;
+window.Buffer = [];
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 store.dispatch(createVerify404TokenAction());
