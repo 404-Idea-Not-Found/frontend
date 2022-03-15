@@ -126,7 +126,7 @@ const Meeting = React.forwardRef(function Meeting(
             <div className="image-container">
               <img
                 className="dot"
-                src={meeting.isLive ? greenDot : redDot}
+                src={signalImage}
                 alt="meeting not ready icon"
               />
             </div>
