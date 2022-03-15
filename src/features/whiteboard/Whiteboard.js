@@ -95,6 +95,26 @@ function Whiteboard({ isOwner }) {
       dispatch(
         createAttachSocketEventListenerAction("clearCanvas", clearCanvas)
       );
+
+      if (isOwner) {
+        dispatch(
+          createAttachSocketEventListenerAction(
+            "getOwnersCanvas",
+            sendOwnersCanvas
+          )
+        );
+      }
+
+      if (!isOwner) {
+        dispatch(
+          createAttachSocketEventListenerAction(
+            "sendOwnersCanvas",
+            replicateOwnersCanvas
+          )
+        );
+
+        dispatch(createEmitSocketEventAction("getOwnersCanvas"));
+      }
     }, 2000);
 
     const debouncedResizeHandler = debounce(onResize, 150);
@@ -107,6 +127,14 @@ function Whiteboard({ isOwner }) {
       document.body.removeEventListener("scroll", debouncedResizeHandler, true);
       dispatch(createRemoveSocketEventListenerAction("drawing"));
       dispatch(createRemoveSocketEventListenerAction("clearCanvas"));
+
+      if (isOwner) {
+        dispatch(createRemoveSocketEventListenerAction("sendOwnersCanvas"));
+      }
+
+      if (!isOwner) {
+        dispatch(createRemoveSocketEventListenerAction("getOwnersCanvas"));
+      }
     };
   }, []);
 
@@ -211,6 +239,30 @@ function Whiteboard({ isOwner }) {
       const { top, left } = canvasRef.current.getBoundingClientRect();
       canvasPositionRef.current.top = top;
       canvasPositionRef.current.left = left;
+    }
+  }
+
+  function sendOwnersCanvas({ requestorSocketId }) {
+    dispatch(
+      createEmitSocketEventAction("sendOwnersCanvas", {
+        ownersCanvas: canvasRef.current.toDataURL(),
+        requestorSocketId,
+      })
+    );
+  }
+
+  function replicateOwnersCanvas({ ownersCanvas }) {
+    const img = new Image();
+    img.onload = start;
+    img.src = ownersCanvas;
+    function start() {
+      contextRef.current.drawImage(
+        img,
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
     }
   }
 
