@@ -208,7 +208,7 @@ function LiveMeeting() {
     );
   }
 
-  if (isOwner && meeting.isLive) {
+  if (isOwner && meeting.isLive && !error.isError) {
     return (
       <Modal
         onModalClose={() => {
@@ -228,7 +228,8 @@ function LiveMeeting() {
     !meeting.isLive &&
     !meeting.isEnd &&
     isOwner &&
-    !didOwnerStartedMeeting
+    !didOwnerStartedMeeting &&
+    !error.isError
   ) {
     return (
       <AccessDeniedCard>
@@ -262,7 +263,13 @@ function LiveMeeting() {
     );
   }
 
-  if (!isFetchingMeeting && !meeting.isLive && !meeting.isEnd && !isOwner) {
+  if (
+    !isFetchingMeeting &&
+    !meeting.isLive &&
+    !meeting.isEnd &&
+    !isOwner &&
+    !error.isError
+  ) {
     return (
       <AccessDeniedCard>
         <h1>Please Wait...</h1>
@@ -275,7 +282,7 @@ function LiveMeeting() {
     );
   }
 
-  if (!isFetchingMeeting && meeting.isEnd) {
+  if (!isFetchingMeeting && meeting.isEnd && !error.isError) {
     return (
       <AccessDeniedCard>
         <h1>이미 종료된 미팅입니다!</h1>

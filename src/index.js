@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
 import "./common/config/firebase";
+import Fallback from "./common/routes/fallback/Fallback";
 import Landing from "./common/routes/landing/Landing";
 import Main from "./common/routes/main/Main";
 import LiveMeeting from "./features/liveMeeting/LiveMeeting";
@@ -40,6 +41,7 @@ ReactDOM.render(
             <Route path="meeting/live/:meetingId" element={<LiveMeeting />} />
           </Route>
           <Route path="my-page" element={<MyPage />} />
+          <Route path="*" element={<Fallback />} />
         </Routes>
       </BrowserRouter>
     </Provider>
