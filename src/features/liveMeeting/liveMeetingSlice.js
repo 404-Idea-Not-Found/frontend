@@ -31,6 +31,7 @@ export const liveMeetingSlice = createSlice({
       state.meeting = {};
       state.isFetchingMeeting = false;
       state.isWhiteBoardAllowed = false;
+      state.isRecruit = false;
       state.painterList = {};
       state.recruitList = {};
       state.ownerDisconnectedDuringMeeting = false;

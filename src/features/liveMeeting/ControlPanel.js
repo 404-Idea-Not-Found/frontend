@@ -8,6 +8,7 @@ import styled from "styled-components";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import { selectUsername } from "../login/selectors";
+import { createGetMeetingListAction } from "../sidebar/sidebarSagas";
 import { createRtcCallEndAction } from "../video/videoSagas";
 import {
   createDisconnectSocketAction,
@@ -169,6 +170,7 @@ function ControlPanel({ meetingId, isOwner }) {
     const modalClickHandler = () => {
       navigate("/main");
       dispatch(createDisconnectSocketAction());
+      dispatch(createGetMeetingListAction(""));
     };
     const isRecruitExist = !!Object.entries(recruitList).length;
 
