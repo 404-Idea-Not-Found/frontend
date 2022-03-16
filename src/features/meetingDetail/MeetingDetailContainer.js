@@ -20,9 +20,27 @@ const LoaderContainer = styled.div`
   align-items: center;
 `;
 
+const NoMeetingContainer = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 function MeetingDetailContainer() {
   const { meetingId } = useParams();
   const { isLoading, error, meeting } = useGetMeeting(meetingId);
+
+  if (!meeting) {
+    return (
+      <StyledDiv>
+        <NoMeetingContainer>
+          <h1>해당 미팅은 찾을 수 없습니다!</h1>
+        </NoMeetingContainer>
+      </StyledDiv>
+    );
+  }
 
   return (
     <StyledDiv>
