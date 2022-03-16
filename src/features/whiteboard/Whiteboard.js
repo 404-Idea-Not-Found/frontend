@@ -90,7 +90,7 @@ function Whiteboard({ isOwner }) {
       canvasPositionRef.current.left = left;
 
       dispatch(
-        createAttachSocketEventListenerAction("drawing", onDrawingEvent)
+        createAttachSocketEventListenerAction("drawing", handleDrawingEvent)
       );
       dispatch(
         createAttachSocketEventListenerAction("clearCanvas", clearCanvas)
@@ -117,7 +117,7 @@ function Whiteboard({ isOwner }) {
       }
     }, 2000);
 
-    const debouncedResizeHandler = debounce(onResize, 150);
+    const debouncedResizeHandler = debounce(handleCanvasPostitionChange, 150);
 
     window.addEventListener("resize", debouncedResizeHandler);
     document.body.addEventListener("scroll", debouncedResizeHandler, true);
@@ -138,13 +138,13 @@ function Whiteboard({ isOwner }) {
     };
   }, []);
 
-  function onMouseDown(event) {
+  function handleMouseDown(event) {
     drawingRef.current = true;
     xyRef.current.x = event.clientX;
     xyRef.current.y = event.clientY;
   }
 
-  function onMouseUp(event) {
+  function handleMouseUp(event) {
     if (!drawingRef.current) {
       return;
     }
@@ -159,7 +159,7 @@ function Whiteboard({ isOwner }) {
     );
   }
 
-  function onMouseMove(event) {
+  function handleMouseMove(event) {
     if (!drawingRef.current) {
       return;
     }
@@ -205,7 +205,7 @@ function Whiteboard({ isOwner }) {
     );
   }
 
-  function onDrawingEvent(pathData) {
+  function handleDrawingEvent(pathData) {
     const w = canvasRef.current.width;
     const h = canvasRef.current.height;
     const { top, left } = canvasPositionRef.current;
@@ -234,7 +234,7 @@ function Whiteboard({ isOwner }) {
     dispatch(createEmitSocketEventAction("clearCanvas", { room: meetingId }));
   }
 
-  function onResize() {
+  function handleCanvasPostitionChange() {
     if (canvasRef.current) {
       const { top, left } = canvasRef.current.getBoundingClientRect();
       canvasPositionRef.current.top = top;
@@ -314,10 +314,10 @@ function Whiteboard({ isOwner }) {
           ref={canvasRef}
           width={window.innerWidth * 0.55}
           height={window.innerHeight * 0.6}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onMouseMove={throttle(onMouseMove, 10)}
-          onMouseOut={onMouseUp}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseMove={throttle(handleMouseMove, 10)}
+          onMouseOut={handleMouseUp}
           isWhiteboardAllowed={isWhiteboardAllowed}
         />
       </div>

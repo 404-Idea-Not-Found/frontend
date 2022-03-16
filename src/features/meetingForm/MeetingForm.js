@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -6,6 +7,7 @@ import createNewMeeting from "../../common/api/createNewMeeting";
 import Modal from "../../common/components/Modal";
 import { COLOR } from "../../common/util/constants";
 import getErrorMessage from "../../common/util/getErrorMessage";
+import { createGetMeetingListAction } from "../sidebar/sidebarSagas";
 
 const StyledForm = styled.form`
   min-height: 400px;
@@ -114,6 +116,7 @@ function MeetingForm() {
   const [submissionError, setSubmissionError] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const isFormValid =
@@ -229,6 +232,7 @@ function MeetingForm() {
 
   function handleSuccessModalCloseClick() {
     navigate("/main");
+    dispatch(createGetMeetingListAction(""));
   }
 
   return (
