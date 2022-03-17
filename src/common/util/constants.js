@@ -14,6 +14,7 @@ export const COLOR = {
 
 export const TIME = {
   DAY_TO_SECONDS: 86400,
+  KOREA_TIME_ZONE: "+0900",
 };
 
 export const PAST_MEETING_FILTER_TYPE = {
