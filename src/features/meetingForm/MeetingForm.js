@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import createNewMeeting from "../../common/api/createNewMeeting";
 import Modal from "../../common/components/Modal";
-import { COLOR } from "../../common/util/constants";
+import { COLOR, TIME } from "../../common/util/constants";
 import getErrorMessage from "../../common/util/getErrorMessage";
 import { createGetMeetingListAction } from "../sidebar/sidebarSagas";
 
@@ -211,7 +211,7 @@ function MeetingForm() {
       tag: [enteredTag1, enteredTag2],
       description: enteredDescription,
       recruitmentNumber: enteredRecruitmentNumber,
-      startTime: enteredStartTime,
+      startTime: enteredStartTime + TIME.KOREA_TIME_ZONE,
     };
 
     if (isFormValid) {
