@@ -15,7 +15,11 @@
 
 ![landingPage](./.github/landingPage.png "landingPage")
 
-- deploy: https://www.404-idea-not-found.com/
+- Deploy: https://www.404-idea-not-found.com/
+- Mockup: https://bit.ly/3wBrcfm
+- DB Schema Modeling: https://bit.ly/3JEwuL1
+- 기술검증: https://bit.ly/3wDetZI
+- 칸반 스케줄: https://bit.ly/3IDnzYO
 
 ## 📎 프로젝트 기획
 
